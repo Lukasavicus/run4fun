@@ -1,13 +1,24 @@
 import {TimeHelper} from '../helpers/TimeHelper';
+import { BadgeList } from './BadgeList';
 
 export class User {
     constructor(name){
         this._name = name;
         this._activities = [];
+        this._badgeList = new BadgeList();
     }
 
     get name(){
         return this._name;
+    }
+
+    //Badges
+    addBadge(badge){
+        this._badgeList.add(badge);
+    }
+
+    get badgeList(){
+        return this._badgeList;
     }
 
     // Activities

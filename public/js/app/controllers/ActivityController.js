@@ -1,9 +1,9 @@
 'use strict';
 
-System.register(['../helpers/Bind', '../helpers/DateHelper', '../helpers/MultiBind', '../models/Activity', '../models/ListActivities', '../models/Message', '../services/ActivityService', '../views/ActivitiesView', '../views/ActivitiesDashboardView', '../views/MessageView'], function (_export, _context) {
+System.register(['../helpers/Bind', '../helpers/DateHelper', '../helpers/MultiBind', '../models/Activity', '../models/Message', '../models/User', '../services/UserService', '../views/ActivitiesView', '../views/ActivitiesDashboardView', '../views/MessageView', '../views/NavigationBarView', '../views/BadgesView'], function (_export, _context) {
     "use strict";
 
-    var Bind, DateHelper, MultiBind, Activity, ListActivities, Message, ActivityService, ActivitiesView, ActivitiesDashboardView, MessageView, _createClass, ActivityController, activityController;
+    var Bind, DateHelper, MultiBind, Activity, Message, User, UserService, ActivitiesView, ActivitiesDashboardView, MessageView, NavigationBarView, BadgesView, _createClass, ActivityController, activityController;
 
     function _classCallCheck(instance, Constructor) {
         if (!(instance instanceof Constructor)) {
@@ -26,18 +26,22 @@ System.register(['../helpers/Bind', '../helpers/DateHelper', '../helpers/MultiBi
             MultiBind = _helpersMultiBind.MultiBind;
         }, function (_modelsActivity) {
             Activity = _modelsActivity.Activity;
-        }, function (_modelsListActivities) {
-            ListActivities = _modelsListActivities.ListActivities;
         }, function (_modelsMessage) {
             Message = _modelsMessage.Message;
-        }, function (_servicesActivityService) {
-            ActivityService = _servicesActivityService.ActivityService;
+        }, function (_modelsUser) {
+            User = _modelsUser.User;
+        }, function (_servicesUserService) {
+            UserService = _servicesUserService.UserService;
         }, function (_viewsActivitiesView) {
             ActivitiesView = _viewsActivitiesView.ActivitiesView;
         }, function (_viewsActivitiesDashboardView) {
             ActivitiesDashboardView = _viewsActivitiesDashboardView.ActivitiesDashboardView;
         }, function (_viewsMessageView) {
             MessageView = _viewsMessageView.MessageView;
+        }, function (_viewsNavigationBarView) {
+            NavigationBarView = _viewsNavigationBarView.NavigationBarView;
+        }, function (_viewsBadgesView) {
+            BadgesView = _viewsBadgesView.BadgesView;
         }],
         execute: function () {
             _createClass = function () {
@@ -70,23 +74,16 @@ System.register(['../helpers/Bind', '../helpers/DateHelper', '../helpers/MultiBi
                     this._route_distance = $("#route_distance");
                     this._time = $("#time");
 
-                    //this._listActivities = new Bind(new ListActivities(), new ActivitiesView($("#activities-data")), 'add');
-                    this._listActivities = new MultiBind(new ListActivities(), [new ActivitiesView($("#activities-data")), new ActivitiesDashboardView($("#management-dashboard"))], 'add');
+                    //this._user = new Bind(new ListActivities(), new ActivitiesView($("#activities-data")), 'add');
+                    this._user = new MultiBind(new User(window.sessionStorage.login), [new ActivitiesView($("#activities-data")), new ActivitiesDashboardView($("#management-dashboard")), new BadgesView($("#badges")), new NavigationBarView($(".user-pill"))], 'addActivity', 'addBadge');
                     this._message = new Bind(new Message(), new MessageView($("#messaging")), 'text');
 
-                    this._service = new ActivityService();
+                    this._service = new UserService();
+
+                    this.import();
                 }
 
                 _createClass(ActivityController, [{
-                    key: 'test',
-                    value: function test() {
-                        this._listActivities.add(new Activity(DateHelper.textToDate("2020-01-01"), "Running", "condominium gym", 4, "00:36:51"));
-                        this._listActivities.add(new Activity(DateHelper.textToDate("2020-01-03"), "Running", "condominium gym", 4, "00:36:45"));
-                        this._listActivities.add(new Activity(DateHelper.textToDate("2020-01-12"), "Running", "condominium gym", 5, "00:46:59"));
-
-                        this._message.text = 'New Activities created';
-                    }
-                }, {
                     key: 'add',
                     value: function add(event) {
                         var _this = this;
@@ -102,7 +99,7 @@ System.register(['../helpers/Bind', '../helpers/DateHelper', '../helpers/MultiBi
                             return _this._message.text = error;
                         });
 
-                        this._listActivities.add(activity);
+                        this._user.addActivity(activity);
 
                         //this._message.text = 'New Activity created';
 
@@ -115,9 +112,19 @@ System.register(['../helpers/Bind', '../helpers/DateHelper', '../helpers/MultiBi
 
                         this._service.getUserActivities().then(function (activities) {
                             activities.forEach(function (activity) {
-                                return _this2._listActivities.add(activity);
+                                return _this2._user.addActivity(activity);
                             });
-                            _this2._message.text = "Activities imported";
+                        }).catch(function (error) {
+                            return _this2._message.text = error;
+                        });
+                        console.log("Reached");
+                        this._service.getUserBadges().then(function (badges) {
+                            console.log("Total badges I have: ", badges);
+                            return badges;
+                        }).then(function (badges) {
+                            badges.forEach(function (badge) {
+                                return _this2._user.addBadge(badge);
+                            });
                         }).catch(function (error) {
                             return _this2._message.text = error;
                         });

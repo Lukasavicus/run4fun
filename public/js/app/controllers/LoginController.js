@@ -48,8 +48,21 @@ System.register(['../services/HttpService'], function (_export, _context) {
 				}
 
 				_createClass(LoginController, [{
+					key: '_parseJwt',
+					value: function _parseJwt(token) {
+						var base64Url = token.split('.')[1];
+						var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+						var jsonPayload = decodeURIComponent(atob(base64).split('').map(function (c) {
+							return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+						}).join(''));
+
+						return JSON.parse(jsonPayload);
+					}
+				}, {
 					key: 'login',
 					value: function login(_login, passwd) {
+						var _this = this;
+
 						// Realiza a submisão de login
 						// Ao receber a resposta favoravel de login:
 						// 		Grava o resultado do x-access-token na sessão do usuário
@@ -68,7 +81,10 @@ System.register(['../services/HttpService'], function (_export, _context) {
 							return res.headers.get('x-access-token');
 						}).then(function (token) {
 							console.log('token', token);
-							if (token) window.sessionStorage.token = token;
+							if (token) {
+								window.sessionStorage.token = token;
+								window.sessionStorage.login = _this._parseJwt(token).login;
+							}
 						}).then(function (res) {
 							if (1 == 1) {
 								window.location.href = "index.html";

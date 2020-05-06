@@ -3,7 +3,7 @@
 System.register(['./View'], function (_export, _context) {
     "use strict";
 
-    var View, _createClass, BadgesView;
+    var View, _createClass, NavigationBarView;
 
     function _classCallCheck(instance, Constructor) {
         if (!(instance instanceof Constructor)) {
@@ -58,29 +58,27 @@ System.register(['./View'], function (_export, _context) {
                 };
             }();
 
-            _export('BadgesView', BadgesView = function (_View) {
-                _inherits(BadgesView, _View);
+            _export('NavigationBarView', NavigationBarView = function (_View) {
+                _inherits(NavigationBarView, _View);
 
-                function BadgesView(HTMLElement) {
-                    _classCallCheck(this, BadgesView);
+                function NavigationBarView(HTMLElement) {
+                    _classCallCheck(this, NavigationBarView);
 
-                    return _possibleConstructorReturn(this, (BadgesView.__proto__ || Object.getPrototypeOf(BadgesView)).call(this, HTMLElement));
+                    return _possibleConstructorReturn(this, (NavigationBarView.__proto__ || Object.getPrototypeOf(NavigationBarView)).call(this, HTMLElement));
                 }
 
-                _createClass(BadgesView, [{
+                _createClass(NavigationBarView, [{
                     key: 'template',
                     value: function template(model) {
-                        return '\n            ' + model.badgeList.badges.map(function (badge) {
-                            return '\n                <div class="badge true">\n                    <img src="' + badge.icon + '" "="" class="badge-img">\n                    <p class="badge-title">' + badge.title + '</p>\n                </div>\n            ';
-                        }).join('') + '\n        ';
+                        return '<img class="user-img" src="imgs/misc/avatar_test.jpg"> ' + model.name + ' ';
                     }
                 }]);
 
-                return BadgesView;
+                return NavigationBarView;
             }(View));
 
-            _export('BadgesView', BadgesView);
+            _export('NavigationBarView', NavigationBarView);
         }
     };
 });
-//# sourceMappingURL=BadgesView.js.map
+//# sourceMappingURL=NavigationBarView.js.map

@@ -11,5 +11,9 @@ module.exports = function(app) {
 		.delete(api.removeById)
 		.put(api.update);
 
-	app.get('/v1/users/:login', api.findByLogin);
+	//app.get('/v1/users/:login', api.findByLogin);
+
+	//
+	app.route('/v1/users/badges')
+		.get(api.listBadges)
 };

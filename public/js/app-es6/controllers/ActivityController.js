@@ -3,14 +3,16 @@ import { DateHelper } from '../helpers/DateHelper';
 import {MultiBind} from '../helpers/MultiBind';
 
 import {Activity} from '../models/Activity';
-import {ListActivities} from '../models/ListActivities';
 import {Message} from '../models/Message';
+import {User} from '../models/User';
 
-import {ActivityService} from '../services/ActivityService';
+import {UserService} from '../services/UserService';
 
 import {ActivitiesView} from '../views/ActivitiesView';
 import {ActivitiesDashboardView} from '../views/ActivitiesDashboardView';
 import {MessageView} from '../views/MessageView';
+import { NavigationBarView } from '../views/NavigationBarView';
+import { BadgesView } from '../views/BadgesView';
 
 class ActivityController {
 
@@ -23,22 +25,19 @@ class ActivityController {
         this._route_distance = $("#route_distance");
         this._time = $("#time");
 
-        //this._listActivities = new Bind(new ListActivities(), new ActivitiesView($("#activities-data")), 'add');
-        this._listActivities = new MultiBind(new ListActivities(), [
+        //this._user = new Bind(new ListActivities(), new ActivitiesView($("#activities-data")), 'add');
+        this._user = new MultiBind(new User(window.sessionStorage.login), [
             new ActivitiesView($("#activities-data")), 
-            new ActivitiesDashboardView($("#management-dashboard"))
-        ], 'add');
+            new ActivitiesDashboardView($("#management-dashboard")),
+            new BadgesView($("#badges")),
+            new NavigationBarView($(".user-pill"))
+        ], 'addActivity', 'addBadge');
         this._message = new Bind(new Message(), new MessageView($("#messaging")), 'text');
 
-        this._service = new ActivityService();
-    }
+        this._service = new UserService();
 
-    test(){
-        this._listActivities.add(new Activity(DateHelper.textToDate("2020-01-01"), "Running", "condominium gym", 4, "00:36:51"));
-        this._listActivities.add(new Activity(DateHelper.textToDate("2020-01-03"), "Running", "condominium gym", 4, "00:36:45"));
-        this._listActivities.add(new Activity(DateHelper.textToDate("2020-01-12"), "Running", "condominium gym", 5, "00:46:59"));
+        this.import();
 
-        this._message.text = 'New Activities created';
     }
 
     add(event){
@@ -54,7 +53,7 @@ class ActivityController {
             })
             .catch(error => this._message.text = error);
 
-        this._listActivities.add(activity);
+        this._user.addActivity(activity);
 
         //this._message.text = 'New Activity created';
 
@@ -65,8 +64,18 @@ class ActivityController {
         this._service
             .getUserActivities()
             .then(activities => {
-                activities.forEach(activity => this._listActivities.add(activity));
-                this._message.text = "Activities imported";
+                activities.forEach(activity => this._user.addActivity(activity));
+            })
+            .catch(error => this._message.text = error);
+        console.log("Reached");
+        this._service
+            .getUserBadges()
+            .then(badges => {
+                console.log("Total badges I have: ", badges);
+                return badges;
+            })
+            .then(badges => {
+                badges.forEach(badge => this._user.addBadge(badge));
             })
             .catch(error => this._message.text = error);
     }

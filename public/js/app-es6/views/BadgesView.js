@@ -8,7 +8,7 @@ export class BadgesView extends View {
 
     template(model){
         return `
-            ${model.badges.map(badge => `
+            ${model.badgeList.badges.map(badge => `
                 <div class="badge true">
                     <img src="${badge.icon}" "="" class="badge-img">
                     <p class="badge-title">${badge.title}</p>

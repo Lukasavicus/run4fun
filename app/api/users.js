@@ -3,6 +3,7 @@ let mongoose = require('mongoose');
 module.exports = function(app){
 	let api = {};
 	let model = mongoose.model('User');
+	let badgesModel = mongoose.model('User');
 
 	api.list = function(req, res){
 		model.find()
@@ -83,6 +84,41 @@ module.exports = function(app){
 			res.sendStatus(500);
 		});
 	}
+
+	//Badges
+	api.listBadges = function(req, res){
+		console.log(`Getting badges for ${req.usuario}`);
+		model.aggregate([
+			{
+				$match: {
+					login: req.usuario
+				}
+			},
+			{ $lookup : 
+				{
+					from : "badges",
+					localField : "badges",
+					foreignField : "_id",
+					as : "badges_by_user"
+				}
+			},
+			{
+				$project: {
+					_id: 0,
+					badges_by_user: 1,
+				}
+			}
+		])
+		.then(
+			function(result){
+				res.json(result[0]["badges_by_user"]);
+			},
+			function(err){
+				console.log("API / User -> listBadges ", err);
+				res.sendStatus(500);
+			}
+		);
+	};
 
 	return api;
 };

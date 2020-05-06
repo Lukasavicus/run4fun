@@ -1,9 +1,9 @@
 'use strict';
 
-System.register(['../helpers/TimeHelper'], function (_export, _context) {
+System.register(['../helpers/TimeHelper', './BadgeList'], function (_export, _context) {
     "use strict";
 
-    var TimeHelper, _createClass, User;
+    var TimeHelper, BadgeList, _createClass, User;
 
     function _classCallCheck(instance, Constructor) {
         if (!(instance instanceof Constructor)) {
@@ -14,6 +14,8 @@ System.register(['../helpers/TimeHelper'], function (_export, _context) {
     return {
         setters: [function (_helpersTimeHelper) {
             TimeHelper = _helpersTimeHelper.TimeHelper;
+        }, function (_BadgeList) {
+            BadgeList = _BadgeList.BadgeList;
         }],
         execute: function () {
             _createClass = function () {
@@ -40,9 +42,15 @@ System.register(['../helpers/TimeHelper'], function (_export, _context) {
 
                     this._name = name;
                     this._activities = [];
+                    this._badgeList = new BadgeList();
                 }
 
                 _createClass(User, [{
+                    key: 'addBadge',
+                    value: function addBadge(badge) {
+                        this._badgeList.add(badge);
+                    }
+                }, {
                     key: 'addActivity',
                     value: function addActivity(activity) {
                         this._activities.push(activity);
@@ -51,6 +59,11 @@ System.register(['../helpers/TimeHelper'], function (_export, _context) {
                     key: 'name',
                     get: function get() {
                         return this._name;
+                    }
+                }, {
+                    key: 'badgeList',
+                    get: function get() {
+                        return this._badgeList;
                     }
                 }, {
                     key: 'activities',

@@ -13,9 +13,6 @@ System.register(['./controllers/ActivityController'], function (_export, _contex
 
 
       document.querySelector('#activity-form').onsubmit = activityController.add.bind(activityController);
-      document.querySelector('#import-activities').onclick = activityController.import.bind(activityController);
-
-      activityController.test();
     }
   };
 });

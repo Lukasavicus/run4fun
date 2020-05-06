@@ -6,6 +6,16 @@ class LoginController{
 		this._service = new HttpService();
 	}
 
+	_parseJwt (token) {
+		var base64Url = token.split('.')[1];
+		var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+		var jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+			return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+		}).join(''));
+	
+		return JSON.parse(jsonPayload);
+	};
+
 	login(login, passwd){
 		// Realiza a submisão de login
 		// Ao receber a resposta favoravel de login:
@@ -25,7 +35,10 @@ class LoginController{
 		.then(res => res.headers.get('x-access-token'))
 		.then(token => {
 			console.log('token', token);
-			if(token) window.sessionStorage.token = token;
+			if(token){
+				window.sessionStorage.token = token;
+				window.sessionStorage.login = this._parseJwt(token).login;
+			}
 		})
 		.then(res => {
 			if(1 == 1){
