@@ -1,0 +1,8 @@
+TODOS:
+    Arrumar todos as APIs:
+        Todas as APIs devem levar em consideração o usuário da requisição (e também o seu papel (role));
+        As APIs devem implementar as regras de negócio;
+        Fazer scripts de teste:
+            Para inserção no banco de dados;
+            Busca no bd;
+            ...

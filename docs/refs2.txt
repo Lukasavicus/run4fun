@@ -1,0 +1,25 @@
+https://www.flaticon.com/search?search-type=icons&word=objective&license=&color=&stroke=&current_section=&author_id=&pack_id=&family_id=&style_id=133&category_id=
+
+
+https://www.google.com/search?sxsrf=ALeKk01ILW_aLMTbdAUIPblZlHHYxNAOBw%3A1585417027880&ei=Q4t_XoKkNfbD5OUPnJGFwA0&q=context+of+xmlhttprequest&oq=context+of+xmlhtt&gs_lcp=CgZwc3ktYWIQAxgAMggIIRAWEB0QHjoECCMQJzoHCCMQ6gIQJzoFCAAQkQI6BAgAEEM6AggAOgcIABAUEIcCOgUIABDLAToGCAAQFhAeOggIABAWEAoQHlDzsQFYzYYCYO2PAmgHcAB4AYABngKIAfcdkgEGMC4yNi4ymAEAoAEBqgEHZ3dzLXdperABCg&sclient=psy-ab
+https://stackoverflow.com/questions/20279484/how-to-access-the-correct-this-inside-a-callback
+https://stackoverflow.com/questions/9679053/is-it-possible-to-get-the-caller-context-in-javascript
+https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest/open
+https://stackoverflow.com/questions/41975089/context-problems-with-xmlhttprequest-onreadystatechange
+https://stackoverflow.com/questions/30346804/how-to-keep-scope-within-an-xhr-request
+https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Reflect/apply
+https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Reflect/set
+https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy/handler/get
+https://www.google.com/search?q=reflect.get+receiver&oq=reflect.get+receiver&aqs=chrome..69i57.13532j1j7&sourceid=chrome&ie=UTF-8
+https://stackoverflow.com/questions/37563495/what-is-a-receiver-in-javascript
+https://javascript.info/proxy
+http://xahlee.info/js/js_Reflect.get.html
+
+Fetch API and Interceptors:
+    https://blog.logrocket.com/axios-or-fetch-api/
+
+Vanilla JS x-access-token:
+    https://gomakethings.com/using-oauth-with-fetch-in-vanilla-js/
+
+Enums in JS:
+    https://www.tutorialspoint.com/what-is-the-syntax-to-define-enums-in-javascript

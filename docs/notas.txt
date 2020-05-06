@@ -1,0 +1,510 @@
+Notas sobre os cursos e treinamentos:
+
+    JavaScript Avançado I:
+        Aula 01:
+            - document.querySelector;
+            - forEach;
+            - Programação Procedural x Programação Orientada a Objetos;
+            - Classes, objetos, métodos, propriedades, modificadores de acesso (público, privado);
+        Aula 02:
+            * No projeto iremos usar o modelo MVC (Model-View-Controller), declarando classes que representam nossos modelos (dados)
+            e classes que representam nossas views (tela). As ações do usuário serão interceptadas por uma Controller, que irá alterar
+            os dados, o Model, enquanto a View será atualizada para exibir o estado mais atual. Desta forma, as regras de negócio não
+            estarão espalhadas pela View, elas estarão no modelo. Mais adiante, iremos implementar o modelo utilizando o paradigma da
+            Orientação de Objetos.
+            * Modelo: Uma abstração do mundo real (completar)
+                + Classe: Uma especificação da <negociação> com a abstração da mesma, dentro do código.
+            - The "_"-convention para variáveis privadas e métodos getters;
+            - Object.freeze(obj); 
+                . Obs.: Congela tipos primitivos: int, float, double, string.
+                . Obs.: Shallow freeze;
+            - Programação Defensiva: Técnicas para impedir que o cliente utilize de forma errada algum recurso disponibilizado;
+                . Obs.: Aplicar um deep freeze, ou devolver uma cópia de um objeto ao invés da instância do objeto interno de uma classe e etc.
+            - let x var
+        Aula 03:
+            - Associar métodos do Controller às ações do usuário numa página;
+            - High Order Functions: let $ = document.querySelector;
+                - ContextBinding: let $ = document.querySelector.bind(document);
+            - Performance Enhancement: By caching the DOM elements instead of in each execution search the DOM tree for those elements;
+            - Manipulação do Objeto Date;
+            - Spread Operator: ... ;
+            - Arrow Functions: =>  ;
+            * Conceitos:
+                + O C é o controller, aquele que disponibiliza um modelo para a view. O controller é aquele que recebe as ações do
+                usuário e que sabe interagir com o modelo. Como o modelo é independente da view, esta precisa ser renderizada para que
+                reflita as alterações no modelo. Em suma, o controller é a ponte de ligação entre a view e o modelo.
+                + M é o modelo, uma abstração do mundo real, os dados da aplicação e suas regras de negócio. O padrão MVC permite que
+                alterações de layout na view não acarretem alterações no modelo.
+                + A View é a representação do modelo em alguma tecnologia, por exemplo, HTML. A view apresenta um modelo em uma tabela,
+                em um formulário ou em parágrafos, e o padrão MVC permite que qualquer alteração na view não interfira com o modelo.
+        Aula 04:
+            - Métodos estáticos
+            * Classes que não devem ser instanciadas: constructor(){ throw new Error('Esta classe não pode ser instanciada');} ;
+            - Template Strings: `${var_}`;
+            - RegEx;
+            - Fail fast: if (!/^\d{4}-\d{2}-\d{2}$/.test(texto)) throw new Error('Deve estar no formato aaaa-mm-dd');
+            - ListModel: Holder para outras Classes. Representa logicamente uma Estrutura de Dados para manipular uma coleção de elementos
+            de uma determinada classe-modelo.
+            - Blindando arrays: return [].concat(this._myArray);
+            - ES5 x ES6:
+                * Criação de métodos de instância e de classe(estáticos):
+                ----------------------------------------------------------------------------------------------------------------------
+                    function Pessoa(nome, sobrenome) {
+                        this.nome = nome;
+                        this.sobrenome = sobrenome;
+                    }
+
+                    // método de instância
+                    Pessoa.prototype.obterNomeCompleto = function() {
+                        return this.nome + ' ' + this.sobrenome;
+                    };
+
+                    // declarando equivalente a método estático
+                    Pessoa.metodoStaticoQualquer = function() {
+                        console.log('Método estático chamado');
+                    };
+                ----------------------------------------------------------------------------------------------------------------------
+        Aula 05:
+            - View: Uma classe com um método template (para o template-string-HTML) e update(para atualizar o element linkado a essa view);
+            - IIEF (Immediately-invoked function expression): (function(){ <function_body> })();
+            - View (Modelo de View): 
+                class ExampleView {
+                    constructor(HTMLElement){
+                        this._HTMLElement = HTMLElement;
+                    }
+                    _template(model){
+                        return `<html> ${model.operation} </html>`;
+                    }
+                    update(model){
+                        this._HTMLElement.innerHTML = this._template(model);
+                    }
+                }
+        Aula 06:
+            - Default Parameters para Funções;
+            - Herança (O.O.);
+            - workaround for the absent of abstract method in JS;
+            - Overwrite (O.O.);
+            . Obs.: Em TypeScript Classes Abstratas são declaradas assim: abstract class View { ... }
+    
+    JavaScript Avançado II:
+        Aula 01:
+            - Armadilhas: Mecânismos para executar uma função(callback), após uma ação ter sido realizada;
+            - Funções tem escopo para "this" dinâmico (O "this" varia de acordo com o contexto da execução da função);
+            - Reflect API: É uma API para realizar reflexões em JS (reflexões são funcionalidades disponiveís pela linguagem para
+            extensão e desenvolvimento da própria linguagem). O método estático Reflect.apply, toma como parâmetros: a função que
+            será executada, o contexto da execução da função e um array de parâmetros. e.g.: Reflect.apply(this._armadilha, contexto, [this]);
+            - O escopo do "this" das Arrow Functions é léxico, ou seja, ele não é dinâmico com relação ao contexto de execução.
+            . Obs.: Observe que o "this" para funções comuns é dinâmico, ou seja, seu valor é definido no momento em que a função
+            é chamada, jamais no momento em que é declarada. O importante da característica dinâmica do "this" é que se ele não fosse
+            dinâmico, não conseguiríamos escrever uma função genéricas (que se aplicam em diversos contextos).
+            . O this de uma função é dinâmico, isto é, seu valor é determinado no momento em que a função é chamada. Como o this é
+            dinâmico, é possível usar artifícios da linguagem, como a API Reflect, para alterá-lo se assim desejarmos.
+            . O this de uma arrow function é léxico, isto é, seu valor é determinado no local onde a arrow function for definida, ela
+            não cria um novo this. O this de uma arrow function não pode ser alterado, mesmo se usarmos recursos da linguagem, como a
+            API Reflect;
+            - JS permite de uma forma indireta utilizar o artifício da Herança Mixin (Herança Parcial e Múltipla). Observe os exemplos
+            !funcionais! abaixo:
+            ----------------------------------------------------------------------------------------------------------------------
+                class Aviao {
+                    constructor(nome) { this._nome = nome; }
+                    voa() { alert(`${this._nome} está voando`); }
+                    ligaMotor() { console.log('liga o motor'); }
+                }
+
+                class Passarinho1 {
+                    constructor(nome) { this._nome = nome; }
+                    voa() {
+                        // executa o método `voa` de `Avião` usando como contexto a instância de `Passarinho`
+                        Reflect.apply(Aviao.prototype.voa, this, []);
+                    }
+                }
+
+                class Passarinho2 {
+                    constructor(nome) {
+                        this._nome = nome;
+                        // guarda uma instância de avião
+                        this._aviao = new Aviao(nome);
+                    }
+                    voa() {
+                        // usa o método voa de Aviao
+                        this._aviao.voa();
+                    }
+                }
+            ----------------------------------------------------------------------------------------------------------------------
+            * Último comentário: A utilização de mecânismos para automatizar a atualização de um recurso quando esse é alterado (ou
+            refletir uma alteração na view quando um modelo é modificado) é um Padrão de Projeto conhecido como: Observer.
+            . Obs.: Usamos o padrão de projeto Observer sempre que queremos notificar partes do sistema interessadas quando um evento
+            importante for disparado em nosso sistema.
+            No contexto da nossa aplicação, entendemos um evento como o ato de adicionar ou esvaziar nossa <lista de negociações>.
+            É a view que está interessada em observar esse evento e tomar uma ação, no caso, se atualizar com base no estado mais atual
+            do modelo.
+        
+        Aula 02:
+            - Modelos são a parte mais reutilizáveis de um sistema. Misturar código de infraestrutura no código do modelo, polue o
+            modelo e diminui o índice de reutilização do modelo.
+            - Padrão de Projeto Proxy: Proxy é um padrão de projeto que permite ao desenvolvedor criar um objeto wrapper ao redor de
+            um outro objeto de forma transparente para quem irá utilizá-lo ou consumi-lo (ou seja, todos os atributos e funções
+            continuam funcionando da mesma forma), porém com o benefício de poder adicionar armadilhas (traps) para capturar
+            determinados comportamentos e tratá-los antes ou depois da sua execução.
+            . Obs.: o Proxy é idêntico ao objeto que queremos trabalhar, e teremos bastante dificuldade de diferenciá-los. Nós
+            acessamos o Proxy como se ele fosse o objeto real, este último ficará escondido dentro do outro. Nós substituímos o
+            objeto real, que só poderá ser acessado por meio do Proxy - que pode ou não ser executado em um código arbitrário se
+            assim definirmos.
+            . Obs.: A diferença está em que quando chamarmos qualquer método ou propriedade, o Proxy delegará a chamada do método/propriedade
+            para o objeto encapsulado por ele. Mas ainda não temos benefícios com esta mudança. A vantagem está que colocaremos as
+            armadilhas entre a chamada do Proxy e o objeto real. Toda vez que acessamos o Proxy, executaremos um código antes de
+            chamarmos um método ou propriedade correspondente ao objeto real.
+            - Proxies podem interceptar diversas chamadas diferentes (get, set, ...). As de leitura são feitas através da palavra-
+            -chave "get", as de escrita através de "set".
+            - Ao chamar um método o JS "por debaixo dos panos" da um get no método e um Reflect.apply, logo para, numa Proxy, interceptar a
+            chamada a um método, a armadilha a ser utilizada deve ser a "get".
+            - Ao interceptar um método, seguimos a seguinte estratégia: criamos uma função que contém a trap que queremos executar + a 
+            própria execução do método em si.
+            - Toda função possui uma variável implicita chamada "arguments", que é um vetor contendo os argumentos passados para função;
+            - Quick tip: ao invés de usarmos: { get : function(args){ ... } } -> podemos usar (sintax-sugar): { get(args){ ... } }
+            - resumo sobre proxy: O padrão de projeto Proxy nada mais é do que um objeto "falso", "mentiroso", que envolve e encapsula
+            o objeto real que queremos interagir. É como se fosse uma interface, entre o objeto real e o resto do código. Conseguimos
+            assim controlar o acesso aos seus atributos e métodos. Nele também podemos pendurar códigos que não cabem de estar alocados
+            nos nossos modelos, mas que necessitam ser executados no caso de uma alteração ou atualização do mesmo.
+            - get(target, prop, receiver) { ... } ->
+                . O target é o objeto real que é encapsulado pela proxy. É este objeto que não queremos "sujar" com armadilhas ou
+                qualquer código que não diga respeito ao modelo.
+                . O prop é a propriedade em si, que está sendo lida naquele momento.
+                . O receiver é a referência ao próprio proxy. É na configuração do handler do Proxy que colocamos armadilhas.
+            - Reflect.get(target, prop, receiver); ~ target[prop]; !
+        
+        Aula 03:
+            - Padrão de Projeto Factory: Uma classe especializada para a criação de determinado tipo de objeto.
+            - No exemplo da aula (que pode ser extendido para demais situações-problema) toda a vez que atualizamos o modelo queremos
+            atualizar a view. Esse processo também é conhecido como Data-Binding ("ligação de dados"), e nesse caso, é unidirecional,
+            ou seja, ao atualizar a view, não precisamos atualizar o modelo.
+            - Em JS um construtor de uma determinada classe pode devolver qualquer tipo de objeto. ex.: class A { constructor(){ ... return new B()} };
+            ** pulga atrás da orelha: Nós criamos ainda um mecanismo de data binding, semelhante aos frameworks como AngularJS e AureliaJS. (COMO ELES FAZEM) ?
+            - Rest Operator __________ (tem que ser sempre o último parâmetro de uma função o parâmetro a utilizar o rest operator).
+            . Obs.: Sobre o Padrão de Projeto Factory:
+                + Ele é utilizado quando precisamos facilitar a criação de um objeto;
+                + É ideal quando queremos criar objetos similares, com apenas seus detalhes diferentes, que podemos passar nos argumentos da Factory;
+                + É bom para abstrair a criação de um objeto complexo, já que o programador que utilizar a Factory não precisa necessariamente saber
+                como é feita esta operação;
+                + O padrão de projeto Factory é um dos padrões mais utilizados no desenvolvimento. Ele é mais um da categoria dos patterns responsáveis
+                por criar objetos, como o Builder e o Prototype.
+            - Resumir isso aqui (porque isso aqui é genial!): https://cursos.alura.com.br/course/javascript-es6-orientacao-a-objetos-parte-2/task/17497
+            - Um exemplo de Factory incorporado na linguagem do JS é o método from da classe Array: let d = Array.from("abc"); // d = ["a", "b", "c"]
+                . Nesse caso, o método não está numa classe dedicada, mas faz parte da classe Array. E observe que ele não chama build ou create, outros
+                nomes válidos e comuns para factories por aí são from ou getInstance.
+        
+        Aula 04:
+            - Requisições Ajax (Assynchronous JavaScript Request);
+                . 1) Criar objeto: let xhr = new XMLHttpRequest();
+                . 2) Abrir canal com uma url e um verbo HTTP: xhr.open('GET', "www.urlexemplo.com/resource");
+                . 3) Setar configurações:
+                    * xhr.onreadystatechange = () => {
+                        if(xhr.readyState == 4) {
+                            if(xhr.status == 200) {
+                                console.log('Obtendo os dados do servidor.')
+                            } else {
+                                console.log('Não foi possível obter os dados do servidor.')
+                            }
+                        }
+                    }
+                . 4) Enviar requisição: xhr.send();
+                . Obs.: Possíveis estados de uma requisição ajax: {
+                    0: requisição ainda não iniciada;
+                    1: conexão com o servidor estabelecida;
+                    2: requisição recebida;
+                    3: processando requisição;
+                    4: requisição está concluída e a resposta está pronta;
+                }
+                . HTTP Responses Codes: { 2XX : ; 3XX : ; 4XX : ; 5XX : ;}
+            - Convenção para lidar com programação assíncrona:
+                + Também vamos adotar um convenção: em casos de erro, ele será descoberto sempre no primeiro parâmetro e o resultado
+                da operação virá no segundo. Estamos aplicando um padrão que vem do mundo NodeJS, e que recebe o nome de Error-First-Callback.
+                +   (err, interestingData) => {
+                        if(err) {
+                            console.log(err);
+                            return;
+                        }
+                        interestingData.forEach(d => console.log(d));
+                    }
+                    E usamos assim:
+                    * Quando sem erro:
+                        cb(null, JSON.parse(xhr.responseText).map(obj => new Modelo(obj.d1, obj.d2, obj.d3));
+                    * Quando com erro:
+                        cb('Não foi possível obter os dados', null);
+                + Então, se ocorrer um erro, exibiremos a mensagem e daremos o retorno. Desta forma, as linhas abaixo do return não
+                serão executadas. Mas no caso em que venha uma negociação, faremos o forEach().
+            . Obs.: onreadystatechange -> método invocado a cada mudança de estado que a requisição passa.
+            - A extensão XML foi um legado que ficou, mas hoje em dia é menos importante e até confuso. O XMLHttpRequest foi criado
+            pela Microsoft (dentro da equipe Outlook), e o XML realmente era o mais usado na época . O Firefox implementou um objeto
+            com o mesmo nome, mas que trabalhava com a estrutura de dados JSON e que acabou se tornando muito popular. 
+            - O Error-first Callback, ou errorback, é um padrão que foi adotado no mundo Node.js. Como você já aprendeu, o callback é
+            uma função chamada quando uma tarefa for executada, como uma requisição Ajax ou o acesso ao banco de dados. No entanto, a
+            qualquer momento pode acontecer um erro no processamento e aí vem a questão de como lidar com isso. A convenção é que cada
+            callback receba sempre o erro no primeiro parâmetro. Na função callback, basta então verificar esse parâmetro para saber
+            se ocorreu um erro ou não!
+            - Funções de Callback: São uma estratégia para que um código seja executado ao final de outro código "encadeamento".
+            - Pyramid of Doom: Efeito comumente encontrado quando trabalhando com requisições assíncronas precisamos de alguma forma
+            encadear as requisições.
+            . Obs.: A pirâmide é um forte indício de que temos problemas de legibilidade do código, na verdade, é o sintoma de um
+            problema maior, o Callback Hell. Ocorre quando temos requisições assíncronas executadas em determinada ordem, que chama
+            vários callbacks seguidos.
+            Se tivéssemos mais ações que precisassem ser executadas em ordem, teríamos um pirâmide com mais funções. Também vale
+            ressaltar: em uma situação de erro - por exemplo, se a URL estivesse equivocada -, dentro da função que trata de devolver
+            os dados ou executar o erro, executaríamos diversos trechos de código referentes ao erro. Testaríamos diversas vezes se
+            ocorreu o erro, porque o código está repetido.
+            - Para resolver esses problemas usamos o Padrão de Projeto Promises, que é um wrapper para uma função que irá realizar uma
+            determinada tarefa no futuro e que irá lidar a posteriori com as suas consequências, sejam positivas(caso de sucesso), sejam
+            negativas(caso de fracasso, falha, erro)).
+            - ECMAScript6 suporta nativamente Promises. Para usá-las usamos o construtor que toma como parâmetro uma única função.
+            Essa função recebe 2 parâmetros, 2 funções, uma que irá lidar com "a boa consequência" e outra função que irá lidar com
+            "a má consequência".
+            - Promise((resolve, reject) => {
+                ...
+                <várias operações demoradas>
+                ...
+                if(deu_tudo_certo)
+                    resolve(dados_ok);
+                else
+                    reject(obj_erro);
+            });
+            - E será usado assim:
+            function funcao_que_retorna_uma_promise(){
+                return new Promise((resolve, reject) => {
+                    ...
+                    ok ? resolve(dados) : reject(erro);
+                });
+            }
+            funcao_que_retorna_uma_promise()
+                .then(dados => console.log("Imprimindo dados pq deu tudo certo na promise e a funcao em resolve foi invocada!", dados))
+                .catch(erro => console.log("Imprimindo erro pq deu ruim na promise e a funcao em reject teve de ser invocada!", erro));
+            - Por fim, temos o método estático: 
+                Promise
+                    .all([promise1, promise2, ..., promisen])
+                    .then(resultadoDeCadaPromise => resultadoDeCadaPromise.forEach(resultado => console.log(resultado)))
+                    .catch(erroDeAlgumaPromise => console.log(erroDeAlgumaPromise))
+            
+        Aula 05
+            * Pro note: Quando temos uma classe que depende de algum recurso (ex.: depende de um serviço), é interessante explicitar essa
+            dependência, no construtor da classe. ex.:
+                class ServiceXPTO { method_bla() { return something; } }
+                class DependeDeSXPTO{
+                    constructor () {
+                        this.sxpto = new ServiceXPTO();
+                    }
+                }
+                . Obs.: Esse padão é visto em outros frameworks como o Angular.
+            . Obs.: Promises (promessas) agora fazem parte da linguagem JavaScript a partir do ES6. Elas representam o resultado futuro
+            de uma ação, que pode ser de sucesso ou fracasso. Elas visam tornar códigos assíncronos mais legíveis e fáceis de manter,
+            evitando o Callback Hell. Uma ou outra chamada assíncrona não é problemática, o problema é quando temos uma sucessão de
+            chamadas assíncronas e o modo tradicional de lidar com elas, aninhando callbacks, torna o código difícil de ler e manter,
+            principalmente o tratamento de erros.
+            - revisar: https://cursos.alura.com.br/course/javascript-es6-orientacao-a-objetos-parte-2/task/17523
+            - implementar: 
+                HTTPService (ok p/ get) ( com post, put e delete )
+                * isso pode ajudar: https://cursos.alura.com.br/course/javascript-es6-orientacao-a-objetos-parte-2/task/17531
+            - verificar: Se o módulo 3 o Flávio trabalha com módulos e generators (para suspender a execução de uma função no meio)
+            - analisar: https://www.alura.com.br/artigos/ordenacao-de-numeros-no-javascript-nao-funciona
+        
+        Aula 06
+            - testar: polyfills: https://cursos.alura.com.br/course/javascript-es6-orientacao-a-objetos-parte-2/task/17534
+            - resumir: Transpiler: https://cursos.alura.com.br/course/javascript-es6-orientacao-a-objetos-parte-2/task/17536
+    
+    JavaScript Avançado III:
+        Aula 01:
+            - IndexedDB (IDB);
+                . É acessível através do escopo global;
+                . Precisamos solicitar uma requisição de abertura para um banco antes de qualquer coisa.
+            - Tríade de Eventos (onupgradeneeded, onsuccess, onerror);
+            - ObjectStore;
+            - transaction;
+            - store (add / openCursor);
+                . É através da store que podemos realizar operações de persistência.
+            - cursor (store.openCursor -> onsuccess -> e.target.result -> .continue);
+        
+        Aula 02:
+            - Usando o Padrão de Projeto Factory para: ConnectionFactory;
+                . Obs.: ConnectionFactory tem que cumprir algumas exigências:
+                    + Tem que ter métodos estáticos para getConnection e closeConnection;
+                    + O método getConnection deve devolver uma promise (uma vez que a criação de uma conexão é uma operação assíncrona);
+                    + Ao requisitar uma nova conexão, se já houver uma conexão devolver essa (e não criar uma nova por requisição -
+                    unicidade da existência da conexão "Only be exist one");
+                    + Não pode permitir que uma conexão seja fechada fora da classe;
+            - Padrão de Projeto Module Pattern: Encapsulamento de uma classe (através da atribuição da mesma dentro de uma função):
+                . ex.:
+                    const MinhaClasse = (function(){
+                        let configuracoes_da_minha_classe_que_nao_podem_ser_globais = ... ;
+                        return class MinhaClasse { ... /* em algum ponto aqui, usa-se as configuracoes */ };
+                    })();
+            - Monkey Patch (workaround): Método não convencional para realizar uma tarefa;
+                . ex. dado em aula: sobreescrever o método close da classe nativa connection para que esse não possa ser invocado:
+                let close = connection.close.bind(connection);
+                connection.close = function() {
+                    throw new Error('Você não pode fechar diretamente a conexão');
+                };
+                //depois, dentro da classe:
+                static closeConnection() {
+                    if(connection) {
+                        close();
+                        connection = null;
+                    }
+                }
+            - Utilização de "const" a partir do ECMAScript6;
+            - Outro exemplo do Module Pattern:
+            ----------------------------------------------------------------------------------------------------------------------
+                var formatadorDeMoedas = (function() {
+                    let simboloMoeda = 'R$ ';
+                    let modulo = {};
+                    modulo.numeroParaReal = numero => { return simboloMoeda + numero.toFixed(2).replace('.', ','); }
+                    modulo.realParaNumero = texto => { return texto.replace(simboloMoeda, '').replace(',', '.'); }
+                    return modulo;
+                })();
+
+                // exemplo de uso
+
+                let real = 'R$ 100,20';
+                let realConvertidoEmNumero = formatadorDeMoedas.realParaNumero(real);
+                alert(realConvertidoEmNumero);
+                let numero = 200.15;
+                let numeroConvertidoEmReal =  formatadorDeMoedas.numeroParaReal(numero);
+                alert(numeroConvertidoEmReal);
+            ----------------------------------------------------------------------------------------------------------------------
+            . Obs.: Como uma IIFE nada mais é do que uma função, toda função pode retornar algo. Nesse caso, precisamos retornar as
+            duas funções de conversão, mas sabemos que só podemos ter um retorno. É por isso que criamos o objeto modulo e nele
+            adicionamos dinamicamente duas propriedades com os nomes das funções que havíamos criado, e em seguida definimos o
+            comportamento dessas propriedades através de uma função, no caso, arrow functions por serem mais sucintas.
+            Perceba que simboloMoeda não está presente em nenhuma propriedade de modulo. Isso faz sentido, porque nossa função
+            retornará o objeto modulo com as funções, mas não será exportado com simboloMoeda. No final da nossa IIFE, retornamos
+            (exportamos) o objeto modulo. O retorno da IIFE é armazenada na variável formatadorDeMoedas, essa sim no escopo global
+            e acessível em qualquer lugar da nossa aplicação.
+            - Sobre a imutabilidade do const:
+                . considere:
+                    const hoje = new Date();
+                    hoje.setDate(5);
+                    console.log(hoje.getDate()) ; // alterou o dia para 5!
+                . Obs.: Nesse caso não estamos atribuindo um novo valor a variável usando o operador =, mas estamos alterando as
+                propriedades do objeto Date por meio de seus métodos. Sendo assim, const não garante a imutabilidade, apenas a
+                atribuição de um novo valor para a variável.
+            - REFs: https://developer.mozilla.org/en-US/docs/Web/API/IndexedDB_API
+
+        Aula 03:
+            - Padrão de Projeto DAO => Data Access Object;
+             . Obs.: Vantagens do DAO:
+                + A vantagem está ligada com a capacidade de isolar todo o código que acessa seu repositório de dados em um único lugar.
+                Assim, toda vez que o desenvolvedor precisar realizar operações de persistência ele verá que existe um único local para
+                isso, seus DAO's. De forma técnica, o DAO faz parte da camada de persistência, funciona como uma fachada para a API do
+                IndexedDB. Repare que para usar o DAO não é preciso saber os detalhes do store ou cursor.
+            . Obs.: Commit & Rollback on IndexedDB:
+                + Transações do IndexedDB são auto commited. É por meio de uma transação que temos acesso a uma store e dela podemos
+                realizar operações como a inclusão de um objeto. Quando essa operação é realizada com sucesso, ou seja, quando o evento
+                onsuccess é chamado a transação é fechada, ou seja, as transações do IndexedDB são auto commited. É por isso que cada
+                método do nosso NegociacaoDao solicita uma transação toda vez que é chamado.
+                + Podemos cancelar uma transação através do método abort. Uma vez que o processo de efetivação da transação é algo
+                automático, podemos querer, em alguns casos, não efetivá-la, ou seja, queremos abortá-la. Fazendo uma alusão aos
+                bancos de dados relacionais, queremos ser capazes de realizar um rollback.:
+                
+                // #### VAI CANCELAR A TRANSAÇÃO. O evento onerror será chamado.
+                transaction.abort(); 
+
+                Para tratar esse evento de maneira apropriada, usamos:
+                transaction.onabort = e => {
+                    console.log(e);
+                    console.log('Transação abortada');
+                };
+            - Libs que operam em cima do IndexedDB: [Db.js](http://aaronpowell.github.io/db.js/) e [Dexie](https://dexie.org/)
+
+        Aula 04:
+            - JSON.stringify como monkey patch para deep comparasion:
+                . ex.:
+                    let n1 = ObjetoComplexo(param1, param2, param3); let n2 = ObjetoComplexo(param1, param2, param3);
+                    n1 == n2; // false
+                    JSON.stringify(n1) == JSON.stringify(n2); // true
+            - método some, HOF (High Order Functions) => {map, filter, reduce, forEach, some}
+            - setInterval (principalmente para realizar operações automaticamente) e o método _init (para segmentar/limpar o
+            construtor, deixando no construtor somente inicialização de variáveis);
+            - ModelService -> Entidade que executa os serviços para um determinado modelo. ex.: model: Negociacao, service: NegociacaoService;
+                - ModelService tem as seguintes atribuições (no exemplo dado em aula):
+                    + Utilizar o ModelDao (NegociaoDao) para realizar as tarefas do CRUD;
+                    + Comunicar-se com os endpoints de uma API para obter mais dados do Modelo;
+                    + ... 
+            - Obs.: Promise Chaining -> Serial; Promise.all([]) -> Paralelo;
+            - Atribuindo a responsabilidade para verificar se dois objetos são iguais para a classe: a regra "isEquals";
+
+        Aula 05:
+            - Fetch API
+                . Obs.: Principais diferenças da Fetch com relação ao XMLHttpRequest:
+                    + a fetch é nativamente promissificada;
+                    + o fetch só lida com o onreadystatechange == 4;
+                    + a response de fetch tem um atributo ok ("res.ok") que é true se o status = 200 <= requisição <= 299
+                    + a respose da fetch é um objeto, logo para convertermos ela para json temos que usar o método json da
+                    própria response ("res.json()");
+                    + setamos as opções de uma requisição c/ o post na fetch através do seu 2º parâmetro opcional, um dicionário
+                    com as opções. ex.:
+                    fetch(url, {
+                        headers: { 'Content-Type': 'application/json' },
+                        method: 'post',
+                        body: JSON.stringify(dado)
+                    })
+            - Caso o navegador não suporte a Fetch API, procurar um polyfill
+            - Obs.: A Fetch API não é uma substituição direta do XMLHttpRequest, isto porque a `Fetch API não permite abortar
+            requisições em andamento, como pode ser visto nessa discussão: https://github.com/whatwg/fetch/issues/27.
+            Sendo assim, se você não precisar cancelar requisições pendentes, a Fetch API é uma excelente escolha.
+        
+        Aula 06:
+            - Babel -> Transpiler (transcompilador);
+                + Instalação do Babel e do preset para ES2015 (ECMAScript6, ou também mais corretamente chamado de ECMAScript2015);
+                + Arquivo de configuração do Babel;
+                + npm run build script;
+                + Depuração e sourcemaps c/ Babel;
+                + Babel monitoring c/ watch;
+                . Obs. (sobre sourcemaps):
+                    * São arquivos usados em ambiente de desenvolvimento que visam fazer um "de para" do arquivo transcompilado com o
+                    arquivo original, para que erros sejam apontados no arquivo original.
+                    * Sourcemaps só são baixados (se existirem), ao usar uma ferramenta de depuração do navegador, assim, o usuário
+                    comum do site, não irá notar um overhead no download dos arquivos referentes aos recursos da página Web.
+        
+        Aula 07:
+            - No sistema de módulos do ES6, todo script js é um módulo e por padrão cada módulo tem um escopo próprio, ou seja, não está
+            no escopo global.
+            - Para utilizar um módulo A, por exemplo, esse módulo deve ter sido exportado (export class A { ... }) e onde iremos usá-lo
+            importamos: import {A} from './A';
+            - A especificação do ES6, define, imports e exports, mas ela não define como esses módulos devem ser carregados pelo navegador;
+            - Para carregar os módulos, é necessário utilizar um programa/biblioteca chamado de Loader (atualmente não existe um loader padrão
+            para todos os navegadores);
+            - Uma lib muito famosa que atua como um loader é a SystemJS;
+                + Configuração da SystemJS;
+                + O módulo boot.js (o "entry-point" da aplicação);
+            - Babel S2 SystemJS -> configurações adicionais para o Babel poder funcionar adequadamente com o sistema de módulos do SystemJS;
+            - Monkey Patch: exportando instâncias (num esquema de Singleton) para outros escopos.
+            - Event Bubbling - Delegação de eventos;
+            -> resumir: https://cursos.alura.com.br/course/javascript-es6-orientacao-a-objetos-parte-3/task/18502
+            . Obs. (sobre módulos e transpilers):
+                + Quando trabalhamos com módulos, nossos scripts já isolam por padrão todo seu código, sendo necessário indicarmos
+                através da instrução export o que pode ser importado do módulo.
+                + É necessário compilar nosso código para que seja compatível com o loader que escolhermos. Isso acarreta em mais
+                uma transformação a ser realizada pelo transpiler escolhido.
+                + Veja que o sistema de módulos do ES2015 não define como o loader deve ser implementado pelos browsers do mercado,
+                sendo necessário escolher algum do mercado. O mais famoso é o Systemsjs, capaz de lidar não apenas com os módulos do
+                ES6, mas também com os do Node.js que seguem o padrão CommonJS.
+        
+        Palavra Final:
+
+        Uma palavra, múltiplas oportunidades
+        Por fim, cito Thomas Kuhn, em especial seu livro "A estrutura das revoluções científicas". O conceito de paradigma permeia todo
+        o seu trabalho. Na obra, Kuhn afirma que quando um paradigma muda, não importa se você tinha sucesso no passado, ele não garantirá
+        o seu futuro.
+        Com o avanço da linguagem JavaScript - tanto no browser quanto no back-end, com a plataforma Node.js - uma linguagem que já era a
+        mais popular do mundo, tornou-se ainda mais importante invadindo os calabouços mais obscuros do lado back-end, procurando a
+        universalidade de sua presença. Inclusive é possível criar aplicações mobile utilizando essa linguagem com auxílio de ferramentas
+        como Apache Cordova/Phonegap ou Ionic.
+        Se antes JavaScript era uma linguagem motivo de piada entre os desenvolvedores mais acalorados, hoje é a linguagem que domina a web,
+        a língua franca da web. E com essa mudança de paradigma, muitas oportunidades virão para aqueles preparados.
+        Para todos os meus alunos, meu sincero voto de muito sucesso. Por fim, não esqueçam da minha máxima: "Não basta sermos ninjas,
+        precisamos nos tornar cangaceiros em JavaScript!". Espero que estes treinamentos tenham colocado todos vocês nessa trilha árdua,
+        mas nem por isso menos estimulante que é conquistar uma linguagem de programação.
+        
+        --- Flávio Almeida
+
+    pendências JS Avançado 3:
+    -> Usar a fetch API quando melhor me aprouver;
+    -> Explicitar a Não Utilização do IndexedDB;
+    Outro Curso

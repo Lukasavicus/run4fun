@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<link href="https://fonts.googleapis.com/css?family=Montserrat&display=swap" rel="stylesheet">
+	<link rel="stylesheet" type="text/css" href="css/reset.css">
+	<link rel="stylesheet" type="text/css" href="css/style.css">
+	<title>Run 4 Fun</title>
+</head>
+<body>
+
+	<header>
+		<nav class=nav-menu>
+			<ul>
+				<li>
+					<a href="index.html">Home</a>
+					<a href="extract.html">Extract</a>
+					<a href="badges.html">Bages</a>
+					<a href="collectables.html">Shop</a>
+					<a href="data.html">Data</a>
+				</li>
+			</ul>
+		</nav>
+
+		<div class="user-pill">
+			<img class="user-img" src="imgs/misc/avatar_test.jpg">
+			{{ Username }} 
+		</div>
+	</header>
+
+	<main>
+
+		<section id="messaging"></section>
+
+		<section class="dashboard" id="management-dashboard">
+			<div>
+				<div>
+					<img src="imgs/badges/008-road.svg">
+					<p>Total Travelled Distance</p>
+				</div>
+				<p class="record" id="total_travelled_dist"></p>
+			</div>
+			<div>
+				<div>
+					<img src="imgs/badges/034-gas.svg">
+					<p>Total Travelled Time</p>
+				</div>
+				<p class="record" id="total_travelled_time"></p>
+			</div>
+			<div>
+				<div>
+					<img src="imgs/badges/025-time.svg">
+					<p>Max Velocity Reached</p>
+				</div>
+				<p class="record" id="max_velocity_reached"></p>
+			</div>
+			<div>
+				<div>
+					<img src="imgs/badges/029-energy-drink.svg">
+					<p>Max One-Shoot Distance</p>
+				</div>
+				<p class="record" id="max_one_shoot_dist"></p>
+			</div>
+			<div>
+				<div>
+					<img src="imgs/badges/040-medal-1.svg">
+					<p>Best Record</p>
+				</div>
+				<p class="record" id="best_record"></p>
+			</div>
+		</section>
+
+		<section id="collectables">
+			<div class="section-title">
+				<p>Collectables</p>
+				<p>Hide Section</p>
+			</div>
+		</section>
+
+		<section id="badges">
+		</section>
+
+		<section id="activities-data">
+            <table id="records-table">
+                <thead>
+                    <tr>
+                        <th rowspan="3" >Date</th>
+                        <th rowspan="3" >Physical Activity</th>
+                        <th rowspan="3" >Place</th>
+                        <th colspan="9" >Measures</th>
+                    </tr>
+                    <tr>
+                        <th colspan="3" >Runned Distance</th>
+                        <th rowspan="2" >Time</th>
+                        <th colspan="5" >Pace</th>
+                    </tr>
+                    <tr>
+                        <th>Route Distance</th>
+                        <th># Rounds</th>
+                        <th>Total Route Distance</th>
+                        <!-- time -->
+                        <th>Pace per Round</th>
+                        <th>Avg. Pace</th>
+                        <th>Avg. Velocity (m/s)</th>
+                        <th>Avg. Velocity (km/h)</th>
+                        <th>Avg. Time (100 mts)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>01/01/2020</td>
+                        <td>Walking/Running</td>
+                        <td>condominium academy</td>
+                        <td>4 km</td>
+                        <td>1</td>
+                        <td>4 km</td>
+                        <td>00:36:51</td>
+                        <td>00:36:51</td>
+                        <td>x</td>
+                        <td>x</td>
+                        <td>x</td>
+                        <td>x</td>
+                    </tr>
+                    <tr>
+                        <td>03/01/2020</td>
+                        <td>Walking/Running</td>
+                        <td>condominium academy</td>
+                        <td>4 km</td>
+                        <td>1</td>
+                        <td>4 km</td>
+                        <td>00:36:45</td>
+                        <td>00:36:45</td>
+                        <td>x</td>
+                        <td>x</td>
+                        <td>x</td>
+                        <td>x</td>
+                    </tr>
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="5" >Total</td>
+                        <td> x kms</td>
+                        <td> xx:xx:xx </td>
+                        <td> xx:xx:xx </td>
+                        <td> xx:xx:xx </td>
+                        <td> xx:xx:xx </td>
+                        <td> xx:xx:xx </td>
+                        <td> xx:xx:xx </td>
+                    </tr>
+                </tfoot>
+            </table>
+        </section>
+
+		<section id="enter-data">
+			<form class="form" action="ActivityController" method="post" id="activity-form">
+				<div class="form-block">
+					<div class="form-input">
+						<label for="date">Date:</label>
+						<input type="date" id="date" name="date">
+					</div>
+
+					<div class="form-input">
+						<label for="date">Physical Activity:</label>
+						<select name="activity" id="activity">
+							<option value="walking">Walking</option>
+							<option value="running">Running</option>
+						</select>
+					</div>
+
+					<div class="form-input">
+						<label for="place">Place:</label>
+						<input type="text" placeholder="Gym" id="place" name="place">
+					</div>
+				</div>
+
+				<div class="form-block">
+					<div class="form-input">
+						<label for="route_distance">Route Distance:</label>
+						<input class="route_dist_metric" type="number" id="route_distance" name="route_distance" placeholder="0.00" step="0.01">
+						<p class="route_dist_metric"> Kms </p>
+					</div>
+
+					<div class="form-input">
+						<label for="no_laps"># Laps:</label>
+						<input type="number" id="no_laps" name="no_laps">
+					</div>
+
+					<div class="form-input">
+						<label for="time">Time:</label>
+						<input type="text" placeholder="hh:mm:ss" id="time" name="time">
+					</div>
+				</div>
+
+				<div class="form-block">
+					<div class="form-input inline">
+						<button type="submit">Submit</button>
+						<input type="button" value="Import" id="import-activities">
+						<input type="button" value="Reset">
+					</div>
+				</div>
+			</form>
+		</section>
+
+		<section id="extract">
+			<div class="section-title">
+				<p>Extract</p>
+				<p>Hide Section</p>
+			</div>
+		</section>
+	</main>
+
+	<footer>
+		<p> Run4Fun - 2020 </p>
+	</footer>
+
+	<!-- <script type="text/javascript" src="script.js"></script> -->
+
+	<script src="outros/script.js"></script>
+</body>
+</html>

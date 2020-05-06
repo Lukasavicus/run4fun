@@ -1,0 +1,284 @@
+* {
+	font-family: 'Montserrat', sans-serif;
+	font-size: 15px;
+}
+
+header {
+	background-color: azure;
+	border: solid 1px black;
+	/*position: absolute;*/
+	top: 0;
+	left: 0;
+}
+
+.nav-menu {
+	position: relative;
+	right: 0;
+	display: inline-block
+}
+
+.user-pill{
+	position: relative;
+	right: -50%;
+
+	display: inline-block;
+	padding: 0 25px;
+	height: 30px;
+	font-size: 16px;
+	line-height: 30px;
+	border-radius: 25px;
+	background-color: #f1f1f1;
+}
+
+.user-img {
+    float: left;
+	margin: 0 10px 0 -25px;
+	height: 30px;
+	width: 30px;
+	border-radius: 50%;
+}
+
+
+main {
+	width: 940px;
+	margin: 0 auto;
+}
+
+/* +++++++++++++++++++++++++++++++++++++++++++ */
+
+
+
+/* === DASHBOARD ============================= */
+
+.dashboard {
+	display: inline-flex;
+	text-align: center;
+	margin: 30px 0;
+}
+
+.dashboard > div {
+	display: block;
+	text-align: center;
+	border-radius: 20px;
+	background: rgba(200, 200, 200, 0.25);
+	width: 170px;
+	margin: 0 10px;
+}
+
+.dashboard > div > div {
+	height: 120px;
+}
+
+.dashboard img {
+	width: 40px;
+	height: 40px;
+	margin: 10px;
+}
+
+.record {
+	height: 30px;
+	width: 100px;
+
+	font-size: 16px;
+	line-height: 30px;
+
+	background-color: white;
+	border-radius: 15px;
+	margin: 10px auto;
+}
+
+/* +++++++++++++++++++++++++++++++++++++++++++ */
+
+
+
+/* === COLLECTABLES ========================== */
+#collectables {
+	display: flex;
+    justify-content: center;
+    width: 940px;
+    flex-direction: row;
+  	flex-wrap: wrap;
+
+}
+
+.collectable {
+
+	display: block;
+    justify-content: flex-start;
+
+	text-align: center;
+	border-radius: 20px;
+	border: dotted 2px rgba(200, 200, 200, 0.45);
+	margin: 10px;	
+	width: 170px;
+	height: auto;
+}
+
+.collectable-img {
+	/*
+	width: 75px;
+	height: 110px;
+	*/
+	width: 85%; 
+    object-fit: contain;
+	margin: 10px 10px 0 10px;
+}
+
+.collectable-title {
+	padding: 5px;
+	margin: 0;
+}
+
+.collectable-description {
+	padding: 5px;
+	margin: 0;
+	font-size: 12px;
+}
+
+.collectable-hist {
+	padding: 5px;
+	margin: 0;
+	font-size: 9px;
+}
+/* +++++++++++++++++++++++++++++++++++++++++++ */
+
+
+
+/* === BADGES ================================ */
+#badges {
+	display: flex;
+    justify-content: center;
+    width: 940px;
+    flex-direction: row;
+  	flex-wrap: wrap;
+
+}
+
+.badge {
+
+	display: block;
+    justify-content: flex-start;
+
+	text-align: center;
+	border-radius: 20px;
+	border: dotted 2px rgba(200, 200, 200, 0.45);
+	margin: 10px;	
+	width: 150px;
+	height: auto;
+}
+
+.badge-img {
+	width: 40px;
+	height: 40px;
+	margin: 10px 10px 0 10px;
+}
+
+.badge-title {
+	padding: 5px;
+	margin: 0;
+}
+
+/* +++++++++++++++++++++++++++++++++++++++++++ */
+
+
+
+/* === TABLE ================================= */
+
+table {
+	margin: 40px 0;
+	border-collapse: collapse;
+	font-size: 12px;
+}
+
+table td, table th {
+	padding: 0 5px;
+}
+
+table thead th {
+	border: solid 2px white;
+}
+
+table tbody td {
+	margin: 20px;
+}
+
+/* table, thead, tbody, tfoot, th, tr, td {
+	border: none;
+}*/
+
+table thead {
+	background: rgba(200, 200, 200, 0.95);
+	vertical-align: top;
+	/* white-space: nowrap; */
+}
+
+tbody {
+	/* border-style: solid; */
+}
+
+tbody tr:nth-child(even) {
+	background: rgba(200, 200, 200, 0.25);
+}
+
+tbody tr:nth-child(even) td{
+	border: solid 3px rgba(200, 200, 200, 0.25);
+}
+
+tfoot {
+	border-top: double 3px black;
+}
+/* +++++++++++++++++++++++++++++++++++++++++++ */
+
+
+
+/* === FORM ================================== */
+
+.form {
+	text-align: left;
+	display: block;
+}
+
+.form-block {
+	display: flex;
+}
+
+.form-input {
+	margin: 20px;
+
+}
+
+.form-input * {
+	display: block;
+	width: 200px;
+	margin: 5px;
+}
+
+.route_dist_metric {
+	display: inline !important;
+}
+
+input.route_dist_metric {
+	width: 156px !important;
+}
+
+p.route_dist_metric {
+	width: 20px !important;
+	margin: 0px !important;
+}
+
+.inline {
+	display: inline !important;
+}
+
+/* +++++++++++++++++++++++++++++++++++++++++++ */
+
+
+
+/* === FOOTER ================================ */
+footer {
+	height: 50px;
+	background-color: #DDD;
+	text-align: center;
+	vertical-align: middle;
+}
+/* +++++++++++++++++++++++++++++++++++++++++++ */

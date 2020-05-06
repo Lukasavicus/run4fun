@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<link href="https://fonts.googleapis.com/css?family=Montserrat&display=swap" rel="stylesheet">
+	<link rel="stylesheet" type="text/css" href="css/reset.css">
+	<link rel="stylesheet" type="text/css" href="css/style.css">
+	<title>Run 4 Fun</title>
+</head>
+<body>
+
+	<header>
+		<nav class=nav-menu>
+			<ul>
+				<li>
+					<a href="index.html">Home</a>
+					<a href="extract.html">Extract</a>
+					<a href="badges.html">Bages</a>
+					<a href="collectables.html">Shop</a>
+					<a href="data.html">Data</a>
+				</li>
+			</ul>
+		</nav>
+
+		<div class="user-pill">
+			<img class="user-img" src="imgs/misc/avatar_test.jpg">
+			{{ Username }} 
+		</div>
+	</header>
+
+	<main>
+
+		<section id="messaging"></section>
+
+		<section class="dashboard" id="management-dashboard"></section>
+
+		<section id="collectables">
+			<div class="section-title">
+				<p>Collectables</p>
+				<p>Hide Section</p>
+			</div>
+		</section>
+
+		<section id="badges">
+		</section>
+
+		<section id="activities-data"></section>
+
+		<section id="enter-data">
+			<form class="form" action="ActivityController" method="post" id="activity-form">
+				<div class="form-block">
+					<div class="form-input">
+						<label for="date">Date:</label>
+						<input type="date" id="date" name="date">
+					</div>
+
+					<div class="form-input">
+						<label for="date">Physical Activity:</label>
+						<select name="activity" id="activity">
+							<option value="walking">Walking</option>
+							<option value="running">Running</option>
+						</select>
+					</div>
+
+					<div class="form-input">
+						<label for="place">Place:</label>
+						<input type="text" placeholder="Gym" id="place" name="place">
+					</div>
+				</div>
+
+				<div class="form-block">
+					<div class="form-input">
+						<label for="route_distance">Route Distance:</label>
+						<input class="route_dist_metric" type="number" id="route_distance" name="route_distance" placeholder="0.00" step="0.01">
+						<p class="route_dist_metric"> Kms </p>
+					</div>
+
+					<div class="form-input">
+						<label for="no_laps"># Laps:</label>
+						<input type="number" id="no_laps" name="no_laps">
+					</div>
+
+					<div class="form-input">
+						<label for="time">Time:</label>
+						<input type="text" placeholder="hh:mm:ss" id="time" name="time">
+					</div>
+				</div>
+
+				<div class="form-block">
+					<div class="form-input inline">
+						<button type="submit">Submit</button>
+						<input type="button" value="Import" id="import-activities">
+						<input type="button" value="Reset">
+					</div>
+				</div>
+			</form>
+		</section>
+
+		<section id="extract">
+			<div class="section-title">
+				<p>Extract</p>
+				<p>Hide Section</p>
+			</div>
+		</section>
+	</main>
+
+	<footer>
+		<p> Run4Fun - 2020 </p>
+	</footer>
+
+	<!-- <script type="text/javascript" src="script.js"></script> -->
+
+	<script src="node_modules/systemjs/dist/system.js"></script>
+	<script>
+		System.defaultJSExtensions = true;
+		System.import('js/app/boot').catch(function(err){
+			console.error(err);
+		});
+	</script>
+</body>
+</html>

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Run4Fun</title>
+</head>
+<body>
+	<div class="signin">
+		<form>
+			<label for="login">Login:</label>
+			<input type="login" id="login" name="login">
+
+			<label for="password">Password:</label>
+			<input type="password" id="password" name="password">
+
+			<button id="login-btn"> Login </button>
+		</form>
+	</div>
+
+	<div class="signup">
+		<form>
+			<label for="email">Email:</label>
+			<input type="email" id="email" name="email">
+
+			<label for="password">Password:</label>
+			<input type="password" id="password_signin" name="password_signin">
+		</form>
+	</div>
+	<script src="node_modules/systemjs/dist/system.js"></script>
+	<script>
+		System.defaultJSExtensions = true;
+		System.import('js/app/boot_home').catch(function(err){
+			console.error(err);
+		});
+	</script>
+</body>
+</html>

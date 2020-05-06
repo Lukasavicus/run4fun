@@ -1,0 +1,15 @@
+REFs:
+
+	-> Proxy & XMLHttpRequest:
+	https://stackoverflow.com/questions/26447335/how-can-i-modify-the-xmlhttprequest-responsetext-received-by-another-function
+
+	https://www.google.com/search?sxsrf=ALeKk03P3TIVxbKz6OR9xOyi7YPi3-5R2Q%3A1585453860602&ei=JBuAXo62JOXG5OUP-v2ygAY&q=proxy+xmlhttprequest+on+ready+state+change&oq=proxy+xmlhttprequest+on+read&gs_lcp=CgZwc3ktYWIQAxgAMggIIRAWEB0QHjIICCEQFhAdEB46BAgAEEc6BggAEBYQHjoFCCEQoAFQvs4BWJ3fAWDl5wFoAHACeACAAdYBiAGhCJIBBTAuNy4xmAEAoAEBqgEHZ3dzLXdpeg&sclient=psy-ab
+		https://stackoverflow.com/questions/4809342/how-can-i-create-a-xmlhttprequest-wrapper-proxy
+		https://wakanda.github.io/api-reference/interfaces/xmlhttprequest.html
+		https://gist.github.com/rla/3995595
+
+	https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest/onreadystatechange
+	https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy
+	https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Deprecated_and_obsolete_features#Proxy
+
+	https://towardsdatascience.com/why-to-use-javascript-proxy-5cdc69d943e3
