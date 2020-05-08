@@ -13,6 +13,7 @@ import {ActivitiesDashboardView} from '../views/ActivitiesDashboardView';
 import {MessageView} from '../views/MessageView';
 import { NavigationBarView } from '../views/NavigationBarView';
 import { BadgesView } from '../views/BadgesView';
+import { CollectiblesView } from '../views/CollectiblesView';
 
 class ActivityController {
 
@@ -30,9 +31,16 @@ class ActivityController {
             new ActivitiesView($("#activities-data")), 
             new ActivitiesDashboardView($("#management-dashboard")),
             new BadgesView($("#badges")),
+            new CollectiblesView($("#collectibles")),
             new NavigationBarView($(".user-pill"))
         ], 'addActivity', 'addBadge');
         this._message = new Bind(new Message(), new MessageView($("#messaging")), 'text');
+
+        /**
+         * this._collectiblesList = new Bind(new CollectiblesList(), new CollectiblesView(), 'addCollectible'); // creates a new instance of model-view -> CollectiblesList
+         * 
+         * buyCollectible(){ open modal, option to confirm checkout, purchase order }
+         */
 
         this._service = new UserService();
 
@@ -55,8 +63,6 @@ class ActivityController {
 
         this._user.addActivity(activity);
 
-        //this._message.text = 'New Activity created';
-
         this._cleanForm();
     }
 
@@ -67,11 +73,10 @@ class ActivityController {
                 activities.forEach(activity => this._user.addActivity(activity));
             })
             .catch(error => this._message.text = error);
-        console.log("Reached");
+
         this._service
             .getUserBadges()
             .then(badges => {
-                console.log("Total badges I have: ", badges);
                 return badges;
             })
             .then(badges => {

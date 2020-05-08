@@ -91,8 +91,8 @@ main {
 
 
 
-/* === COLLECTABLES ========================== */
-#collectables {
+/* === CollectibleS ========================== */
+#collectibles {
 	display: flex;
     justify-content: center;
     width: 940px;
@@ -101,7 +101,7 @@ main {
 
 }
 
-.collectable {
+.collectible {
 
 	display: block;
     justify-content: flex-start;
@@ -114,7 +114,7 @@ main {
 	height: auto;
 }
 
-.collectable-img {
+.collectible-img {
 	/*
 	width: 75px;
 	height: 110px;
@@ -124,18 +124,18 @@ main {
 	margin: 10px 10px 0 10px;
 }
 
-.collectable-title {
+.collectible-title {
 	padding: 5px;
 	margin: 0;
 }
 
-.collectable-description {
+.collectible-description {
 	padding: 5px;
 	margin: 0;
 	font-size: 12px;
 }
 
-.collectable-hist {
+.collectible-hist {
 	padding: 5px;
 	margin: 0;
 	font-size: 9px;

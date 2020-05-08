@@ -50,7 +50,9 @@ class LoginController{
 	}
 
 	logout(){
-		// Apaga o resultado do x-access-token na sessão do usuário
+		delete window.sessionStorage.token;
+		delete window.sessionStorage.login;
+		window.location.href = "home.html";
 	}
 
 	signin(){

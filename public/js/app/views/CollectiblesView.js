@@ -3,7 +3,7 @@
 System.register(['./View'], function (_export, _context) {
     "use strict";
 
-    var View, _createClass, NavigationBarView;
+    var View, _createClass, CollectiblesView;
 
     function _classCallCheck(instance, Constructor) {
         if (!(instance instanceof Constructor)) {
@@ -58,27 +58,29 @@ System.register(['./View'], function (_export, _context) {
                 };
             }();
 
-            _export('NavigationBarView', NavigationBarView = function (_View) {
-                _inherits(NavigationBarView, _View);
+            _export('CollectiblesView', CollectiblesView = function (_View) {
+                _inherits(CollectiblesView, _View);
 
-                function NavigationBarView(HTMLElement) {
-                    _classCallCheck(this, NavigationBarView);
+                function CollectiblesView(HTMLElement) {
+                    _classCallCheck(this, CollectiblesView);
 
-                    return _possibleConstructorReturn(this, (NavigationBarView.__proto__ || Object.getPrototypeOf(NavigationBarView)).call(this, HTMLElement));
+                    return _possibleConstructorReturn(this, (CollectiblesView.__proto__ || Object.getPrototypeOf(CollectiblesView)).call(this, HTMLElement));
                 }
 
-                _createClass(NavigationBarView, [{
+                _createClass(CollectiblesView, [{
                     key: 'template',
                     value: function template(model) {
-                        return '<img class="user-img" src="imgs/misc/avatar_test.jpg"> ' + model.name + ' \u2022 ' + model.balance;
+                        return '\n            ' + model.collectibleList.collectibles.map(function (collectible) {
+                            return '\n                <div class="collectible">\n                    <!--\n                        <p class="collectible-description">Stark\'s House</p>\n                        <p class="collectible-description">Winter\'s comming</p>\n                    -->\n                    <img src="' + collectible.icon + '" class="collectible-img">\n                    <p class="collectible-description">' + collectible.description + '</p>\n                </div>\n            ';
+                        }).join('') + '\n        ';
                     }
                 }]);
 
-                return NavigationBarView;
+                return CollectiblesView;
             }(View));
 
-            _export('NavigationBarView', NavigationBarView);
+            _export('CollectiblesView', CollectiblesView);
         }
     };
 });
-//# sourceMappingURL=NavigationBarView.js.map
+//# sourceMappingURL=CollectiblesView.js.map

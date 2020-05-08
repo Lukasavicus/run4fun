@@ -2,16 +2,16 @@ let mongoose = require('mongoose');
 
 module.exports = function(app){
 	let api = {};
-	let model = mongoose.model('Collectable');
+	let model = mongoose.model('Collectible');
 
 	api.list = function(req, res){
 		model.find()
 		.then(
-			function(collectables){
-				res.json(collectables);
+			function(collectibles){
+				res.json(collectibles);
 			},
 			function(err){
-				console.log("API / Collectables -> list ", err);
+				console.log("API / Collectibles -> list ", err);
 				res.sendStatus(500);
 			}
 		);
@@ -21,13 +21,13 @@ module.exports = function(app){
 		const _id = req.params.id;
 		model.findById(_id)
 		.then(
-			function(collectable){
+			function(collectible){
 				// check object empty
-				if(!collectable) throw new Error('None collectable founded');
-				res.json(collectable);
+				if(!collectible) throw new Error('None collectible founded');
+				res.json(collectible);
 			},
 			function(err){
-				console.log("API / Collectables -> findById ", err);
+				console.log("API / Collectibles -> findById ", err);
 				res.sendStatus(500);
 			}
 		);
@@ -45,20 +45,20 @@ module.exports = function(app){
 
 	api.create = function(req, res){
 		model.create(req.body)
-		.then(function(collectable) {
-			res.json(collectable);
+		.then(function(collectible) {
+			res.json(collectible);
 		}, function(err) {
-			console.log("API / Collectables -> create ", err);
+			console.log("API / Collectibles -> create ", err);
 			res.sendStatus(500);
 		});
 	};
 
 	api.update = function(req, res){
 		model.findByIdAndUpdate(req.params.id, req.body)
-		.then(function(collectable) {
-			res.json(collectable);
+		.then(function(collectible) {
+			res.json(collectible);
 		}, function(err) {
-			console.log("API / Collectables -> update ", err);
+			console.log("API / Collectibles -> update ", err);
 			res.sendStatus(500);
 		});
 	}

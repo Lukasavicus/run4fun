@@ -12,7 +12,15 @@ export class HttpService {
                     options.headers['x-access-token'] = window.sessionStorage.token;
             }
             //console.log("arg after ",args);
-            const result = originalFetch.apply(window, args);
+            //const result = originalFetch.apply(window, args);
+            const result = originalFetch.apply(window, args).then((res) => {
+                if(!res.ok && res.status == 401){
+                    delete window.sessionStorage.token;
+                    delete window.sessionStorage.login;
+                    window.location.href = "home.html";
+                }
+                return res;
+            });
             return result;//.then(console.log('Request was sent'));
         };
       })(fetch);

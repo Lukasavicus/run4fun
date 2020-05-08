@@ -8,7 +8,7 @@ let schema = mongoose.Schema({
 	balance : 		{type : Number, required : true},
 
 	badges: 		{type : Array, default: []},
-	collectables: 	{type : Array, default: []},
+	collectibles: 	{type : Array, default: []},
 	activities: 	{type : Array, default: []},
 },
 {

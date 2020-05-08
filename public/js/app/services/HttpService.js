@@ -48,7 +48,15 @@ System.register([], function (_export, _context) {
                                 if (options === undefined) args.push({ 'headers': { 'x-access-token': window.sessionStorage.token } });else options.headers['x-access-token'] = window.sessionStorage.token;
                             }
                             //console.log("arg after ",args);
-                            var result = originalFetch.apply(window, args);
+                            //const result = originalFetch.apply(window, args);
+                            var result = originalFetch.apply(window, args).then(function (res) {
+                                if (!res.ok && res.status == 401) {
+                                    delete window.sessionStorage.token;
+                                    delete window.sessionStorage.login;
+                                    window.location.href = "home.html";
+                                }
+                                return res;
+                            });
                             return result; //.then(console.log('Request was sent'));
                         };
                     }(fetch);

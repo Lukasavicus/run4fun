@@ -1,15 +1,31 @@
 import {TimeHelper} from '../helpers/TimeHelper';
 import { BadgeList } from './BadgeList';
+import { CollectibleList } from './CollectibleList';
 
 export class User {
-    constructor(name){
+    constructor(name, balance=0){
         this._name = name;
+        this._balance = balance;
         this._activities = [];
         this._badgeList = new BadgeList();
+        this._collectibleList = new CollectibleList();
     }
 
     get name(){
         return this._name;
+    }
+
+    get balance(){
+        return this._balance;
+    }
+
+    //Collectibles
+    addCollectible(collecatble){
+        this._collectibleList.add(collecatble);
+    }
+
+    get collectibleList(){
+        return this._collectibleList;
     }
 
     //Badges

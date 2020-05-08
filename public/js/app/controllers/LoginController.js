@@ -97,7 +97,9 @@ System.register(['../services/HttpService'], function (_export, _context) {
 				}, {
 					key: 'logout',
 					value: function logout() {
-						// Apaga o resultado do x-access-token na sessão do usuário
+						delete window.sessionStorage.token;
+						delete window.sessionStorage.login;
+						window.location.href = "home.html";
 					}
 				}, {
 					key: 'signin',

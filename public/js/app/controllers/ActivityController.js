@@ -1,9 +1,9 @@
 'use strict';
 
-System.register(['../helpers/Bind', '../helpers/DateHelper', '../helpers/MultiBind', '../models/Activity', '../models/Message', '../models/User', '../services/UserService', '../views/ActivitiesView', '../views/ActivitiesDashboardView', '../views/MessageView', '../views/NavigationBarView', '../views/BadgesView'], function (_export, _context) {
+System.register(['../helpers/Bind', '../helpers/DateHelper', '../helpers/MultiBind', '../models/Activity', '../models/Message', '../models/User', '../services/UserService', '../views/ActivitiesView', '../views/ActivitiesDashboardView', '../views/MessageView', '../views/NavigationBarView', '../views/BadgesView', '../views/CollectiblesView'], function (_export, _context) {
     "use strict";
 
-    var Bind, DateHelper, MultiBind, Activity, Message, User, UserService, ActivitiesView, ActivitiesDashboardView, MessageView, NavigationBarView, BadgesView, _createClass, ActivityController, activityController;
+    var Bind, DateHelper, MultiBind, Activity, Message, User, UserService, ActivitiesView, ActivitiesDashboardView, MessageView, NavigationBarView, BadgesView, CollectiblesView, _createClass, ActivityController, activityController;
 
     function _classCallCheck(instance, Constructor) {
         if (!(instance instanceof Constructor)) {
@@ -42,6 +42,8 @@ System.register(['../helpers/Bind', '../helpers/DateHelper', '../helpers/MultiBi
             NavigationBarView = _viewsNavigationBarView.NavigationBarView;
         }, function (_viewsBadgesView) {
             BadgesView = _viewsBadgesView.BadgesView;
+        }, function (_viewsCollectiblesView) {
+            CollectiblesView = _viewsCollectiblesView.CollectiblesView;
         }],
         execute: function () {
             _createClass = function () {
@@ -75,8 +77,14 @@ System.register(['../helpers/Bind', '../helpers/DateHelper', '../helpers/MultiBi
                     this._time = $("#time");
 
                     //this._user = new Bind(new ListActivities(), new ActivitiesView($("#activities-data")), 'add');
-                    this._user = new MultiBind(new User(window.sessionStorage.login), [new ActivitiesView($("#activities-data")), new ActivitiesDashboardView($("#management-dashboard")), new BadgesView($("#badges")), new NavigationBarView($(".user-pill"))], 'addActivity', 'addBadge');
+                    this._user = new MultiBind(new User(window.sessionStorage.login), [new ActivitiesView($("#activities-data")), new ActivitiesDashboardView($("#management-dashboard")), new BadgesView($("#badges")), new CollectiblesView($("#collectibles")), new NavigationBarView($(".user-pill"))], 'addActivity', 'addBadge');
                     this._message = new Bind(new Message(), new MessageView($("#messaging")), 'text');
+
+                    /**
+                     * this._collectiblesList = new Bind(new CollectiblesList(), new CollectiblesView(), 'addCollectible'); // creates a new instance of model-view -> CollectiblesList
+                     * 
+                     * buyCollectible(){ open modal, option to confirm checkout, purchase order }
+                     */
 
                     this._service = new UserService();
 
@@ -101,8 +109,6 @@ System.register(['../helpers/Bind', '../helpers/DateHelper', '../helpers/MultiBi
 
                         this._user.addActivity(activity);
 
-                        //this._message.text = 'New Activity created';
-
                         this._cleanForm();
                     }
                 }, {
@@ -117,9 +123,8 @@ System.register(['../helpers/Bind', '../helpers/DateHelper', '../helpers/MultiBi
                         }).catch(function (error) {
                             return _this2._message.text = error;
                         });
-                        console.log("Reached");
+
                         this._service.getUserBadges().then(function (badges) {
-                            console.log("Total badges I have: ", badges);
                             return badges;
                         }).then(function (badges) {
                             badges.forEach(function (badge) {

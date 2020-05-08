@@ -1,9 +1,9 @@
 'use strict';
 
-System.register(['../helpers/TimeHelper', './BadgeList'], function (_export, _context) {
+System.register(['../helpers/TimeHelper', './BadgeList', './CollectibleList'], function (_export, _context) {
     "use strict";
 
-    var TimeHelper, BadgeList, _createClass, User;
+    var TimeHelper, BadgeList, CollectibleList, _createClass, User;
 
     function _classCallCheck(instance, Constructor) {
         if (!(instance instanceof Constructor)) {
@@ -16,6 +16,8 @@ System.register(['../helpers/TimeHelper', './BadgeList'], function (_export, _co
             TimeHelper = _helpersTimeHelper.TimeHelper;
         }, function (_BadgeList) {
             BadgeList = _BadgeList.BadgeList;
+        }, function (_CollectibleList) {
+            CollectibleList = _CollectibleList.CollectibleList;
         }],
         execute: function () {
             _createClass = function () {
@@ -38,14 +40,23 @@ System.register(['../helpers/TimeHelper', './BadgeList'], function (_export, _co
 
             _export('User', User = function () {
                 function User(name) {
+                    var balance = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
+
                     _classCallCheck(this, User);
 
                     this._name = name;
+                    this._balance = balance;
                     this._activities = [];
                     this._badgeList = new BadgeList();
+                    this._collectibleList = new CollectibleList();
                 }
 
                 _createClass(User, [{
+                    key: 'addCollectible',
+                    value: function addCollectible(collecatble) {
+                        this._collectibleList.add(collecatble);
+                    }
+                }, {
                     key: 'addBadge',
                     value: function addBadge(badge) {
                         this._badgeList.add(badge);
@@ -59,6 +70,16 @@ System.register(['../helpers/TimeHelper', './BadgeList'], function (_export, _co
                     key: 'name',
                     get: function get() {
                         return this._name;
+                    }
+                }, {
+                    key: 'balance',
+                    get: function get() {
+                        return this._balance;
+                    }
+                }, {
+                    key: 'collectibleList',
+                    get: function get() {
+                        return this._collectibleList;
                     }
                 }, {
                     key: 'badgeList',

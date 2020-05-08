@@ -16,4 +16,4 @@ let schema = mongoose.Schema({
 }
 );
 
-mongoose.model('Collectable', schema);
+mongoose.model('Collectible', schema);

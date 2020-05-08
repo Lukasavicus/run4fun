@@ -23,3 +23,9 @@ Vanilla JS x-access-token:
 
 Enums in JS:
     https://www.tutorialspoint.com/what-is-the-syntax-to-define-enums-in-javascript
+
+    https://javascript.info/promise-chaining
+    https://jwt.io/
+
+    CSS:
+        https://www.toptal.com/designers/subtlepatterns/

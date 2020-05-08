@@ -7,6 +7,6 @@ export class NavigationBarView extends View {
     }
 
     template(model){
-        return `<img class="user-img" src="imgs/misc/avatar_test.jpg"> ${model.name} `;
+        return `<img class="user-img" src="imgs/misc/avatar_test.jpg"> ${model.name} • ${model.balance}`;
     }
 }
