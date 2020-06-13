@@ -31,19 +31,25 @@
 
 		<section class="dashboard" id="management-dashboard"></section>
 
-		<section id="collectibles">
-			<div class="section-title">
-				<p>Collectibles</p>
-				<p>Hide Section</p>
-			</div>
-		</section>
+		<section id="dialog">dialog</section>
 
-		<section id="badges">
-			<div class="section-title">
-				<p>Badges</p>
-				<p>Hide Section</p>
-			</div>
+	<div class="section-title">
+		<p>Collectibles</p>
+		<p class="toogle-content" id="toogle-collectibles" data-toogle="true">[Hide Section]</p>
+		<section id="collectibles">
 		</section>
+	</div>
+
+	<div class="modal" id="parent-purchase-modal">
+		<div class="modal-content" id="purchase-modal"></div>
+	</div>
+
+	<div class="section-title">
+		<p>Badges</p>
+		<p class="toogle-content" id="toogle-badges" data-toogle="true">[Hide Section]</p>
+		<section id="badges">
+		</section>
+	</div>
 
 		<section id="activities-data"></section>
 
@@ -117,5 +123,62 @@
 			console.error(err);
 		});
 	</script>
+
+	<script>
+		function col_click(){
+			Array.from(document.querySelectorAll("div.collectible.not-purchased"))
+				.forEach(el => {
+					el.addEventListener('click', function(event){
+						console.log(event, el);
+						let icon = el.firstElementChild.src;
+						purchase_order({
+							'description' : "Winter's comming",
+							'icon' : icon,
+							'hist' : "",
+							'price' : 40
+						});
+						document.querySelector("#parent-purchase-modal").style.display = "block";
+					});
+				});
+
+			function purchase_order(collectible){
+				let pmodal = document.querySelector("#purchase-modal");
+				pmodal.innerHTML = `
+				<div class="modal-header">
+					<p style="display: inline;">Purchase Collectible</p>
+					<span class="modal-close">&times</span>
+				</div>
+				<div class="modal-body">
+					<form class="form" action="?" method="post" id="?">
+						<div class="collectible" title="${collectible.description}" >
+							<img src="${collectible.icon}" class="collectible-img">
+							<p class="collectible-description">${collectible.hist}</p>
+						</div>
+						<div class="price-div">
+							<span class="price-content">
+								cost: ${collectible.price}⚡
+							</span>
+						</div>
+						<div style="text-align: center;">
+							<button type="submit">Purchase</button>
+							<button type="submit">Dismiss</button>
+						</div>
+					</form>
+				</div>
+				`;
+			}
+		}
+	</script>
+	<script>
+		let flag = true;
+		setInterval(() => {
+			//alert("loaded");
+			if(flag){
+				//col_click();
+				flag = !flag
+			}
+		}, 3000);
+	</script>
+
 </body>
 </html>

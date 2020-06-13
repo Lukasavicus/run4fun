@@ -13,6 +13,7 @@ module.exports = function(app) {
              password: req.body.password
          })
          .then(function(usuario) {
+             console.log('analisando usuario', usuario);
              if (!usuario) {
                  console.log('Invalid Login/password');
                  res.sendStatus(401);

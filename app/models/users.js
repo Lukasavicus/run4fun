@@ -5,6 +5,7 @@ let schema = mongoose.Schema({
 	email: 			{type : String, required : true, unique : true},
 	login: 			{type : String, required : true, unique : true},
 	password: 		{type : String, required : true},
+	role: 			{type : String, required : true},
 	balance : 		{type : Number, required : true},
 
 	badges: 		{type : Array, default: []},

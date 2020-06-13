@@ -70,7 +70,7 @@ System.register(['./View'], function (_export, _context) {
                 _createClass(NavigationBarView, [{
                     key: 'template',
                     value: function template(model) {
-                        return '<img class="user-img" src="imgs/misc/avatar_test.jpg"> ' + model.name + ' \u2022 ' + model.balance;
+                        return '<img class="user-img" src="imgs/misc/avatar_test.jpg" title="\u26A1 is our currency. To won \u26A1s you just need to run. As much distance you run more \u26A1 you receive!"> ' + model.name + ' \u2022 ' + model.balance + ' \u26A1';
                     }
                 }]);
 

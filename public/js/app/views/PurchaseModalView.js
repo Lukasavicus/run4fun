@@ -3,7 +3,7 @@
 System.register(['./View'], function (_export, _context) {
     "use strict";
 
-    var View, _createClass, CollectiblesView;
+    var View, _createClass, PurchaseModalView;
 
     function _classCallCheck(instance, Constructor) {
         if (!(instance instanceof Constructor)) {
@@ -58,29 +58,27 @@ System.register(['./View'], function (_export, _context) {
                 };
             }();
 
-            _export('CollectiblesView', CollectiblesView = function (_View) {
-                _inherits(CollectiblesView, _View);
+            _export('PurchaseModalView', PurchaseModalView = function (_View) {
+                _inherits(PurchaseModalView, _View);
 
-                function CollectiblesView(HTMLElement) {
-                    _classCallCheck(this, CollectiblesView);
+                function PurchaseModalView(HTMLElement) {
+                    _classCallCheck(this, PurchaseModalView);
 
-                    return _possibleConstructorReturn(this, (CollectiblesView.__proto__ || Object.getPrototypeOf(CollectiblesView)).call(this, HTMLElement));
+                    return _possibleConstructorReturn(this, (PurchaseModalView.__proto__ || Object.getPrototypeOf(PurchaseModalView)).call(this, HTMLElement));
                 }
 
-                _createClass(CollectiblesView, [{
+                _createClass(PurchaseModalView, [{
                     key: 'template',
                     value: function template(model) {
-                        return '\n            ' + model.collectibleList.collectibles.map(function (collectible) {
-                            return '\n                <div class="collectible ' + (collectible.owned ? '' : 'not-purchased') + '" title="' + (collectible.owned ? collectible.description : 'This Collectible costs: ' + collectible.price + '⚡') + '" >\n                    <!--\n                        <p class="collectible-description">Stark\'s House</p>\n                        <p class="collectible-description">Winter\'s comming</p>\n                    -->\n                    <img src="' + collectible.icon + '" class="collectible-img">\n                    <p class="collectible-description">' + (collectible.owned ? collectible.hist : '') + '</p>\n                </div>\n            ';
-                        }).join('') + '\n        ';
+                        return '\n            <div class="modal-header">\n                <p style="display: inline;">Purchase Collectible</p>\n                <span class="modal-close">&times</span>\n            </div>\n            <div class="modal-body">\n                <form class="form" action="?" method="post" id="?">\n                    <div class="collectible" title="' + model.description + '" >\n                        <img src="' + model.icon + '" class="collectible-img">\n                        <p class="collectible-description">' + model.hist + '</p>\n                    </div>\n                    <div class="price-div">\n                        <span class="price-content">\n                            cost: ' + model.price + '\u26A1\n                        </span>\n                    </div>\n                    <div style="text-align: center;">\n                        <button type="submit">Purchase</button>\n                        <button type="submit">Dismiss</button>\n                    </div>\n                </form>\n            </div>\n        ';
                     }
                 }]);
 
-                return CollectiblesView;
+                return PurchaseModalView;
             }(View));
 
-            _export('CollectiblesView', CollectiblesView);
+            _export('PurchaseModalView', PurchaseModalView);
         }
     };
 });
-//# sourceMappingURL=CollectiblesView.js.map
+//# sourceMappingURL=PurchaseModalView.js.map

@@ -72,10 +72,10 @@ export class ProxyFactory {
 
                 // other handlers
                 construct: function(target, args) {
-                    console.log('HANDLERS - constructing');
-                    var obj = Object.create(base.prototype);
-                    this.apply(target, obj, args);
-                    return obj;
+                    // console.log('HANDLERS - constructing');
+                    let object = new target(...args);
+                    options[0].action(object)
+                    return object;
                 },
                 apply: function(target, that, args) {
                     console.log('HANDLERS - applying');

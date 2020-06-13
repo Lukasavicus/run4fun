@@ -33,12 +33,15 @@ System.register([], function (_export, _context) {
             }();
 
             _export("Collectible", Collectible = function () {
-                function Collectible(title, icon, price, description) {
+                function Collectible(title, icon, price, serie, hist, owned, description) {
                     _classCallCheck(this, Collectible);
 
                     this._title = title;
                     this._icon = icon;
                     this._price = price;
+                    this._serie = serie;
+                    this._hist = hist;
+                    this._owned = owned;
                     this._description = description;
 
                     Object.freeze(this);
@@ -58,6 +61,21 @@ System.register([], function (_export, _context) {
                     key: "price",
                     get: function get() {
                         return this._price;
+                    }
+                }, {
+                    key: "serie",
+                    get: function get() {
+                        return this._serie;
+                    }
+                }, {
+                    key: "hist",
+                    get: function get() {
+                        return this._hist;
+                    }
+                }, {
+                    key: "owned",
+                    get: function get() {
+                        return this._owned;
                     }
                 }, {
                     key: "description",

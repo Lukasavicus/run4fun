@@ -4,7 +4,8 @@ let schema = mongoose.Schema({
 	date: 		{type : Date, require : true},
 	value: 		{type : Number, require : true},
 	type: 		{type : String, require : true},
-	item: 		{type : mongoose.Schema.ObjectId, require : true}
+	description:{type : String, require : true},
+	user_id: 	{type : mongoose.Schema.ObjectId, require : true}
 },
 {
 	timestamps: {

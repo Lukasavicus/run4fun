@@ -12,8 +12,12 @@ module.exports = function(app) {
 		.put(api.update);
 
 	//app.get('/v1/users/:login', api.findByLogin);
+	app.get('/v1/user', api.findByLogin);
 
 	//
 	app.route('/v1/users/badges')
-		.get(api.listBadges)
+		.get(api.listBadges);
+
+	app.route('/v1/users/collectibles')
+		.get(api.listCollectibles);
 };

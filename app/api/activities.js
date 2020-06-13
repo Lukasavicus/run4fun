@@ -5,10 +5,11 @@ module.exports = function(app){
 	let model = mongoose.model('Activity');
 	let userModel = mongoose.model('User');
 	let badgeModel = mongoose.model('Badge');
+	let transactionModel = mongoose.model('Transaction');
 
-	//
+	//Badges
 	function _set_up_badges(req, res){
-		userModel.aggregate([
+		return userModel.aggregate([
 			{
 				$match: {
 					login: req.usuario
@@ -47,7 +48,16 @@ module.exports = function(app){
 							)
 							.then(function(updatedUser){
 								console.log("updatedUser", updatedUser);
+								return {badge, 'user' : updatedUser};
 							}, (err) => { throw new Error(err)})
+							.then(data => {
+								console.log(data);
+								let badge = data.badge;
+								let user = data.user;
+								if(user)
+									return _set_up_transaction(badge.value, "income", `Income: Badge earned: "${badge.title}" +${badge.value}⚡`, user._id);
+								return null;
+							})
 							.catch((err) => { throw new Error(err)});
 						}
 					});
@@ -63,6 +73,34 @@ module.exports = function(app){
 		);
 	}
 
+	function _set_up_transaction(value, type, description, user_id){
+		return transactionModel.create({
+				'date' : "",
+				'value' : value,
+				'type' : type,
+				'description' : description,
+				'user_id' : mongoose.Types.ObjectId(user_id),
+			}).then(function(transaction){
+				return transaction
+			}, function(err){
+				console.log("API / Activities -> _set_up_transaction ", err);
+				throw new Error(err);
+			})
+			.then(() => _set_up_user_balance(value, user_id));
+	}
+
+	function _set_up_user_balance(value, user_id){
+		return userModel.findOneAndUpdate(
+				{ '_id' : mongoose.Types.ObjectId(user_id)},
+				{"$inc" : { "balance" : value } }
+			)
+			.then(function(updatedUser){
+				return updatedUser
+			}, function(err){
+				console.log("API / Activities -> _set_up_user_balance ", err);
+				throw new Error(err);
+			});
+	}
 
 	api.list = function(req, res){
 		userModel.aggregate([
@@ -137,12 +175,12 @@ module.exports = function(app){
 			.then(function(user){
 				//console.log("User updated ", user);
 
-				/*
-				 looking up for some badges ?
-				 */
-				_set_up_badges(req, res);
-
+				_set_up_badges(req, res); // badges assignment
+				//.then(() => {
+				_set_up_transaction(activity.route_distance, "income", `Income: ${activity.physical_activity} +${activity.route_distance}⚡`, req.usuario);
+				//}).then(() => {
 				res.json({activity, 'user_activities' : user['activities']});
+				//});
 			}, function(){
 				console.log("API / Activities -> create (update user)", err);
 				res.sendStatus(500);

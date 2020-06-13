@@ -20,8 +20,8 @@ export class User {
     }
 
     //Collectibles
-    addCollectible(collecatble){
-        this._collectibleList.add(collecatble);
+    addCollectible(collectible){
+        this._collectibleList.add(collectible);
     }
 
     get collectibleList(){

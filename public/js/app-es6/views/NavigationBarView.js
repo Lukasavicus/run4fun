@@ -7,6 +7,6 @@ export class NavigationBarView extends View {
     }
 
     template(model){
-        return `<img class="user-img" src="imgs/misc/avatar_test.jpg"> ${model.name} • ${model.balance}`;
+        return `<img class="user-img" src="imgs/misc/avatar_test.jpg" title="⚡ is our currency. To won ⚡s you just need to run. As much distance you run more ⚡ you receive!"> ${model.name} • ${model.balance} ⚡`;
     }
 }

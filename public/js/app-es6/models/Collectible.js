@@ -1,8 +1,11 @@
 export class Collectible{
-    constructor(title, icon, price, description){
+    constructor(title, icon, price, serie, hist, owned, description){
         this._title = title;
         this._icon = icon;
         this._price = price;
+        this._serie = serie;
+        this._hist = hist;
+        this._owned = owned;
         this._description = description;
 
         Object.freeze(this);
@@ -18,6 +21,18 @@ export class Collectible{
 
     get price(){
         return this._price;
+    }
+
+    get serie(){
+        return this._serie;
+    }
+
+    get hist(){
+        return this._hist;
+    }
+
+    get owned(){
+        return this._owned;
     }
 
     get description(){

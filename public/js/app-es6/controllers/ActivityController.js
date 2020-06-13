@@ -14,38 +14,61 @@ import {MessageView} from '../views/MessageView';
 import { NavigationBarView } from '../views/NavigationBarView';
 import { BadgesView } from '../views/BadgesView';
 import { CollectiblesView } from '../views/CollectiblesView';
+import { PurchaseModalView } from '../views/PurchaseModalView';
+import { Collectible } from '../models/Collectible';
+
+let $ = document.querySelector.bind(document);
 
 class ActivityController {
 
     constructor(){
-        let $ = document.querySelector.bind(document);
-    
+        this._service = new UserService();
+
+        let name = null;
+        let balance = null;
+
         this._date = $("#date");
         this._activity = $("#activity");
         this._place = $("#place");
         this._route_distance = $("#route_distance");
         this._time = $("#time");
 
-        //this._user = new Bind(new ListActivities(), new ActivitiesView($("#activities-data")), 'add');
-        this._user = new MultiBind(new User(window.sessionStorage.login), [
+        // this._targetCollectible = new Collectible();
+        this._purchaseCollectible = new Bind(Collectible, new PurchaseModalView($("#purchase-modal")))
+
+        this._service
+            .getUserInfo()
+            .then(user_obj => {
+                name = user_obj.name;
+                balance = user_obj.balance;
+            })
+            .then(() => {
+
+                this._user = this._newUserModel(name, balance);
+                this._message = new Bind(new Message(), new MessageView($("#messaging")), 'text');
+                this._init();
+
+            });
+
+            /**
+             * 
+             * buyCollectible(){ open modal, option to confirm checkout, purchase order }
+             */
+    }
+
+    _newUserModel(name, balance){
+        return new MultiBind(new User(name, balance), [
             new ActivitiesView($("#activities-data")), 
             new ActivitiesDashboardView($("#management-dashboard")),
             new BadgesView($("#badges")),
             new CollectiblesView($("#collectibles")),
             new NavigationBarView($(".user-pill"))
-        ], 'addActivity', 'addBadge');
-        this._message = new Bind(new Message(), new MessageView($("#messaging")), 'text');
+        ], 'addActivity', 'addBadge', 'addCollectible');
+    }
 
-        /**
-         * this._collectiblesList = new Bind(new CollectiblesList(), new CollectiblesView(), 'addCollectible'); // creates a new instance of model-view -> CollectiblesList
-         * 
-         * buyCollectible(){ open modal, option to confirm checkout, purchase order }
-         */
-
-        this._service = new UserService();
-
+    _init(){
         this.import();
-
+                //this._test();
     }
 
     add(event){
@@ -83,6 +106,16 @@ class ActivityController {
                 badges.forEach(badge => this._user.addBadge(badge));
             })
             .catch(error => this._message.text = error);
+
+
+        this._service
+            .getUserCollectibles()
+            .then(collectibles => {
+                collectibles.forEach(collectible => this._user.addCollectible(collectible));
+            })
+            .catch(error => this._message.text = error);
+
+
     }
 
     _createActivity(){
@@ -103,6 +136,35 @@ class ActivityController {
         this._time = "00:00:00";
         //this._date.focus();
     }
+
+    toogle_section(event){
+        let _id = event.target.id;
+        let toogle = $(`#${_id}`).dataset.toogle;
+        let target = $(`#${_id}`).parentElement.querySelector("section");
+        
+        if(toogle == "true"){
+            $(`#${_id}`).innerText = "[Show Section]";
+            $(`#${_id}`).dataset.toogle = "false";
+        }
+        else{
+            $(`#${_id}`).innerText = "[Hide Section]";
+            $(`#${_id}`).dataset.toogle = "true";
+        }
+
+        Array.from(target.children).forEach(el => {console.log(el)});
+        Array.from(target.children).forEach(el => el.classList.toggle("invisible"));
+
+    }
+
+    buyCollectible(elem){
+        // open modal, option to confirm checkout, purchase order
+        console.log(elem);
+        let icon = elem.firstElementChild.src;
+        let desc = elem.secondElementChild.innerText;
+        new this._purchaseCollectible("Title", icon, "price", "serie", "hist", false, desc);
+        $("#parent-purchase-modal").style.display = "block";
+    }
+
 }
 
 let activityController = new ActivityController();

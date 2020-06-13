@@ -1,0 +1,4 @@
+1. Bloquear as rotas de CRUD para Badges e Collectable por ROLE;
+2. Criar simples mecânismo (prompt/alert) para usuário poder comprar um collectable;
+3. Permitir crUD de corridas;
+4. Criar tela de sign in/ signup

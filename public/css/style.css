@@ -44,6 +44,10 @@ main {
 	margin: 0 auto;
 }
 
+.invisible{
+	display: none !important;
+}
+
 /* +++++++++++++++++++++++++++++++++++++++++++ */
 
 
@@ -139,6 +143,17 @@ main {
 	padding: 5px;
 	margin: 0;
 	font-size: 9px;
+}
+
+.not-purchased{
+	-webkit-filter: grayscale(100%); /* Safari 6.0 - 9.0 */
+	filter: grayscale(100%);
+}
+
+.not-purchased:hover{
+	-webkit-filter: grayscale(85%); /* Safari 6.0 - 9.0 */
+	filter: grayscale(85%);
+	cursor: pointer;
 }
 /* +++++++++++++++++++++++++++++++++++++++++++ */
 
@@ -272,7 +287,62 @@ p.route_dist_metric {
 
 /* +++++++++++++++++++++++++++++++++++++++++++ */
 
+.modal{
+		display: none; /* Hidden by default */
+		position: fixed; /* Stay in place */
+		z-index: 1; /* Sit on top */
+		padding-top: 100px; /* Location of the box */
+		left: 0;
+		top: 0;
+		width: 100%; /* Full width */
+		height: 100%; /* Full height */
+		overflow: auto; /* Enable scroll if needed */
+		background-color: rgb(0,0,0); /* Fallback color */
+		background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
 
+.modal-content{
+	background-color: #fefefe;
+	margin: auto;
+	border: 1px solid #888;
+	inline-size: fit-content;
+	border-radius: 3%;
+}
+
+.modal-header{
+	background: lightgray;
+	padding: 15px;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
+.modal-close {
+	font-size: 25px;
+	font-weight: bold;
+	color: black;
+}
+
+.modal-close:hover {
+	cursor: pointer;
+	color: darkgray;
+}
+
+.modal-body{
+	padding: 0px 20px 20px 20px;
+}
+
+.modal .price-div{
+	text-align: right;
+}
+
+.modal .price-content{
+	background: lightgreen;
+	padding: 7px;
+	margin: 7px 20px;
+	border-radius: 15px;
+	display: inline-block;
+}
 
 /* === FOOTER ================================ */
 footer {

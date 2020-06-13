@@ -53,8 +53,8 @@ System.register(['../helpers/TimeHelper', './BadgeList', './CollectibleList'], f
 
                 _createClass(User, [{
                     key: 'addCollectible',
-                    value: function addCollectible(collecatble) {
-                        this._collectibleList.add(collecatble);
+                    value: function addCollectible(collectible) {
+                        this._collectibleList.add(collectible);
                     }
                 }, {
                     key: 'addBadge',

@@ -1,0 +1,5 @@
+CONCEITOS.txt
+    View: Representação visual de um Modelo.
+    Model: Representação (lógica) de uma Estrutura de Dados para um Conceito (abstrato).
+        - Dados + maneiras de acessar os Dados;
+    Controller: Relaciona o Comportamento de uma View com os Dados de um Modelo.

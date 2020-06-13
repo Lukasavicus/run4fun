@@ -1,9 +1,9 @@
 'use strict';
 
-System.register(['../helpers/Bind', '../helpers/DateHelper', '../helpers/MultiBind', '../models/Activity', '../models/Message', '../models/User', '../services/UserService', '../views/ActivitiesView', '../views/ActivitiesDashboardView', '../views/MessageView', '../views/NavigationBarView', '../views/BadgesView', '../views/CollectiblesView'], function (_export, _context) {
+System.register(['../helpers/Bind', '../helpers/DateHelper', '../helpers/MultiBind', '../models/Activity', '../models/Message', '../models/User', '../services/UserService', '../views/ActivitiesView', '../views/ActivitiesDashboardView', '../views/MessageView', '../views/NavigationBarView', '../views/BadgesView', '../views/CollectiblesView', '../views/PurchaseModalView', '../models/Collectible'], function (_export, _context) {
     "use strict";
 
-    var Bind, DateHelper, MultiBind, Activity, Message, User, UserService, ActivitiesView, ActivitiesDashboardView, MessageView, NavigationBarView, BadgesView, CollectiblesView, _createClass, ActivityController, activityController;
+    var Bind, DateHelper, MultiBind, Activity, Message, User, UserService, ActivitiesView, ActivitiesDashboardView, MessageView, NavigationBarView, BadgesView, CollectiblesView, PurchaseModalView, Collectible, _createClass, $, ActivityController, activityController;
 
     function _classCallCheck(instance, Constructor) {
         if (!(instance instanceof Constructor)) {
@@ -44,6 +44,10 @@ System.register(['../helpers/Bind', '../helpers/DateHelper', '../helpers/MultiBi
             BadgesView = _viewsBadgesView.BadgesView;
         }, function (_viewsCollectiblesView) {
             CollectiblesView = _viewsCollectiblesView.CollectiblesView;
+        }, function (_viewsPurchaseModalView) {
+            PurchaseModalView = _viewsPurchaseModalView.PurchaseModalView;
+        }, function (_modelsCollectible) {
+            Collectible = _modelsCollectible.Collectible;
         }],
         execute: function () {
             _createClass = function () {
@@ -64,11 +68,18 @@ System.register(['../helpers/Bind', '../helpers/DateHelper', '../helpers/MultiBi
                 };
             }();
 
+            $ = document.querySelector.bind(document);
+
             ActivityController = function () {
                 function ActivityController() {
+                    var _this = this;
+
                     _classCallCheck(this, ActivityController);
 
-                    var $ = document.querySelector.bind(document);
+                    this._service = new UserService();
+
+                    var name = null;
+                    var balance = null;
 
                     this._date = $("#date");
                     this._activity = $("#activity");
@@ -76,25 +87,40 @@ System.register(['../helpers/Bind', '../helpers/DateHelper', '../helpers/MultiBi
                     this._route_distance = $("#route_distance");
                     this._time = $("#time");
 
-                    //this._user = new Bind(new ListActivities(), new ActivitiesView($("#activities-data")), 'add');
-                    this._user = new MultiBind(new User(window.sessionStorage.login), [new ActivitiesView($("#activities-data")), new ActivitiesDashboardView($("#management-dashboard")), new BadgesView($("#badges")), new CollectiblesView($("#collectibles")), new NavigationBarView($(".user-pill"))], 'addActivity', 'addBadge');
-                    this._message = new Bind(new Message(), new MessageView($("#messaging")), 'text');
+                    // this._targetCollectible = new Collectible();
+                    this._purchaseCollectible = new Bind(Collectible, new PurchaseModalView($("#purchase-modal")));
+
+                    this._service.getUserInfo().then(function (user_obj) {
+                        name = user_obj.name;
+                        balance = user_obj.balance;
+                    }).then(function () {
+
+                        _this._user = _this._newUserModel(name, balance);
+                        _this._message = new Bind(new Message(), new MessageView($("#messaging")), 'text');
+                        _this._init();
+                    });
 
                     /**
-                     * this._collectiblesList = new Bind(new CollectiblesList(), new CollectiblesView(), 'addCollectible'); // creates a new instance of model-view -> CollectiblesList
                      * 
                      * buyCollectible(){ open modal, option to confirm checkout, purchase order }
                      */
-
-                    this._service = new UserService();
-
-                    this.import();
                 }
 
                 _createClass(ActivityController, [{
+                    key: '_newUserModel',
+                    value: function _newUserModel(name, balance) {
+                        return new MultiBind(new User(name, balance), [new ActivitiesView($("#activities-data")), new ActivitiesDashboardView($("#management-dashboard")), new BadgesView($("#badges")), new CollectiblesView($("#collectibles")), new NavigationBarView($(".user-pill"))], 'addActivity', 'addBadge', 'addCollectible');
+                    }
+                }, {
+                    key: '_init',
+                    value: function _init() {
+                        this.import();
+                        //this._test();
+                    }
+                }, {
                     key: 'add',
                     value: function add(event) {
-                        var _this = this;
+                        var _this2 = this;
 
                         event.preventDefault();
 
@@ -102,9 +128,9 @@ System.register(['../helpers/Bind', '../helpers/DateHelper', '../helpers/MultiBi
 
                         this._service.addActivity(activity).then(function (res) {
                             console.log(res);
-                            _this._message.text = "Activity created";
+                            _this2._message.text = "Activity created";
                         }).catch(function (error) {
-                            return _this._message.text = error;
+                            return _this2._message.text = error;
                         });
 
                         this._user.addActivity(activity);
@@ -114,24 +140,32 @@ System.register(['../helpers/Bind', '../helpers/DateHelper', '../helpers/MultiBi
                 }, {
                     key: 'import',
                     value: function _import() {
-                        var _this2 = this;
+                        var _this3 = this;
 
                         this._service.getUserActivities().then(function (activities) {
                             activities.forEach(function (activity) {
-                                return _this2._user.addActivity(activity);
+                                return _this3._user.addActivity(activity);
                             });
                         }).catch(function (error) {
-                            return _this2._message.text = error;
+                            return _this3._message.text = error;
                         });
 
                         this._service.getUserBadges().then(function (badges) {
                             return badges;
                         }).then(function (badges) {
                             badges.forEach(function (badge) {
-                                return _this2._user.addBadge(badge);
+                                return _this3._user.addBadge(badge);
                             });
                         }).catch(function (error) {
-                            return _this2._message.text = error;
+                            return _this3._message.text = error;
+                        });
+
+                        this._service.getUserCollectibles().then(function (collectibles) {
+                            collectibles.forEach(function (collectible) {
+                                return _this3._user.addCollectible(collectible);
+                            });
+                        }).catch(function (error) {
+                            return _this3._message.text = error;
                         });
                     }
                 }, {
@@ -148,6 +182,38 @@ System.register(['../helpers/Bind', '../helpers/DateHelper', '../helpers/MultiBi
                         this._route_distance = 0.00;
                         this._time = "00:00:00";
                         //this._date.focus();
+                    }
+                }, {
+                    key: 'toogle_section',
+                    value: function toogle_section(event) {
+                        var _id = event.target.id;
+                        var toogle = $('#' + _id).dataset.toogle;
+                        var target = $('#' + _id).parentElement.querySelector("section");
+
+                        if (toogle == "true") {
+                            $('#' + _id).innerText = "[Show Section]";
+                            $('#' + _id).dataset.toogle = "false";
+                        } else {
+                            $('#' + _id).innerText = "[Hide Section]";
+                            $('#' + _id).dataset.toogle = "true";
+                        }
+
+                        Array.from(target.children).forEach(function (el) {
+                            console.log(el);
+                        });
+                        Array.from(target.children).forEach(function (el) {
+                            return el.classList.toggle("invisible");
+                        });
+                    }
+                }, {
+                    key: 'buyCollectible',
+                    value: function buyCollectible(elem) {
+                        // open modal, option to confirm checkout, purchase order
+                        console.log(elem);
+                        var icon = elem.firstElementChild.src;
+                        var desc = elem.secondElementChild.innerText;
+                        new this._purchaseCollectible("Title", icon, "price", "serie", "hist", false, desc);
+                        $("#parent-purchase-modal").style.display = "block";
                     }
                 }]);
 

@@ -2,10 +2,47 @@ import {HttpService} from './HttpService';
 
 import {Activity} from '../models/Activity';
 import {Badge} from '../models/Badge';
+import {Collectible} from '../models/Collectible';
 
 export class UserService {
     constructor(){
         this._httpService = new HttpService();
+    }
+
+    //User
+    getUserInfo(){
+        return new Promise((resolve, reject) => {
+            this._httpService
+            .get('/v1/user')
+            .then(user_obj => resolve(user_obj))
+            .catch(error => {
+                console.log(error);
+                reject(`Could not get collectibles for user`);
+            });
+        });
+    }
+
+    //Collectibles
+    getUserCollectibles(){
+        return new Promise((resolve, reject) => {
+            this._httpService
+            .get('/v1/users/collectibles')
+            .then(collectibles_obj => resolve(collectibles_obj.map(badge_obj =>
+                    new Collectible(
+                        badge_obj.title,
+                        badge_obj.icon,
+                        badge_obj.value,
+                        badge_obj.serie,
+                        badge_obj.hist,
+                        badge_obj.owned,
+                        badge_obj.description
+                    ))
+            ))
+            .catch(error => {
+                console.log(error);
+                reject(`Could not get collectibles for user`);
+            });
+        });
     }
 
     //Badges
