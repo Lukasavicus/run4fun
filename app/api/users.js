@@ -3,7 +3,6 @@ let mongoose = require('mongoose');
 module.exports = function(app){
 	let api = {};
 	let model = mongoose.model('User');
-	let badgesModel = mongoose.model('Badge');
 	let collectibleModel = mongoose.model('Collectible');
 
 	
@@ -151,7 +150,7 @@ module.exports = function(app){
 				return owned_collectibles_agg[0]["collectibles_by_user"];
 			},
 			function(err){
-				console.log("API / Users -> _set_up_badges *", err);
+				console.log("API / Users -> listCollectibles - user", err);
 				res.sendStatus(500);
 			}
 		)
@@ -171,13 +170,13 @@ module.exports = function(app){
 				return {owned_collectibles, other_collectibles};
 				
 			}, function(err){
-				console.log("API / Activities -> _set_up_badges ", err);
+				console.log("API / Activities -> listCollectibles - collectible ", err);
 				res.sendStatus(500);
 			})
 			.then(collectibles_result => {
 				let all_collectibles = collectibles_result.owned_collectibles.concat(collectibles_result.other_collectibles);
 				
-				console.log("ALL:", all_collectibles);
+				// console.log("ALL:", all_collectibles);
 
 				res.json(all_collectibles);
 			});

@@ -3,6 +3,7 @@ import {HttpService} from './HttpService';
 import {Activity} from '../models/Activity';
 import {Badge} from '../models/Badge';
 import {Collectible} from '../models/Collectible';
+import {Transaction} from '../models/Transaction';
 
 export class UserService {
     constructor(){
@@ -27,15 +28,16 @@ export class UserService {
         return new Promise((resolve, reject) => {
             this._httpService
             .get('/v1/users/collectibles')
-            .then(collectibles_obj => resolve(collectibles_obj.map(badge_obj =>
+            .then(collectibles_obj => resolve(collectibles_obj.map(collectible_obj =>
                     new Collectible(
-                        badge_obj.title,
-                        badge_obj.icon,
-                        badge_obj.value,
-                        badge_obj.serie,
-                        badge_obj.hist,
-                        badge_obj.owned,
-                        badge_obj.description
+                        collectible_obj._id,
+                        collectible_obj.title,
+                        collectible_obj.icon,
+                        collectible_obj.value,
+                        collectible_obj.serie,
+                        collectible_obj.hist,
+                        collectible_obj.owned,
+                        collectible_obj.description
                     ))
             ))
             .catch(error => {
@@ -95,6 +97,28 @@ export class UserService {
         */
     }
 
+    // Transactions
+    getUserTransactions(){
+        return new Promise((resolve, reject) => {
+            this._httpService
+            .get('/v1/transactions')
+            .then(transactions_obj =>
+                resolve(transactions_obj.map(transaction_obj =>
+                    new Transaction(
+                        new Date(transaction_obj.date),
+                        transaction_obj.value,
+                        transaction_obj.type,
+                        transaction_obj.description,
+                    )
+                ))
+            )
+            .catch(error => {
+                console.log(error);
+                reject(`Could not get transactions for user`);
+            });
+        });
+    }
+
     addActivity(activity){
         return new Promise((resolve, reject) => {
             this._httpService
@@ -129,6 +153,28 @@ export class UserService {
                 console.log(error);
                 reject(`Could not create activities for user`);
             });
+        });
+    }
+
+    purchaseCollectible(collectible_id){
+        // TODO: Try to use patch
+        // return new Promise((resolve, reject) => {
+        //     this._httpService
+        //         .patch(`/v1/collectibles/${collectible_id}`)
+        //         .then(res => resolve(res));
+        // });
+        return new Promise((resolve, reject) => {
+            this._httpService
+                .get(`/v1/collectible/purchase/${collectible_id}`)
+                // .then(res => {console.log('RES SERVICE', res); return resolve(res)});
+                .then(res => {
+                    // console.log('RES SERVICE', res);
+                    resolve(res);
+                })
+                .catch(res => {
+                    // console.log('RES SERVICE ERROR', res);
+                    reject(res);
+                });
         });
     }
 

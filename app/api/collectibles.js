@@ -1,8 +1,12 @@
 let mongoose = require('mongoose');
 
+let transactionRules = require('../rules/transactions');
+const userRules = require('../rules/users');
+
 module.exports = function(app){
 	let api = {};
 	let model = mongoose.model('Collectible');
+	let userModel = mongoose.model('User');
 
 	api.list = function(req, res){
 		model.find()
@@ -61,6 +65,58 @@ module.exports = function(app){
 			console.log("API / Collectibles -> update ", err);
 			res.sendStatus(500);
 		});
+	}
+
+	api.purchase = function(req, res){
+		console.log("PURCHASE");
+		const params = req.url.split('/');
+		const _id = params[params.length-1];
+		model.findById(_id)
+		.then(function(collectible){
+				// check object empty
+				if(!collectible) throw new Error('None collectible founded');
+				userModel.findOne({"login" : req.usuario})
+				.then(function(user){
+					if(!user) throw new Error('None User founded');
+
+					console.log("PURCHASE Operation", user, collectible);
+
+					if(user.balance > collectible.value ){
+						// DO THE PURCHASE OPERATION HERE
+						console.log("Set up Transactions");
+						transactionRules
+						._set_up_transaction(-collectible.value, "outcome", `Outcome: Purchasing ${collectible.name} -${collectible.value}⚡`, user._id)
+						.then(() => {
+							// ADD COLLECTIBLE TO USER
+							userRules
+							.purchaseCollectible(collectible._id, user._id)
+							.then(() => {
+								console.log(`Collectible ${collectible.name} purchase by ${user.login}`);
+								res.json({'checkout' : 'ok'});
+							})
+							.catch(err => {
+								throw new Error(err);
+							});
+						})
+						.catch(err => {
+							throw new Error(err);
+						});
+					}
+					else{
+						console.log('Not enough cash, stranger!');
+						res.status(403).send('Not cash')//.json({ msg: 'Not enough cash, stranger!'});
+					}
+				},
+				function(err){
+					console.log("API / Collectibles -> userModel find ", err);
+					res.sendStatus(500);
+				});
+			},
+			function(err){
+				console.log("API / Collectibles -> findById ", err);
+				res.sendStatus(500);
+			}
+		);
 	}
 
 	return api;

@@ -13,7 +13,7 @@ export class ActivitiesDashboardView extends View {
                 <img src="imgs/badges/008-road.svg">
                 <p>Total Travelled Distance</p>
             </div>
-            <p class="record" id="total_travelled_dist">${model.total_kms} Kms</p>
+            <p class="record" id="total_travelled_dist">${model.total_distance} Kms</p>
         </div>
         <div>
             <div>
@@ -27,14 +27,14 @@ export class ActivitiesDashboardView extends View {
                 <img src="imgs/badges/025-time.svg">
                 <p>Max Velocity Reached</p>
             </div>
-            <p class="record" id="max_velocity_reached"></p>
+            <p class="record" id="max_velocity_reached">${model.max_velocity} km/h</p>
         </div>
         <div>
             <div>
                 <img src="imgs/badges/029-energy-drink.svg">
                 <p>Max One-Shoot Distance</p>
             </div>
-            <p class="record" id="max_one_shoot_dist"></p>
+            <p class="record" id="max_one_shoot_dist">${model.max_distance} kms</p>
         </div>
         <div>
             <div>

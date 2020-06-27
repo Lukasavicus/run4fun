@@ -1,8 +1,9 @@
 export class Transaction{
-    constructor(date, value, nature){
+    constructor(date, value, type, description){
         this._date = date;
         this._value = value;
-        this._nature = nature;
+        this._type = type;
+        this._description = description;
 
         Object.freeze(this);
     }
@@ -15,7 +16,11 @@ export class Transaction{
         return this._value;
     }
 
-    get nature(){
-        return this._nature;
+    get type(){
+        return this._type;
+    }
+
+    get description(){
+        return this._description;
     }
 }

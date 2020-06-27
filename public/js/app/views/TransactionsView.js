@@ -1,9 +1,9 @@
 'use strict';
 
-System.register(['./View'], function (_export, _context) {
+System.register(['./View', '../helpers/DateHelper'], function (_export, _context) {
     "use strict";
 
-    var View, _createClass, CollectiblesView;
+    var View, DateHelper, _createClass, TransactionsView;
 
     function _classCallCheck(instance, Constructor) {
         if (!(instance instanceof Constructor)) {
@@ -38,6 +38,8 @@ System.register(['./View'], function (_export, _context) {
     return {
         setters: [function (_View2) {
             View = _View2.View;
+        }, function (_helpersDateHelper) {
+            DateHelper = _helpersDateHelper.DateHelper;
         }],
         execute: function () {
             _createClass = function () {
@@ -58,29 +60,29 @@ System.register(['./View'], function (_export, _context) {
                 };
             }();
 
-            _export('CollectiblesView', CollectiblesView = function (_View) {
-                _inherits(CollectiblesView, _View);
+            _export('TransactionsView', TransactionsView = function (_View) {
+                _inherits(TransactionsView, _View);
 
-                function CollectiblesView(HTMLElement) {
-                    _classCallCheck(this, CollectiblesView);
+                function TransactionsView(HTMLElement) {
+                    _classCallCheck(this, TransactionsView);
 
-                    return _possibleConstructorReturn(this, (CollectiblesView.__proto__ || Object.getPrototypeOf(CollectiblesView)).call(this, HTMLElement));
+                    return _possibleConstructorReturn(this, (TransactionsView.__proto__ || Object.getPrototypeOf(TransactionsView)).call(this, HTMLElement));
                 }
 
-                _createClass(CollectiblesView, [{
+                _createClass(TransactionsView, [{
                     key: 'template',
                     value: function template(model) {
-                        return '\n            ' + model.collectibleList.collectibles.map(function (collectible) {
-                            return '\n                <div id="' + collectible.id + '" data-price=' + collectible.price + ' data-serie=' + collectible.serie + ' class="collectible ' + (collectible.owned ? '' : 'not-purchased') + '" title="' + (collectible.owned ? collectible.description : 'This Collectible costs: ' + collectible.price + '⚡') + '" >\n                    <img src="' + collectible.icon + '" class="collectible-img">\n                    <p class="collectible-description">' + (collectible.owned ? collectible.hist : '') + '</p>\n                </div>\n            ';
-                        }).join('') + '\n        ';
+                        return '\n            <table id="transactions-table">\n                <thead>\n                    <tr>\n                        <th>Date</th>\n                        <th>Value</th>\n                        <th>Nature</th>\n                        <th>Description</th>\n                    </tr>\n                </thead>\n                <tbody>\n                    ' + (model.transactionList.length ? '' : model.transactionList.transactions.map(function (transaction) {
+                            return '\n                            <tr>\n                                <td>' + DateHelper.dateToText(transaction.date) + '</td>\n                                <td>' + transaction.value + '</td>\n                                <td>' + transaction.type + '</td>\n                                <td>' + transaction.description + ' km</td>\n                            </tr>\n                            ';
+                        }).join('')) + '\n                </tbody>\n                <tfoot>\n                    <tr>\n                        <td colspan="2" >Current Balance:</td>\n                        <td>' + model.balance + ' Neons</td>\n                    </tr>\n                </tfoot>\n            </table>\n        ';
                     }
                 }]);
 
-                return CollectiblesView;
+                return TransactionsView;
             }(View));
 
-            _export('CollectiblesView', CollectiblesView);
+            _export('TransactionsView', TransactionsView);
         }
     };
 });
-//# sourceMappingURL=CollectiblesView.js.map
+//# sourceMappingURL=TransactionsView.js.map

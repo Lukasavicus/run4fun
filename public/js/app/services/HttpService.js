@@ -42,18 +42,23 @@ System.register([], function (_export, _context) {
                                 args[_key] = arguments[_key];
                             }
 
-                            //console.log("arg before ",args);
+                            console.log("arg before ", args);
                             if (window.sessionStorage.token) {
-                                var options = args[1];
-                                if (options === undefined) args.push({ 'headers': { 'x-access-token': window.sessionStorage.token } });else options.headers['x-access-token'] = window.sessionStorage.token;
+                                if (args[1] === undefined || args[1].headers === undefined) {
+                                    args.push({ 'headers': { 'x-access-token': window.sessionStorage.token } });
+                                } else {
+                                    console.log('I do have a token ! Let me pass');
+                                    args[1].headers['x-access-token'] = window.sessionStorage.token;
+                                }
                             }
-                            //console.log("arg after ",args);
+                            console.log("arg after ", args);
                             //const result = originalFetch.apply(window, args);
                             var result = originalFetch.apply(window, args).then(function (res) {
                                 if (!res.ok && res.status == 401) {
-                                    delete window.sessionStorage.token;
-                                    delete window.sessionStorage.login;
-                                    window.location.href = "home.html";
+                                    // IF 401 REDIRECT
+                                    // delete window.sessionStorage.token;
+                                    // delete window.sessionStorage.login;
+                                    // window.location.href = "home.html";
                                 }
                                 return res;
                             });
@@ -68,6 +73,7 @@ System.register([], function (_export, _context) {
                 _createClass(HttpService, [{
                     key: '_handleErrors',
                     value: function _handleErrors(res) {
+                        console.log('HttpService', res);
                         if (!res.ok) throw new Error(res.statusText);
                         return res;
                     }
@@ -78,8 +84,13 @@ System.register([], function (_export, _context) {
 
                         return this._fetch(url).then(function (res) {
                             return _this._handleErrors(res);
-                        }).then(function (res) {
-                            return res.json();
+                        })
+                        // .then(res => res.json());
+                        .then(function (res) {
+                            // console.log('GET Res', res);
+                            var res_json = res.json();
+                            // console.log('GET ResJson', res_json);
+                            return res_json;
                         });
                     }
                 }, {
@@ -89,10 +100,24 @@ System.register([], function (_export, _context) {
 
                         var response_json = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
 
+                        console.log('POST', url, options, response_json);
                         return this._fetch(url, options).then(function (res) {
                             return _this2._handleErrors(res);
                         }).then(function (res) {
                             return response_json ? res.json() : res;
+                        });
+                    }
+                }, {
+                    key: 'patch',
+                    value: function patch(url) {
+                        var _this3 = this;
+
+                        return this._fetch(url, {
+                            method: 'PATCH'
+                        }).then(function (res) {
+                            return _this3._handleErrors(res);
+                        }).then(function (res) {
+                            return res.json();
                         });
                     }
                 }, {

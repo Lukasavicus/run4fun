@@ -33,9 +33,10 @@ System.register([], function (_export, _context) {
             }();
 
             _export("Collectible", Collectible = function () {
-                function Collectible(title, icon, price, serie, hist, owned, description) {
+                function Collectible(id, title, icon, price, serie, hist, owned, description) {
                     _classCallCheck(this, Collectible);
 
+                    this._id = id;
                     this._title = title;
                     this._icon = icon;
                     this._price = price;
@@ -48,6 +49,11 @@ System.register([], function (_export, _context) {
                 }
 
                 _createClass(Collectible, [{
+                    key: "id",
+                    get: function get() {
+                        return this._id;
+                    }
+                }, {
                     key: "title",
                     get: function get() {
                         return this._title;

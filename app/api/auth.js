@@ -7,7 +7,7 @@ module.exports = function(app) {
      var model = mongoose.model('User');
 
      api.autentica = function(req, res) {
-     	console.log('autentica invoked', req.body);
+         console.log('autentica invoked', req.body);
          model.findOne({
              login: req.body.login,
              password: req.body.password
@@ -26,7 +26,8 @@ module.exports = function(app) {
                  res.set('x-access-token', token); 
                  res.end(); 
              }
-         });
+         })
+         .catch(err => console.log("ERROR", err))
      };
 
     api.verificaToken = function(req, res, next) {
@@ -40,6 +41,7 @@ module.exports = function(app) {
                     return res.sendStatus(401);
             }
             else {
+                // console.log("ACEITO", req.url, req.method, req.params, req.query, req.headers);
                 console.log('Token aceito');
                 console.log(decoded);
                 req.usuario = decoded.login;
@@ -48,6 +50,7 @@ module.exports = function(app) {
         });
         }
         else {
+            console.log("NO-TOKEN", req.url, req.method, req.params, req.query, req.headers);
             console.log('Nenhum token enviado');
             return res.sendStatus(401);
         }

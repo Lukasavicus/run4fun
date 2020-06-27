@@ -301,13 +301,69 @@ p.route_dist_metric {
 		background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
 }
 
-.modal-content{
+.modal-box{
 	background-color: #fefefe;
 	margin: auto;
 	border: 1px solid #888;
 	inline-size: fit-content;
 	border-radius: 3%;
 }
+
+.modal-content {
+	margin: auto;
+	inline-size: fit-content;
+}
+
+.modal-content.success:after{
+	display:block;
+	content: '';
+	border-bottom: solid 3px #019fb6;
+	border-top: solid 3px #019fb6;
+
+	border-left: solid 3px #019fb6;
+	border-right: solid 3px #019fb6;
+	
+	transform: scaleX(0);  
+	transition: transform 250ms ease-in-out;
+}
+
+.modal-content.success:hover:after{
+	transform: scaleX(1);
+}
+
+.modal-content.error:after{
+	display:block;
+	content: '';
+	border-bottom: solid 3px #d45b23;
+	border-top: solid 3px #d45b23;
+
+	border-left: solid 3px #d45b23;
+	border-right: solid 3px #d45b23;
+	
+	transform: scaleX(0);  
+	transition: transform 250ms ease-in-out;
+}
+
+.modal-content.error:hover:after{
+	transform: scaleX(1);
+}
+
+/* .transform-scalex:after{
+	transform: scaleX(1);
+} */
+
+
+/* .modal-content.success:after{
+	display:block;
+	content: '';
+	border-bottom: solid 3px #019fb6;  
+	transform: scaleX(0);  
+	transition: transform 250ms ease-in-out;
+}
+
+.modal-content.success:hover:after{
+	transform: scaleX(1);
+} */
 
 .modal-header{
 	background: lightgray;
@@ -330,6 +386,19 @@ p.route_dist_metric {
 
 .modal-body{
 	padding: 0px 20px 20px 20px;
+}
+
+.modal .oper-gif{
+	text-align: left;
+}
+
+.modal .oper-gif img {
+	width: 30px;
+	height: 30px;
+}
+
+.disp-n{
+	display: none;
 }
 
 .modal .price-div{

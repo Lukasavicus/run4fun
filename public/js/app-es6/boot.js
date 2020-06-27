@@ -18,7 +18,8 @@ Array
 // console.log(Array.from(document.querySelectorAll("div.collectible.not-purchased")));
 
 let flag = true;
-		setInterval(() => {
+		// setInterval(() => {
+        setTimeout(() => {
 			if(flag){
                 console.log('loaded');
                 Array
@@ -31,4 +32,4 @@ let flag = true;
 
 				flag = !flag
 			}
-		}, 1500);
+        }, 1500);

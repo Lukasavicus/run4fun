@@ -9,5 +9,9 @@ module.exports = function(app) {
 	app.route('/v1/collectibles/:id')
 		.get(api.findById)
 		.delete(api.removeById)
-		.put(api.update);
+		.put(api.update)
+		.patch(api.purchase);
+
+	app.route('/v1/collectible/purchase/:id')
+		.get(api.purchase);
 };

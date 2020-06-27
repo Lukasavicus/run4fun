@@ -1,11 +1,12 @@
 let mongoose = require('mongoose');
 
+let transactionRules = require('../rules/transactions');
+
 module.exports = function(app){
 	let api = {};
 	let model = mongoose.model('Activity');
 	let userModel = mongoose.model('User');
 	let badgeModel = mongoose.model('Badge');
-	let transactionModel = mongoose.model('Transaction');
 
 	//Badges
 	function _set_up_badges(req, res){
@@ -55,7 +56,7 @@ module.exports = function(app){
 								let badge = data.badge;
 								let user = data.user;
 								if(user)
-									return _set_up_transaction(badge.value, "income", `Income: Badge earned: "${badge.title}" +${badge.value}⚡`, user._id);
+									return transactionRules._set_up_transaction(badge.value, "income", `Income: Badge earned: "${badge.title}" +${badge.value}⚡`, user._id);
 								return null;
 							})
 							.catch((err) => { throw new Error(err)});
@@ -71,35 +72,6 @@ module.exports = function(app){
 				res.sendStatus(500);
 			}
 		);
-	}
-
-	function _set_up_transaction(value, type, description, user_id){
-		return transactionModel.create({
-				'date' : "",
-				'value' : value,
-				'type' : type,
-				'description' : description,
-				'user_id' : mongoose.Types.ObjectId(user_id),
-			}).then(function(transaction){
-				return transaction
-			}, function(err){
-				console.log("API / Activities -> _set_up_transaction ", err);
-				throw new Error(err);
-			})
-			.then(() => _set_up_user_balance(value, user_id));
-	}
-
-	function _set_up_user_balance(value, user_id){
-		return userModel.findOneAndUpdate(
-				{ '_id' : mongoose.Types.ObjectId(user_id)},
-				{"$inc" : { "balance" : value } }
-			)
-			.then(function(updatedUser){
-				return updatedUser
-			}, function(err){
-				console.log("API / Activities -> _set_up_user_balance ", err);
-				throw new Error(err);
-			});
 	}
 
 	api.list = function(req, res){
@@ -177,7 +149,7 @@ module.exports = function(app){
 
 				_set_up_badges(req, res); // badges assignment
 				//.then(() => {
-				_set_up_transaction(activity.route_distance, "income", `Income: ${activity.physical_activity} +${activity.route_distance}⚡`, req.usuario);
+				transactionRules._set_up_transaction(activity.route_distance, "income", `Income: ${activity.physical_activity} +${activity.route_distance}⚡`, user._id);
 				//}).then(() => {
 				res.json({activity, 'user_activities' : user['activities']});
 				//});

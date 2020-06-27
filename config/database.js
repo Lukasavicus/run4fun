@@ -10,7 +10,8 @@ module.exports = function(uri) {
 
 	mongoose.connection.on('error', function(error) {
 		console.log('Erro na conexão: ' + error);
-	});	
+	})
+	.catch(err => console.log("Capturando o erro", err));
 
 	mongoose.connection.on('disconnected', function() {
 		console.log('Desconectado do MongoDB')

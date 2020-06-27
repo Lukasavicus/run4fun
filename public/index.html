@@ -5,6 +5,9 @@
 	<link rel="stylesheet" type="text/css" href="css/reset.css">
 	<link rel="stylesheet" type="text/css" href="css/style.css">
 	<title>Run 4 Fun</title>
+
+	<link rel="shortcut icon" href="/favicon-32x32.png" type="image/x-icon">
+	<link rel="icon" href="/favicon-32x32.png" type="image/x-icon">
 </head>
 <body>
 
@@ -41,7 +44,10 @@
 	</div>
 
 	<div class="modal" id="parent-purchase-modal">
-		<div class="modal-content" id="purchase-modal"></div>
+			<div class="modal-content">
+				<div class="modal-box" id="purchase-modal"></div>
+			</div>
+		</div>
 	</div>
 
 	<div class="section-title">
@@ -83,11 +89,6 @@
 					</div>
 
 					<div class="form-input">
-						<label for="no_laps"># Laps:</label>
-						<input type="number" id="no_laps" name="no_laps">
-					</div>
-
-					<div class="form-input">
 						<label for="time">Time:</label>
 						<input type="text" placeholder="hh:mm:ss" id="time" name="time">
 					</div>
@@ -102,12 +103,12 @@
 			</form>
 		</section>
 
-		<section id="extract">
-			<div class="section-title">
-				<p>Extract</p>
-				<p>Hide Section</p>
-			</div>
-		</section>
+		<div class="section-title">
+			<p>Extract</p>
+			<p class="toogle-content" id="toogle-extract" data-toogle="true">[Hide Section]</p>
+			<section id="extract">
+			</section>
+		</div>
 	</main>
 
 	<footer>
@@ -125,59 +126,7 @@
 	</script>
 
 	<script>
-		function col_click(){
-			Array.from(document.querySelectorAll("div.collectible.not-purchased"))
-				.forEach(el => {
-					el.addEventListener('click', function(event){
-						console.log(event, el);
-						let icon = el.firstElementChild.src;
-						purchase_order({
-							'description' : "Winter's comming",
-							'icon' : icon,
-							'hist' : "",
-							'price' : 40
-						});
-						document.querySelector("#parent-purchase-modal").style.display = "block";
-					});
-				});
 
-			function purchase_order(collectible){
-				let pmodal = document.querySelector("#purchase-modal");
-				pmodal.innerHTML = `
-				<div class="modal-header">
-					<p style="display: inline;">Purchase Collectible</p>
-					<span class="modal-close">&times</span>
-				</div>
-				<div class="modal-body">
-					<form class="form" action="?" method="post" id="?">
-						<div class="collectible" title="${collectible.description}" >
-							<img src="${collectible.icon}" class="collectible-img">
-							<p class="collectible-description">${collectible.hist}</p>
-						</div>
-						<div class="price-div">
-							<span class="price-content">
-								cost: ${collectible.price}⚡
-							</span>
-						</div>
-						<div style="text-align: center;">
-							<button type="submit">Purchase</button>
-							<button type="submit">Dismiss</button>
-						</div>
-					</form>
-				</div>
-				`;
-			}
-		}
-	</script>
-	<script>
-		let flag = true;
-		setInterval(() => {
-			//alert("loaded");
-			if(flag){
-				//col_click();
-				flag = !flag
-			}
-		}, 3000);
 	</script>
 
 </body>

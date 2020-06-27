@@ -68,7 +68,7 @@ System.register(["../helpers/TimeHelper"], function (_export, _context) {
                 }, {
                     key: "avg_velocity_kmh",
                     get: function get() {
-                        // return the average velocity in meters/second;
+                        // return the average velocity in km/h;
                         var hours = TimeHelper.getNumberHours(this._time);
                         return (this._route_distance / hours).toFixed(2);
                     }

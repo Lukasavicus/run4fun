@@ -1,9 +1,9 @@
 'use strict';
 
-System.register(['./View', '../helpers/DateHelper', '../helpers/TimeHelper'], function (_export, _context) {
+System.register(['./View', '../helpers/DateHelper'], function (_export, _context) {
     "use strict";
 
-    var View, DateHelper, TimeHelper, _createClass, ActivitiesView;
+    var View, DateHelper, _createClass, ActivitiesView;
 
     function _classCallCheck(instance, Constructor) {
         if (!(instance instanceof Constructor)) {
@@ -40,8 +40,6 @@ System.register(['./View', '../helpers/DateHelper', '../helpers/TimeHelper'], fu
             View = _View2.View;
         }, function (_helpersDateHelper) {
             DateHelper = _helpersDateHelper.DateHelper;
-        }, function (_helpersTimeHelper) {
-            TimeHelper = _helpersTimeHelper.TimeHelper;
         }],
         execute: function () {
             _createClass = function () {
@@ -74,9 +72,9 @@ System.register(['./View', '../helpers/DateHelper', '../helpers/TimeHelper'], fu
                 _createClass(ActivitiesView, [{
                     key: 'template',
                     value: function template(model) {
-                        return '\n            <table id="records-table">\n                <thead>\n                    <tr>\n                        <th rowspan="3" >Date</th>\n                        <th rowspan="3" >Physical Activity</th>\n                        <th rowspan="3" >Place</th>\n                        <th colspan="9" >Measures</th>\n                    </tr>\n                    <tr>\n                        <th colspan="3" >Runned Distance</th>\n                        <th rowspan="2" >Time</th>\n                        <th colspan="5" >Pace</th>\n                    </tr>\n                    <tr>\n                        <th>Route Distance</th>\n                        <th># Rounds</th>\n                        <th>Total Route Distance</th>\n                        <!-- time -->\n                        <th>Pace per Round</th>\n                        <th>Avg. Pace</th>\n                        <th>Avg. Velocity (m/s)</th>\n                        <th>Avg. Velocity (km/h)</th>\n                        <th>Avg. Time (100 mts)</th>\n                    </tr>\n                </thead>\n                <tbody>\n                    ' + model.activities.map(function (activity) {
-                            return '\n                            <tr>\n                                <td>' + DateHelper.dateToText(activity.date) + '</td>\n                                <td>' + activity.physical_activity + '</td>\n                                <td>' + activity.place + '</td>\n                                <td>' + activity.route_distance + ' km</td>\n                                <td>?</td>\n                                <td>' + activity.route_distance + ' km</td>\n                                <td>' + activity.time + '</td>\n                                <td>' + activity.time + '</td>\n                                <td>x</td>\n                                <td>' + activity.avg_velocity_ms + '</td>\n                                <td>' + activity.avg_velocity_kmh + '</td>\n                                <td>' + activity.avg_time_by_distance(100) + '</td>\n                            </tr>\n                            ';
-                        }).join('') + '\n                </tbody>\n                <tfoot>\n                    <tr>\n                        <td colspan="5" >Total</td>\n                        <td>' + model.total_kms + ' kms</td>\n                        <td>' + model.total_time + '</td>\n                        <td> xx:xx:xx </td>\n                        <td> xx:xx:xx </td>\n                        <td> xx:xx:xx </td>\n                        <td> xx:xx:xx </td>\n                        <td> xx:xx:xx </td>\n                    </tr>\n                </tfoot>\n            </table>\n        ';
+                        return '\n            <table id="records-table">\n                <thead>\n                    <tr>\n                        <th rowspan="3" >Date</th>\n                        <th rowspan="3" >Physical Activity</th>\n                        <th rowspan="3" >Place</th>\n                        <th colspan="5" >Measures</th>\n                    </tr>\n                    <tr>\n                        <th rowspan="2" >Distance</th>\n                        <th rowspan="2" >Time</th>\n                        <th colspan="3" >Pace</th>\n                    </tr>\n                    <tr>\n                        <th>Avg. Velocity (m/s)</th>\n                        <th>Avg. Velocity (km/h)</th>\n                        <th>Avg. Time (100 mts)</th>\n                    </tr>\n                </thead>\n                <tbody>\n                    ' + model.activities.map(function (activity) {
+                            return '\n                            <tr>\n                                <td>' + DateHelper.dateToText(activity.date) + '</td>\n                                <td>' + activity.physical_activity + '</td>\n                                <td>' + activity.place + '</td>\n                                <td>' + activity.route_distance + ' km</td>\n                                <td>' + activity.time + '</td>\n                                <td>' + activity.avg_velocity_ms + '</td>\n                                <td>' + activity.avg_velocity_kmh + '</td>\n                                <td>' + activity.avg_time_by_distance(100) + '</td>\n                            </tr>\n                            ';
+                        }).join('') + '\n                </tbody>\n                <tfoot>\n                    <tr>\n                        <td colspan="3" >Total</td>\n                        <td>' + model.total_distance + ' kms</td>\n                        <td>' + model.total_time + '</td>\n                        <td>' + model.avg_velocity_ms + '</td>\n                        <td>' + model.avg_velocity_kmh + '</td>\n                        <td> xx:xx:xx </td>\n                    </tr>\n                </tfoot>\n            </table>\n        ';
                     }
                 }]);
 

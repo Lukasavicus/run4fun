@@ -33,12 +33,13 @@ System.register([], function (_export, _context) {
             }();
 
             _export("Transaction", Transaction = function () {
-                function Transaction(date, value, nature) {
+                function Transaction(date, value, type, description) {
                     _classCallCheck(this, Transaction);
 
                     this._date = date;
                     this._value = value;
-                    this._nature = nature;
+                    this._type = type;
+                    this._description = description;
 
                     Object.freeze(this);
                 }
@@ -54,9 +55,14 @@ System.register([], function (_export, _context) {
                         return this._value;
                     }
                 }, {
-                    key: "nature",
+                    key: "type",
                     get: function get() {
-                        return this._nature;
+                        return this._type;
+                    }
+                }, {
+                    key: "description",
+                    get: function get() {
+                        return this._description;
                     }
                 }]);
 

@@ -1,9 +1,9 @@
 'use strict';
 
-System.register(['./HttpService', '../models/Activity', '../models/Badge', '../models/Collectible'], function (_export, _context) {
+System.register(['./HttpService', '../models/Activity', '../models/Badge', '../models/Collectible', '../models/Transaction'], function (_export, _context) {
     "use strict";
 
-    var HttpService, Activity, Badge, Collectible, _createClass, UserService;
+    var HttpService, Activity, Badge, Collectible, Transaction, _createClass, UserService;
 
     function _classCallCheck(instance, Constructor) {
         if (!(instance instanceof Constructor)) {
@@ -20,6 +20,8 @@ System.register(['./HttpService', '../models/Activity', '../models/Badge', '../m
             Badge = _modelsBadge.Badge;
         }, function (_modelsCollectible) {
             Collectible = _modelsCollectible.Collectible;
+        }, function (_modelsTransaction) {
+            Transaction = _modelsTransaction.Transaction;
         }],
         execute: function () {
             _createClass = function () {
@@ -71,8 +73,8 @@ System.register(['./HttpService', '../models/Activity', '../models/Badge', '../m
 
                         return new Promise(function (resolve, reject) {
                             _this2._httpService.get('/v1/users/collectibles').then(function (collectibles_obj) {
-                                return resolve(collectibles_obj.map(function (badge_obj) {
-                                    return new Collectible(badge_obj.title, badge_obj.icon, badge_obj.value, badge_obj.serie, badge_obj.hist, badge_obj.owned, badge_obj.description);
+                                return resolve(collectibles_obj.map(function (collectible_obj) {
+                                    return new Collectible(collectible_obj._id, collectible_obj.title, collectible_obj.icon, collectible_obj.value, collectible_obj.serie, collectible_obj.hist, collectible_obj.owned, collectible_obj.description);
                                 }));
                             }).catch(function (error) {
                                 console.log(error);
@@ -119,12 +121,28 @@ System.register(['./HttpService', '../models/Activity', '../models/Badge', '../m
                         */
                     }
                 }, {
-                    key: 'addActivity',
-                    value: function addActivity(activity) {
+                    key: 'getUserTransactions',
+                    value: function getUserTransactions() {
                         var _this5 = this;
 
                         return new Promise(function (resolve, reject) {
-                            _this5._httpService.post('/v1/activities', {
+                            _this5._httpService.get('/v1/transactions').then(function (transactions_obj) {
+                                return resolve(transactions_obj.map(function (transaction_obj) {
+                                    return new Transaction(new Date(transaction_obj.date), transaction_obj.value, transaction_obj.type, transaction_obj.description);
+                                }));
+                            }).catch(function (error) {
+                                console.log(error);
+                                reject('Could not get transactions for user');
+                            });
+                        });
+                    }
+                }, {
+                    key: 'addActivity',
+                    value: function addActivity(activity) {
+                        var _this6 = this;
+
+                        return new Promise(function (resolve, reject) {
+                            _this6._httpService.post('/v1/activities', {
                                 method: 'POST',
                                 body: JSON.stringify({
                                     'date': activity.date,
@@ -145,6 +163,29 @@ System.register(['./HttpService', '../models/Activity', '../models/Badge', '../m
                             }).catch(function (error) {
                                 console.log(error);
                                 reject('Could not create activities for user');
+                            });
+                        });
+                    }
+                }, {
+                    key: 'purchaseCollectible',
+                    value: function purchaseCollectible(collectible_id) {
+                        var _this7 = this;
+
+                        // TODO: Try to use patch
+                        // return new Promise((resolve, reject) => {
+                        //     this._httpService
+                        //         .patch(`/v1/collectibles/${collectible_id}`)
+                        //         .then(res => resolve(res));
+                        // });
+                        return new Promise(function (resolve, reject) {
+                            _this7._httpService.get('/v1/collectible/purchase/' + collectible_id)
+                            // .then(res => {console.log('RES SERVICE', res); return resolve(res)});
+                            .then(function (res) {
+                                // console.log('RES SERVICE', res);
+                                resolve(res);
+                            }).catch(function (res) {
+                                // console.log('RES SERVICE ERROR', res);
+                                reject(res);
                             });
                         });
                     }

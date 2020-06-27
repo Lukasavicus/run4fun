@@ -120,7 +120,7 @@ System.register([], function (_export, _context) {
 
                             // other handlers
                             construct: function construct(target, args) {
-                                // console.log('HANDLERS - constructing');
+                                console.log('HANDLERS - constructing');
                                 var object = new (Function.prototype.bind.apply(target, [null].concat(_toConsumableArray(args))))();
                                 options[0].action(object);
                                 return object;

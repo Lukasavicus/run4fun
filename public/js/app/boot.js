@@ -30,7 +30,8 @@ System.register(['./controllers/ActivityController', './controllers/LoginControl
 
             flag = true;
 
-            setInterval(function () {
+            // setInterval(() => {
+            setTimeout(function () {
                 if (flag) {
                     console.log('loaded');
                     Array.from(document.querySelectorAll("div.collectible.not-purchased")).forEach(function (el) {

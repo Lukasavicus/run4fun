@@ -18,7 +18,7 @@ export class Activity{
     }
 
     get avg_velocity_kmh(){
-        // return the average velocity in meters/second;
+        // return the average velocity in km/h;
         const hours = TimeHelper.getNumberHours(this._time);
         return (this._route_distance / hours).toFixed(2);
     }
