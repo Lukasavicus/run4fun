@@ -124,13 +124,19 @@ module.exports = function(app){
 	};
 
 	api.removeById = function(req, res){
-		model.remove({'_id' : req.params.id})
-		.then(function() {
-			res.sendStatus(200);
-		}, function(err) {
-			console.log(err);
-			res.sendStatus(500);
-		});
+		const params = req.url.split('/');
+		const _id = params[params.length-1];
+
+		console.log("\n\n===== REMOVE THIS ======== \n\n", _id);
+
+		res.sendStatus(200);
+		// model.remove({'_id' : req.params.id})
+		// .then(function() {
+		// 	res.sendStatus(200);
+		// }, function(err) {
+		// 	console.log(err);
+		// 	res.sendStatus(500);
+		// });
 	};
 
 	api.create = function(req, res){

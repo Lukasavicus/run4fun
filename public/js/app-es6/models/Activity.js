@@ -1,14 +1,19 @@
 import {TimeHelper} from '../helpers/TimeHelper';
 
 export class Activity{
-    constructor(date=new Date(), physical_activity="Walking", place="", route_distance=0.0, time="00:00:00"){
+    constructor(date=new Date(), physical_activity="Walking", place="", route_distance=0.0, time="00:00:00", id=null){
         this._date = new Date(date.getTime());
         this._physical_activity = physical_activity;
         this._place = place;
         this._route_distance = route_distance;
         this._time = time;
+        this._id = id;
 
         Object.freeze(this);
+    }
+
+    get id(){
+        return this._id;
     }
 
     get avg_velocity_ms(){

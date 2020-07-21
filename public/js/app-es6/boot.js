@@ -17,19 +17,33 @@ Array
 
 // console.log(Array.from(document.querySelectorAll("div.collectible.not-purchased")));
 
-let flag = true;
-		// setInterval(() => {
-        setTimeout(() => {
-			if(flag){
-                console.log('loaded');
-                Array
-                    .from(document.querySelectorAll("div.collectible.not-purchased"))
-                    .forEach(el => {
-                        el.onclick = function(){
-                            Reflect.apply(activityController.buyCollectible, activityController, [el]);
-                        };
-                    });
+setTimeout(() => {
+        console.log('collectibles loaded');
+        Array
+            .from(document.querySelectorAll("div.collectible.not-purchased"))
+            .forEach(el => {
+                el.onclick = function(){
+                    Reflect.apply(activityController.buyCollectible, activityController, [el]);
+                };
+            });
+}, 1500);
 
-				flag = !flag
-			}
-        }, 1500);
+setTimeout(() => {
+        console.log('activities loaded');
+        Array
+            .from(document.querySelectorAll("td button"))
+            .filter(el => el.innerText=="edit")
+            .forEach(el => {
+                el.onclick = function(){
+                    //Reflect.apply(activityController.buyCollectible, activityController, [el]);
+                };
+            });
+        Array
+            .from(document.querySelectorAll("td button"))
+            .filter(el => el.innerText=="delete")
+            .forEach(el => {
+                el.onclick = function(){
+                    Reflect.apply(activityController.deleteActivity, activityController, [el]);
+                };
+            });
+}, 1500);

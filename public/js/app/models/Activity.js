@@ -41,6 +41,7 @@ System.register(["../helpers/TimeHelper"], function (_export, _context) {
                     var place = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "";
                     var route_distance = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 0.0;
                     var time = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : "00:00:00";
+                    var id = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : null;
 
                     _classCallCheck(this, Activity);
 
@@ -49,6 +50,7 @@ System.register(["../helpers/TimeHelper"], function (_export, _context) {
                     this._place = place;
                     this._route_distance = route_distance;
                     this._time = time;
+                    this._id = id;
 
                     Object.freeze(this);
                 }
@@ -57,6 +59,11 @@ System.register(["../helpers/TimeHelper"], function (_export, _context) {
                     key: "avg_time_by_distance",
                     value: function avg_time_by_distance(dist) {
                         return TimeHelper.timeToText(0, 0, parseInt(dist / this.avg_velocity_ms));
+                    }
+                }, {
+                    key: "id",
+                    get: function get() {
+                        return this._id;
                     }
                 }, {
                     key: "avg_velocity_ms",

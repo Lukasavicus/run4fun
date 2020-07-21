@@ -3,7 +3,7 @@
 System.register(['./controllers/ActivityController', './controllers/LoginController'], function (_export, _context) {
     "use strict";
 
-    var activityControllerInstance, loginControllerInstance, activityController, loginController, flag;
+    var activityControllerInstance, loginControllerInstance, activityController, loginController;
     return {
         setters: [function (_controllersActivityController) {
             activityControllerInstance = _controllersActivityController.activityControllerInstance;
@@ -28,20 +28,31 @@ System.register(['./controllers/ActivityController', './controllers/LoginControl
 
             // console.log(Array.from(document.querySelectorAll("div.collectible.not-purchased")));
 
-            flag = true;
-
-            // setInterval(() => {
             setTimeout(function () {
-                if (flag) {
-                    console.log('loaded');
-                    Array.from(document.querySelectorAll("div.collectible.not-purchased")).forEach(function (el) {
-                        el.onclick = function () {
-                            Reflect.apply(activityController.buyCollectible, activityController, [el]);
-                        };
-                    });
+                console.log('collectibles loaded');
+                Array.from(document.querySelectorAll("div.collectible.not-purchased")).forEach(function (el) {
+                    el.onclick = function () {
+                        Reflect.apply(activityController.buyCollectible, activityController, [el]);
+                    };
+                });
+            }, 1500);
 
-                    flag = !flag;
-                }
+            setTimeout(function () {
+                console.log('activities loaded');
+                Array.from(document.querySelectorAll("td button")).filter(function (el) {
+                    return el.innerText == "edit";
+                }).forEach(function (el) {
+                    el.onclick = function () {
+                        //Reflect.apply(activityController.buyCollectible, activityController, [el]);
+                    };
+                });
+                Array.from(document.querySelectorAll("td button")).filter(function (el) {
+                    return el.innerText == "delete";
+                }).forEach(function (el) {
+                    el.onclick = function () {
+                        Reflect.apply(activityController.deleteActivity, activityController, [el]);
+                    };
+                });
             }, 1500);
         }
     };

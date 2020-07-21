@@ -121,6 +121,22 @@ System.register([], function (_export, _context) {
                         });
                     }
                 }, {
+                    key: 'delete',
+                    value: function _delete(url) {
+                        var _this4 = this;
+
+                        return this._fetch(url, {
+                            method: 'DELETE',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            }
+                        }).then(function (res) {
+                            return _this4._handleErrors(res);
+                        }).then(function (res) {
+                            return res.json();
+                        });
+                    }
+                }, {
                     key: '_get',
                     value: function _get(url) {
                         return new Promise(function (resolve, reject) {

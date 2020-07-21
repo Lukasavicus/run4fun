@@ -17,6 +17,7 @@ export class ActivitiesView extends View {
                         <th rowspan="3" >Physical Activity</th>
                         <th rowspan="3" >Place</th>
                         <th colspan="5" >Measures</th>
+                        <th colspan="2" rowspan="2"> </th>
                     </tr>
                     <tr>
                         <th rowspan="2" >Distance</th>
@@ -27,11 +28,14 @@ export class ActivitiesView extends View {
                         <th>Avg. Velocity (m/s)</th>
                         <th>Avg. Velocity (km/h)</th>
                         <th>Avg. Time (100 mts)</th>
+                        <th> edit </th>
+                        <th> delete </th>
                     </tr>
                 </thead>
                 <tbody>
                     ${model.activities.map(activity => `
                             <tr>
+                                <td style="display:none">${activity.id}</td>
                                 <td>${DateHelper.dateToText(activity.date)}</td>
                                 <td>${activity.physical_activity}</td>
                                 <td>${activity.place}</td>
@@ -40,6 +44,8 @@ export class ActivitiesView extends View {
                                 <td>${activity.avg_velocity_ms}</td>
                                 <td>${activity.avg_velocity_kmh}</td>
                                 <td>${activity.avg_time_by_distance(100)}</td>
+                                <td> <button>edit</button> </td>
+                                <td> <button>delete</button> </td>
                             </tr>
                             `
                     )

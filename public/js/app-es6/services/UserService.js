@@ -80,7 +80,8 @@ export class UserService {
                         activity_obj.physical_activity,
                         activity_obj.place,
                         activity_obj.route_distance,
-                        activity_obj.time
+                        activity_obj.time,
+                        activity_obj._id
                     )
                 ))
             )
@@ -175,6 +176,21 @@ export class UserService {
                     // console.log('RES SERVICE ERROR', res);
                     reject(res);
                 });
+        });
+    }
+
+    removeActivity(activity_id){
+        return new Promise((resolve, reject) => {
+            this._httpService
+            .delete(`/v1/activities/${activity_id}`)
+            .then(response => {
+                console.log("Depois do delete", response);
+                resolve(response);
+            })
+            .catch(error => {
+                console.log(error);
+                reject(`Could not delete activity for user`);
+            });
         });
     }
 

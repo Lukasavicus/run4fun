@@ -254,6 +254,15 @@ System.register(['../helpers/Bind', '../helpers/DateHelper', '../helpers/MultiBi
                     value: function _closeModal() {
                         $("#parent-purchase-modal").style.display = "none";
                     }
+                }, {
+                    key: 'deleteActivity',
+                    value: function deleteActivity(elem) {
+                        console.log(elem);
+                        var activity_id = elem.parentElement.parentElement.querySelector("td").innerText;
+                        this._service.removeActivity(activity_id).then(function (r) {
+                            return console.log("resp", r);
+                        });
+                    }
                 }]);
 
                 return ActivityController;

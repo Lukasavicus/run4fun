@@ -65,6 +65,17 @@ export class HttpService {
         .then(res => res.json());
     }
 
+    delete(url) {
+        return this._fetch(url, {
+            method: 'DELETE',
+            headers : {
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(res => this._handleErrors(res))
+        .then(res => res.json());
+    }
+
     // This is deprecated
     _get(url) {
         return new Promise((resolve, reject) => {

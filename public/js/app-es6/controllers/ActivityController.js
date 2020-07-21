@@ -200,6 +200,14 @@ class ActivityController {
         $("#parent-purchase-modal").style.display = "none";
     }
 
+    deleteActivity(elem){
+        console.log(elem);
+        let activity_id = elem.parentElement.parentElement.querySelector("td").innerText;
+        this._service
+            .removeActivity(activity_id)
+            .then(r => console.log("resp", r));
+    }
+
 }
 
 let activityController = new ActivityController();

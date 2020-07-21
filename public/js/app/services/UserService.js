@@ -106,7 +106,7 @@ System.register(['./HttpService', '../models/Activity', '../models/Badge', '../m
                         return new Promise(function (resolve, reject) {
                             _this4._httpService.get('/v1/activities').then(function (activities_obj) {
                                 return resolve(activities_obj.map(function (activity_obj) {
-                                    return new Activity(new Date(activity_obj.date), activity_obj.physical_activity, activity_obj.place, activity_obj.route_distance, activity_obj.time);
+                                    return new Activity(new Date(activity_obj.date), activity_obj.physical_activity, activity_obj.place, activity_obj.route_distance, activity_obj.time, activity_obj._id);
                                 }));
                             }).catch(function (error) {
                                 console.log(error);
@@ -186,6 +186,21 @@ System.register(['./HttpService', '../models/Activity', '../models/Badge', '../m
                             }).catch(function (res) {
                                 // console.log('RES SERVICE ERROR', res);
                                 reject(res);
+                            });
+                        });
+                    }
+                }, {
+                    key: 'removeActivity',
+                    value: function removeActivity(activity_id) {
+                        var _this8 = this;
+
+                        return new Promise(function (resolve, reject) {
+                            _this8._httpService.delete('/v1/activities/' + activity_id).then(function (response) {
+                                console.log("Depois do delete", response);
+                                resolve(response);
+                            }).catch(function (error) {
+                                console.log(error);
+                                reject('Could not delete activity for user');
                             });
                         });
                     }

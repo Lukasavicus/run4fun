@@ -41,8 +41,8 @@ module.exports = function(app) {
                     return res.sendStatus(401);
             }
             else {
-                // console.log("ACEITO", req.url, req.method, req.params, req.query, req.headers);
                 console.log('Token aceito');
+                // console.log(`TOKEN url:[${req.url}]\nmethod:[${req.method}]\n`, req.params, req.query, req.headers);
                 console.log(decoded);
                 req.usuario = decoded.login;
                 next();
@@ -50,8 +50,8 @@ module.exports = function(app) {
         });
         }
         else {
-            console.log("NO-TOKEN", req.url, req.method, req.params, req.query, req.headers);
             console.log('Nenhum token enviado');
+            // console.log(`NO-TOKEN url:[${req.url}]\nmethod:[${req.method}]\n`, req.params, req.query, req.headers);
             return res.sendStatus(401);
         }
     }
