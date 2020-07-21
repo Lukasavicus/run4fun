@@ -85,13 +85,13 @@ module.exports = function(app){
 						// DO THE PURCHASE OPERATION HERE
 						console.log("Set up Transactions");
 						transactionRules
-						._set_up_transaction(-collectible.value, "outcome", `Outcome: Purchasing ${collectible.name} -${collectible.value}⚡`, user._id)
+						._set_up_transaction(-collectible.value, "outcome", `Outcome: Purchasing ${collectible.title} -${collectible.value}⚡`, user._id)
 						.then(() => {
 							// ADD COLLECTIBLE TO USER
 							userRules
 							.purchaseCollectible(collectible._id, user._id)
 							.then(() => {
-								console.log(`Collectible ${collectible.name} purchase by ${user.login}`);
+								console.log(`Collectible ${collectible.title} purchase by ${user.login}`);
 								res.json({'checkout' : 'ok'});
 							})
 							.catch(err => {

@@ -51,11 +51,11 @@ export class User {
     // Transactions
 
     addTransaction(transaction){
-        this._transactions.push(transaction);
+        this._transactionList.add(transaction);
     }
 
     get transactionList(){
-        return [].concat(this._transactions);
+        return this._transactionList;
     }
 
     get total_distance(){

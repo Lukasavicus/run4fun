@@ -72,7 +72,7 @@ System.register(['../helpers/TimeHelper', './BadgeList', './CollectibleList', '.
                 }, {
                     key: 'addTransaction',
                     value: function addTransaction(transaction) {
-                        this._transactions.push(transaction);
+                        this._transactionList.add(transaction);
                     }
                 }, {
                     key: 'name',
@@ -102,7 +102,7 @@ System.register(['../helpers/TimeHelper', './BadgeList', './CollectibleList', '.
                 }, {
                     key: 'transactionList',
                     get: function get() {
-                        return [].concat(this._transactions);
+                        return this._transactionList;
                     }
                 }, {
                     key: 'total_distance',

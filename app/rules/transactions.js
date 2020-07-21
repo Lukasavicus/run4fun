@@ -6,7 +6,7 @@ let transactionModel = mongoose.model('Transaction');
 let transactionRules = {
     _set_up_transaction : function(value, type, description, user_id){
         return transactionModel.create({
-                'date' : "",
+                'date' : new Date(),
                 'value' : value,
                 'type' : type,
                 'description' : description,
