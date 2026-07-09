@@ -10,7 +10,7 @@ let transactionRules = {
                 'value' : value,
                 'type' : type,
                 'description' : description,
-                'user_id' : mongoose.Types.ObjectId(user_id),
+                'user_id' : new mongoose.Types.ObjectId(user_id),
             }).then(function(transaction){
                 return transaction
             }, function(err){
