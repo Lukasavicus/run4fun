@@ -42,10 +42,10 @@ module.exports = function(app){
 						let result = f(activities);
 						console.log("result, ", result);
 						if(result){
-							console.log("Inserting badge with _id: ", mongoose.Types.ObjectId(badge._id), badge._id);
+							console.log("Inserting badge with _id: ", new mongoose.Types.ObjectId(badge._id), badge._id);
 							userModel.findOneAndUpdate(
-								{"$and" : [{"login" : req.usuario}, {"badges" : { "$nin" : [mongoose.Types.ObjectId(badge._id)] } } ] },
-								{ "$push" : {"badges" : mongoose.Types.ObjectId(badge._id) } }
+								{"$and" : [{"login" : req.usuario}, {"badges" : { "$nin" : [new mongoose.Types.ObjectId(badge._id)] } } ] },
+								{ "$push" : {"badges" : new mongoose.Types.ObjectId(badge._id) } }
 							)
 							.then(function(updatedUser){
 								console.log("updatedUser", updatedUser);
@@ -148,7 +148,7 @@ module.exports = function(app){
 			/**/
 			userModel.findOneAndUpdate(
 				{"login" : req.usuario},
-				{ "$push" : {"activities" : mongoose.Types.ObjectId(activity._id) } }
+				{ "$push" : {"activities" : new mongoose.Types.ObjectId(activity._id) } }
 			)
 			.then(function(user){
 				//console.log("User updated ", user);

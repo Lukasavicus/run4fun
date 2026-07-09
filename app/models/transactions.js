@@ -5,7 +5,7 @@ let schema = mongoose.Schema({
 	value: 		{type : Number, require : true},
 	type: 		{type : String, require : true},
 	description:{type : String, require : true},
-	user_id: 	{type : mongoose.Schema.ObjectId, require : true}
+	user_id: 	{type : mongoose.Schema.Types.ObjectId, require : true}
 },
 {
 	timestamps: {
