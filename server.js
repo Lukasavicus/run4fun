@@ -1,8 +1,8 @@
 let http = require('http')
 var app = require('./config/express');
-require('./config/database')('mongodb://localhost/run4fun');
+require('./config/database')(process.env.MONGODB_URI || 'mongodb://localhost/run4fun');
 
-let port = 3000;
+let port = process.env.PORT || 3000;
 
 http
 	.createServer(app)
