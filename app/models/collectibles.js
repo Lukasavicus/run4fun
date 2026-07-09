@@ -16,4 +16,4 @@ let schema = mongoose.Schema({
 }
 );
 
-mongoose.model('Collectible', schema);
+mongoose.model('Collectible', schema, (process.env.DB_PREFIX || '') + 'collectibles');

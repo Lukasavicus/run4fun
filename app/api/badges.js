@@ -34,7 +34,7 @@ module.exports = function(app){
 	};
 
 	api.removeById = function(req, res){
-		model.remove({'_id' : req.params.id})
+		model.deleteOne({'_id' : req.params.id})
 		.then(function() {
 			res.sendStatus(200);
 		}, function(err) {

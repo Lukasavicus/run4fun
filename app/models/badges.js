@@ -15,4 +15,4 @@ let schema = mongoose.Schema({
 }
 );
 
-mongoose.model('Badge', schema);
+mongoose.model('Badge', schema, (process.env.DB_PREFIX || '') + 'badges');

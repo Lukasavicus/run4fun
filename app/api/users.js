@@ -54,7 +54,7 @@ module.exports = function(app){
 
 	api.removeById = function(req, res){
 		const _id = req.params.id;
-		model.remove({'_id' : _id})
+		model.deleteOne({'_id' : _id})
 		.then(
 			function(){
 				res.sendStatus(200);

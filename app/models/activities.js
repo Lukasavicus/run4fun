@@ -15,4 +15,4 @@ let schema = mongoose.Schema({
 	}
 });
 
-mongoose.model('Activity', schema);
+mongoose.model('Activity', schema, (process.env.DB_PREFIX || '') + 'activities');

@@ -14,4 +14,4 @@ let schema = mongoose.Schema({
 	}
 });
 
-mongoose.model('Transaction', schema);
+mongoose.model('Transaction', schema, (process.env.DB_PREFIX || '') + 'transactions');

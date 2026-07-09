@@ -19,4 +19,4 @@ let schema = mongoose.Schema({
 	}
 });
 
-mongoose.model('User', schema);
+mongoose.model('User', schema, (process.env.DB_PREFIX || '') + 'users');

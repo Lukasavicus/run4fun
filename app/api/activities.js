@@ -130,7 +130,7 @@ module.exports = function(app){
 		console.log("\n\n===== REMOVE THIS ======== \n\n", _id);
 
 		res.sendStatus(200);
-		// model.remove({'_id' : req.params.id})
+		// model.deleteOne({'_id' : req.params.id})
 		// .then(function() {
 		// 	res.sendStatus(200);
 		// }, function(err) {
