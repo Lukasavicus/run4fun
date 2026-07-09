@@ -18,7 +18,7 @@ module.exports = function(app){
 			},
 			{ $lookup : 
 				{
-					from : "activities",
+					from : model.collection.name,
 					localField : "activities",
 					foreignField : "_id",
 					as : "activities_by_user"
@@ -83,7 +83,7 @@ module.exports = function(app){
 			},
 			{ $lookup : 
 				{
-					from : "activities",
+					from : model.collection.name,
 					localField : "activities",
 					foreignField : "_id",
 					as : "activities_by_user"
