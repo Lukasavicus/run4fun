@@ -6,6 +6,7 @@
   "packageManager": "pnpm@10.34.5",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
+    "seed:dev": "node scripts/seed-dev-data.js",
     "start": "node server.js"
   },
   "engines": {
