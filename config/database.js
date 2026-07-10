@@ -18,12 +18,11 @@ module.exports = function(uri) {
 	});
 
 	process.on('SIGINT', function() {
-		mongoose.connection.close(function() {
+		mongoose.connection.close().then(function() {
 			console.log('Aplicação terminada, conexão fechada')
 			process.exit(0);
 		});
 		
 	})
 };
-
 

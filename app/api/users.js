@@ -4,6 +4,7 @@ module.exports = function(app){
 	let api = {};
 	let model = mongoose.model('User');
 	let collectibleModel = mongoose.model('Collectible');
+	let badgeModel = mongoose.model('Badge');
 
 	
 	api.list = function(req, res){
@@ -98,7 +99,7 @@ module.exports = function(app){
 			},
 			{ $lookup : 
 				{
-					from : "badges",
+					from : badgeModel.collection.name,
 					localField : "badges",
 					foreignField : "_id",
 					as : "badges_by_user"
@@ -132,7 +133,7 @@ module.exports = function(app){
 			},
 			{ $lookup : 
 				{
-					from : "collectibles",
+					from : collectibleModel.collection.name,
 					localField : "collectibles",
 					foreignField : "_id",
 					as : "collectibles_by_user"

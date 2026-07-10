@@ -5,7 +5,7 @@ let model = mongoose.model('User');
 let userRules = {
     _set_up_user_balance : function(value, user_id){
         return model.findOneAndUpdate(
-                { '_id' : mongoose.Types.ObjectId(user_id)},
+                { '_id' : new mongoose.Types.ObjectId(user_id)},
                 {"$inc" : { "balance" : value } }
             )
             .then(function(updatedUser){
@@ -19,7 +19,7 @@ let userRules = {
     purchaseCollectible : function(collectible_id, user_id){
         return model.findOneAndUpdate(
                 { '_id' : user_id},
-                { "$push" : {"collectibles" : mongoose.Types.ObjectId(collectible_id) } }
+                { "$push" : {"collectibles" : new mongoose.Types.ObjectId(collectible_id) } }
             )
             .then(function(user){
                 return user

@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Site Run4Fun",
   "main": "server.js",
+  "packageManager": "pnpm@10.34.5",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node server.js"
@@ -13,14 +14,14 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "body-parser": "^1.19.0",
+    "body-parser": "^1.20.6",
     "consign": "^0.1.6",
-    "cors": "^2.8.5",
-    "express": "^4.17.1",
-    "jsonwebtoken": "^8.5.1",
+    "cors": "^2.8.6",
+    "express": "^4.22.2",
+    "jsonwebtoken": "^9.0.3",
     "mongoose": "^8.9.5"
   },
   "devDependencies": {
-    "nodemon": "^2.0.2"
+    "nodemon": "^3.1.14"
   }
 }
