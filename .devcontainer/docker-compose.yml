@@ -5,6 +5,8 @@ services:
     environment:
       MONGODB_URI: mongodb://mongo:27017/run4fun
       PORT: 3000
+    ports:
+      - "3000:3000"
     volumes:
       - ..:/workspaces/run4fun:cached
     depends_on:
