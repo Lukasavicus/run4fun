@@ -5,6 +5,8 @@
   "main": "server.js",
   "packageManager": "pnpm@10.34.5",
   "scripts": {
+    "assets:collectibles": "node scripts/generate-collectible-assets.js",
+    "smoke:dev": "node scripts/smoke-dev.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "seed:dev": "node scripts/seed-dev-data.js",
     "start": "node server.js"
