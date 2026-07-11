@@ -193,14 +193,16 @@ System.register(['../helpers/Bind', '../helpers/DateHelper', '../helpers/MultiBi
                     value: function toogle_section(event) {
                         var _id = event.target.id;
                         var toogle = $('#' + _id).dataset.toogle;
-                        var target = $('#' + _id).parentElement.querySelector("section");
+                        var target = $('#' + _id).closest(".section-title").querySelector("section");
 
                         if (toogle == "true") {
-                            $('#' + _id).innerText = "[Show Section]";
+                            $('#' + _id).innerText = "Show";
                             $('#' + _id).dataset.toogle = "false";
+                            target.classList.add("collapsed");
                         } else {
-                            $('#' + _id).innerText = "[Hide Section]";
+                            $('#' + _id).innerText = "Hide";
                             $('#' + _id).dataset.toogle = "true";
+                            target.classList.remove("collapsed");
                         }
 
                         Array.from(target.children).forEach(function (el) {

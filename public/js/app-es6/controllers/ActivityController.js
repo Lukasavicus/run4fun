@@ -144,15 +144,17 @@ class ActivityController {
     toogle_section(event){
         let _id = event.target.id;
         let toogle = $(`#${_id}`).dataset.toogle;
-        let target = $(`#${_id}`).parentElement.querySelector("section");
+        let target = $(`#${_id}`).closest(".section-title").querySelector("section");
         
         if(toogle == "true"){
-            $(`#${_id}`).innerText = "[Show Section]";
+            $(`#${_id}`).innerText = "Show";
             $(`#${_id}`).dataset.toogle = "false";
+            target.classList.add("collapsed");
         }
         else{
-            $(`#${_id}`).innerText = "[Hide Section]";
+            $(`#${_id}`).innerText = "Hide";
             $(`#${_id}`).dataset.toogle = "true";
+            target.classList.remove("collapsed");
         }
 
         Array.from(target.children).forEach(el => {console.log(el)});

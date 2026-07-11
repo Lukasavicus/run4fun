@@ -44,8 +44,8 @@ export class ActivitiesView extends View {
                                 <td>${activity.avg_velocity_ms}</td>
                                 <td>${activity.avg_velocity_kmh}</td>
                                 <td>${activity.avg_time_by_distance(100)}</td>
-                                <td> <button>edit</button> </td>
-                                <td> <button>delete</button> </td>
+                                <td> <button class="table-action">edit</button> </td>
+                                <td> <button class="table-action danger">delete</button> </td>
                             </tr>
                             `
                     )

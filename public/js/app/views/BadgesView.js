@@ -71,7 +71,7 @@ System.register(['./View'], function (_export, _context) {
                     key: 'template',
                     value: function template(model) {
                         return '\n            ' + model.badgeList.badges.map(function (badge) {
-                            return '\n                <div class="badge true">\n                    <img src="' + badge.icon + '" "="" class="badge-img">\n                    <p class="badge-title">' + badge.title + '</p>\n                </div>\n            ';
+                            return '\n                <div class="badge true">\n                    <img src="' + badge.icon + '" class="badge-img">\n                    <p class="badge-title">' + badge.title + '</p>\n                </div>\n            ';
                         }).join('') + '\n        ';
                     }
                 }]);

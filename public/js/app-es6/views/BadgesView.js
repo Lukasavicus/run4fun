@@ -10,7 +10,7 @@ export class BadgesView extends View {
         return `
             ${model.badgeList.badges.map(badge => `
                 <div class="badge true">
-                    <img src="${badge.icon}" "="" class="badge-img">
+                    <img src="${badge.icon}" class="badge-img">
                     <p class="badge-title">${badge.title}</p>
                 </div>
             `).join('')}
