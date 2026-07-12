@@ -21,7 +21,7 @@ class LoginController{
 		// Ao receber a resposta favoravel de login:
 		// 		Grava o resultado do x-access-token na sessão do usuário
 		// 		Redireciona para o index
-		this._service.post('/autenticar', {
+		return this._service.post('/autenticar', {
 			method : 'POST',
 			body: JSON.stringify({
 				'login' : login,
@@ -49,18 +49,31 @@ class LoginController{
 		// redir home (login / sign in)
 	}
 
+	signup(login, email, password){
+		if(!login || !email || !password) {
+			throw new Error('Fill login, email and password');
+		}
+
+		return this._service.post('/signup', {
+			method : 'POST',
+			body: JSON.stringify({
+				'login' : login,
+				'email' : email,
+				'password' : password
+			}),
+			headers: {
+			  'Content-Type': 'application/json'
+			},
+		}, true)
+		.then(() => this.login(login, password));
+	}
+
 	logout(){
 		delete window.sessionStorage.token;
 		delete window.sessionStorage.login;
 		window.location.href = "home.html";
 	}
 
-	signin(){
-		// Faz validações
-		// 		Se validações ok:
-		// 		Submete dados para cadastro do usuário
-		//		Se cadastro ok redireciona para tela de login
-	}
 }
 
 let loginController = new LoginController();

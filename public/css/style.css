@@ -496,6 +496,15 @@ main {
 	padding: 30px;
 }
 
+.signin {
+	display: grid;
+	gap: 16px;
+}
+
+.signup-card {
+	padding-top: 24px;
+}
+
 .login-card h2 {
 	margin: 0 0 24px;
 	color: #17252f;
@@ -539,6 +548,14 @@ main {
 	color: #60737c;
 	font-size: 12px;
 	text-align: center;
+}
+
+.home-message {
+	min-height: 18px;
+	margin: -12px 0 12px;
+	color: #c84f4f;
+	font-size: 12px;
+	font-weight: bold;
 }
 
 /* === TABLES ================================ */

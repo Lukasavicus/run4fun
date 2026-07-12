@@ -39,6 +39,7 @@
 		<section class="signin">
 			<form class="login-card">
 				<h2>Welcome back</h2>
+				<p class="home-message" id="home-message"></p>
 
 				<label for="login">Login</label>
 				<input type="text" id="login" name="login" autocomplete="username">
@@ -48,6 +49,21 @@
 
 				<button id="login-btn" type="submit">Login</button>
 				<p class="login-hint">Demo account: demo / demo</p>
+			</form>
+
+			<form class="login-card signup-card">
+				<h2>Create account</h2>
+
+				<label for="signup-login">Login</label>
+				<input type="text" id="signup-login" name="signup-login" autocomplete="username">
+
+				<label for="signup-email">Email</label>
+				<input type="email" id="signup-email" name="signup-email" autocomplete="email">
+
+				<label for="signup-password">Password</label>
+				<input type="password" id="signup-password" name="signup-password" autocomplete="new-password">
+
+				<button id="signup-btn" type="submit">Create account</button>
 			</form>
 		</section>
 	</main>

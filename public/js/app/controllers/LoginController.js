@@ -67,7 +67,7 @@ System.register(['../services/HttpService'], function (_export, _context) {
 						// Ao receber a resposta favoravel de login:
 						// 		Grava o resultado do x-access-token na sessão do usuário
 						// 		Redireciona para o index
-						this._service.post('/autenticar', {
+						return this._service.post('/autenticar', {
 							method: 'POST',
 							body: JSON.stringify({
 								'login': _login,
@@ -95,19 +95,34 @@ System.register(['../services/HttpService'], function (_export, _context) {
 						// redir home (login / sign in)
 					}
 				}, {
+					key: 'signup',
+					value: function signup(login, email, password) {
+						var _this2 = this;
+
+						if (!login || !email || !password) {
+							throw new Error('Fill login, email and password');
+						}
+
+						return this._service.post('/signup', {
+							method: 'POST',
+							body: JSON.stringify({
+								'login': login,
+								'email': email,
+								'password': password
+							}),
+							headers: {
+								'Content-Type': 'application/json'
+							}
+						}, true).then(function () {
+							return _this2.login(login, password);
+						});
+					}
+				}, {
 					key: 'logout',
 					value: function logout() {
 						delete window.sessionStorage.token;
 						delete window.sessionStorage.login;
 						window.location.href = "home.html";
-					}
-				}, {
-					key: 'signin',
-					value: function signin() {
-						// Faz validações
-						// 		Se validações ok:
-						// 		Submete dados para cadastro do usuário
-						//		Se cadastro ok redireciona para tela de login
 					}
 				}]);
 
