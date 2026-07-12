@@ -70,8 +70,19 @@ System.register(['./View'], function (_export, _context) {
                 _createClass(BadgesView, [{
                     key: 'template',
                     value: function template(model) {
-                        return '\n            ' + model.badgeList.badges.map(function (badge) {
-                            return '\n                <div class="badge true">\n                    <img src="' + badge.icon + '" class="badge-img">\n                    <p class="badge-title">' + badge.title + '</p>\n                </div>\n            ';
+                        var groups = model.badgeList.badges.reduce(function (badgesByGroup, badge) {
+                            var group = badge.group || 'General';
+                            badgesByGroup[group] = badgesByGroup[group] || [];
+                            badgesByGroup[group].push(badge);
+                            return badgesByGroup;
+                        }, {});
+
+                        return '\n            <div class="badge-toolbar">\n                <button class="badge-filter active" type="button" onclick="this.closest(\'#badges\').dataset.filter=\'all\'; this.parentNode.querySelectorAll(\'.badge-filter\').forEach(button => button.classList.remove(\'active\')); this.classList.add(\'active\')">All</button>\n                <button class="badge-filter" type="button" onclick="this.closest(\'#badges\').dataset.filter=\'earned\'; this.parentNode.querySelectorAll(\'.badge-filter\').forEach(button => button.classList.remove(\'active\')); this.classList.add(\'active\')">Earned</button>\n            </div>\n\n            ' + Object.keys(groups).map(function (group) {
+                            return '\n                <div class="badge-group">\n                    <h3>' + group + '</h3>\n                    <div class="badge-grid">\n                        ' + groups[group].sort(function (a, b) {
+                                return Number(b.earned) - Number(a.earned) || a.title.localeCompare(b.title);
+                            }).map(function (badge) {
+                                return '\n                                <div class="badge ' + (badge.earned ? 'earned' : 'blocked') + '">\n                                    <span class="badge-status">' + (badge.earned ? 'Earned' : 'Blocked') + '</span>\n                                    <img src="' + badge.icon + '" class="badge-img" alt="' + badge.title + '">\n                                    <p class="badge-title">' + badge.title + '</p>\n                                    <p class="badge-description">' + badge.description + '</p>\n                                </div>\n                            ';
+                            }).join('') + '\n                    </div>\n                </div>\n            ';
                         }).join('') + '\n        ';
                     }
                 }]);

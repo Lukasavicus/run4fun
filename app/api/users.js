@@ -90,37 +90,34 @@ module.exports = function(app){
 
 	//Badges
 	api.listBadges = function(req, res){
-		//console.log(`Getting badges for ${req.usuario}`);
-		model.aggregate([
-			{
-				$match: {
-					login: req.usuario
-				}
-			},
-			{ $lookup : 
-				{
-					from : badgeModel.collection.name,
-					localField : "badges",
-					foreignField : "_id",
-					as : "badges_by_user"
-				}
-			},
-			{
-				$project: {
-					_id: 0,
-					badges_by_user: 1,
-				}
-			}
-		])
-		.then(
-			function(result){
-				res.json(result[0]["badges_by_user"]);
-			},
-			function(err){
-				console.log("API / User -> listBadges ", err);
-				res.sendStatus(500);
-			}
-		);
+		let earnedBadges = [];
+
+		model.findOne({ login: req.usuario })
+		.then(function(user){
+			earnedBadges = ((user && user.badges) || []).map(function(badgeId){
+				return badgeId.toString();
+			});
+
+			return badgeModel.find().sort({ group: 1, sort_order: 1, title: 1 });
+		})
+		.then(function(badges){
+			res.json(badges
+				.map(function(badge){
+					let badgeObj = badge.toObject();
+					badgeObj.earned = earnedBadges.indexOf(badge._id.toString()) >= 0;
+					return badgeObj;
+				})
+				.sort(function(a, b){
+					if(a.earned != b.earned) return a.earned ? -1 : 1;
+					if(a.group != b.group) return a.group.localeCompare(b.group);
+					return (a.sort_order || 0) - (b.sort_order || 0);
+				})
+			);
+		})
+		.catch(function(err){
+			console.log("API / User -> listBadges ", err);
+			res.sendStatus(500);
+		});
 	};
 
 	// Collectibles

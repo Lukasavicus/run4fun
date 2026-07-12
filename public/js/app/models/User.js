@@ -65,6 +65,11 @@ System.register(['../helpers/TimeHelper', './BadgeList', './CollectibleList', '.
                         this._badgeList.add(badge);
                     }
                 }, {
+                    key: 'setBadges',
+                    value: function setBadges(badges) {
+                        this._badgeList.replace(badges);
+                    }
+                }, {
                     key: 'addActivity',
                     value: function addActivity(activity) {
                         this._activities.push(activity);

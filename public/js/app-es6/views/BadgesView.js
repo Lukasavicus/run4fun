@@ -7,11 +7,34 @@ export class BadgesView extends View {
     }
 
     template(model){
+        const groups = model.badgeList.badges.reduce((badgesByGroup, badge) => {
+            const group = badge.group || 'General';
+            badgesByGroup[group] = badgesByGroup[group] || [];
+            badgesByGroup[group].push(badge);
+            return badgesByGroup;
+        }, {});
+
         return `
-            ${model.badgeList.badges.map(badge => `
-                <div class="badge true">
-                    <img src="${badge.icon}" class="badge-img">
-                    <p class="badge-title">${badge.title}</p>
+            <div class="badge-toolbar">
+                <button class="badge-filter active" type="button" onclick="this.closest('#badges').dataset.filter='all'; this.parentNode.querySelectorAll('.badge-filter').forEach(button => button.classList.remove('active')); this.classList.add('active')">All</button>
+                <button class="badge-filter" type="button" onclick="this.closest('#badges').dataset.filter='earned'; this.parentNode.querySelectorAll('.badge-filter').forEach(button => button.classList.remove('active')); this.classList.add('active')">Earned</button>
+            </div>
+
+            ${Object.keys(groups).map(group => `
+                <div class="badge-group">
+                    <h3>${group}</h3>
+                    <div class="badge-grid">
+                        ${groups[group]
+                            .sort((a, b) => Number(b.earned) - Number(a.earned) || a.title.localeCompare(b.title))
+                            .map(badge => `
+                                <div class="badge ${badge.earned ? 'earned' : 'blocked'}">
+                                    <span class="badge-status">${badge.earned ? 'Earned' : 'Blocked'}</span>
+                                    <img src="${badge.icon}" class="badge-img" alt="${badge.title}">
+                                    <p class="badge-title">${badge.title}</p>
+                                    <p class="badge-description">${badge.description}</p>
+                                </div>
+                            `).join('')}
+                    </div>
                 </div>
             `).join('')}
         `;

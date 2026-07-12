@@ -106,7 +106,7 @@ System.register(['../helpers/Bind', '../helpers/DateHelper', '../helpers/MultiBi
                 _createClass(ActivityController, [{
                     key: '_newUserModel',
                     value: function _newUserModel(name, balance) {
-                        return new MultiBind(new User(name, balance), [new ActivitiesView($("#activities-data")), new ActivitiesDashboardView($("#management-dashboard")), new BadgesView($("#badges")), new CollectiblesView($("#collectibles")), new TransactionsView($("#extract")), new NavigationBarView($(".user-pill"))], 'addActivity', 'addBadge', 'addCollectible', 'addTransaction');
+                        return new MultiBind(new User(name, balance), [new ActivitiesView($("#activities-data")), new ActivitiesDashboardView($("#management-dashboard")), new BadgesView($("#badges")), new CollectiblesView($("#collectibles")), new TransactionsView($("#extract")), new NavigationBarView($(".user-pill"))], 'addActivity', 'addBadge', 'setBadges', 'addCollectible', 'addTransaction');
                     }
                 }, {
                     key: '_init',
@@ -126,6 +126,7 @@ System.register(['../helpers/Bind', '../helpers/DateHelper', '../helpers/MultiBi
                         this._service.addActivity(activity).then(function (res) {
                             console.log(res);
                             _this2._message.text = "Activity created";
+                            return _this2._refreshBadges();
                         }).catch(function (error) {
                             return _this2._message.text = error;
                         });
@@ -148,11 +149,7 @@ System.register(['../helpers/Bind', '../helpers/DateHelper', '../helpers/MultiBi
                         });
 
                         this._service.getUserBadges().then(function (badges) {
-                            return badges;
-                        }).then(function (badges) {
-                            badges.forEach(function (badge) {
-                                return _this3._user.addBadge(badge);
-                            });
+                            return _this3._user.setBadges(badges);
                         }).catch(function (error) {
                             return _this3._message.text = error;
                         });
@@ -171,6 +168,15 @@ System.register(['../helpers/Bind', '../helpers/DateHelper', '../helpers/MultiBi
                             });
                         }).catch(function (error) {
                             return _this3._message.text = error;
+                        });
+                    }
+                }, {
+                    key: '_refreshBadges',
+                    value: function _refreshBadges() {
+                        var _this4 = this;
+
+                        return this._service.getUserBadges().then(function (badges) {
+                            return _this4._user.setBadges(badges);
                         });
                     }
                 }, {
@@ -215,7 +221,7 @@ System.register(['../helpers/Bind', '../helpers/DateHelper', '../helpers/MultiBi
                 }, {
                     key: 'buyCollectible',
                     value: function buyCollectible(elem) {
-                        var _this4 = this;
+                        var _this5 = this;
 
                         // open modal, option to confirm checkout, purchase order
                         console.log(elem);
@@ -238,7 +244,7 @@ System.register(['../helpers/Bind', '../helpers/DateHelper', '../helpers/MultiBi
                             event.preventDefault();
 
                             $(".oper-gif img").classList.remove('disp-n');
-                            _this4._service.purchaseCollectible(elem.id).then(function (resp) {
+                            _this5._service.purchaseCollectible(elem.id).then(function (resp) {
                                 $(".oper-gif img").src = './imgs/misc/ok.gif';
                                 $(".modal-content").classList.remove('error');
                                 $(".modal-content").classList.add('success');

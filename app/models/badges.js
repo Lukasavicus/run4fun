@@ -6,6 +6,8 @@ let schema = mongoose.Schema({
 	icon: 		{type : String, require : true},
 	value: 		{type : Number, require : true},
 	description:{type : String, require : true},
+	group: 		{type : String, default : 'General'},
+	sort_order: {type : Number, default : 0},
 },
 {
 	timestamps: {

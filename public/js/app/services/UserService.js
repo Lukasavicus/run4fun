@@ -90,7 +90,7 @@ System.register(['./HttpService', '../models/Activity', '../models/Badge', '../m
                         return new Promise(function (resolve, reject) {
                             _this3._httpService.get('/v1/users/badges').then(function (badges_obj) {
                                 return resolve(badges_obj.map(function (badge_obj) {
-                                    return new Badge(badge_obj.title, badge_obj.icon, badge_obj.description);
+                                    return new Badge(badge_obj._id, badge_obj.title, badge_obj.icon, badge_obj.description, badge_obj.group, badge_obj.earned);
                                 }));
                             }).catch(function (error) {
                                 console.log(error);

@@ -35,6 +35,10 @@ export class User {
         this._badgeList.add(badge);
     }
 
+    setBadges(badges){
+        this._badgeList.replace(badges);
+    }
+
     get badgeList(){
         return this._badgeList;
     }

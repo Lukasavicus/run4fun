@@ -60,7 +60,7 @@ class ActivityController {
             new CollectiblesView($("#collectibles")),
             new TransactionsView($("#extract")),
             new NavigationBarView($(".user-pill"))
-        ], 'addActivity', 'addBadge', 'addCollectible', 'addTransaction');
+        ], 'addActivity', 'addBadge', 'setBadges', 'addCollectible', 'addTransaction');
     }
 
     _init(){
@@ -78,6 +78,7 @@ class ActivityController {
             .then(res => {
                 console.log(res);
                 this._message.text = "Activity created";
+                return this._refreshBadges();
             })
             .catch(error => this._message.text = error);
 
@@ -96,12 +97,7 @@ class ActivityController {
 
         this._service
             .getUserBadges()
-            .then(badges => {
-                return badges;
-            })
-            .then(badges => {
-                badges.forEach(badge => this._user.addBadge(badge));
-            })
+            .then(badges => this._user.setBadges(badges))
             .catch(error => this._message.text = error);
 
 
@@ -120,6 +116,12 @@ class ActivityController {
                 .catch(error => this._message.text = error);
 
 
+    }
+
+    _refreshBadges(){
+        return this._service
+            .getUserBadges()
+            .then(badges => this._user.setBadges(badges));
     }
 
     _createActivity(){

@@ -55,9 +55,12 @@ export class UserService {
             .then(badges_obj =>
                 resolve(badges_obj.map(badge_obj =>
                     new Badge(
+                        badge_obj._id,
                         badge_obj.title,
                         badge_obj.icon,
-                        badge_obj.description
+                        badge_obj.description,
+                        badge_obj.group,
+                        badge_obj.earned
                     )
                 ))
             )

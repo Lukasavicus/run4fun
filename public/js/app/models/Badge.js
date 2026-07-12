@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 System.register([], function (_export, _context) {
     "use strict";
@@ -32,38 +32,59 @@ System.register([], function (_export, _context) {
                 };
             }();
 
-            _export("Badge", Badge = function () {
-                function Badge(title, icon, description) {
+            _export('Badge', Badge = function () {
+                function Badge(id, title, icon, description) {
+                    var group = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : 'General';
+                    var earned = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : false;
+
                     _classCallCheck(this, Badge);
 
+                    this._id = id;
                     this._title = title;
                     this._icon = icon;
                     this._description = description;
+                    this._group = group;
+                    this._earned = earned;
 
                     Object.freeze(this);
                 }
 
                 _createClass(Badge, [{
-                    key: "title",
+                    key: 'id',
+                    get: function get() {
+                        return this._id;
+                    }
+                }, {
+                    key: 'title',
                     get: function get() {
                         return this._title;
                     }
                 }, {
-                    key: "icon",
+                    key: 'icon',
                     get: function get() {
                         return this._icon;
                     }
                 }, {
-                    key: "description",
+                    key: 'description',
                     get: function get() {
                         return this._description;
+                    }
+                }, {
+                    key: 'group',
+                    get: function get() {
+                        return this._group;
+                    }
+                }, {
+                    key: 'earned',
+                    get: function get() {
+                        return this._earned;
                     }
                 }]);
 
                 return Badge;
             }());
 
-            _export("Badge", Badge);
+            _export('Badge', Badge);
         }
     };
 });

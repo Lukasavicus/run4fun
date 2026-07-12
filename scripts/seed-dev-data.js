@@ -37,100 +37,109 @@ const nerdCollections = [
   ['Sci Fi Relics', ['Time Crystal', 'Neon Visor', 'Plasma Core', 'Orbit Drone', 'Holo Deck', 'Gravity Boots', 'Nano Cube', 'Star Compass', 'Warp Cell', 'Rocket Badge']],
 ];
 
-function totalDistance(activities) {
-  return activities.reduce((total, activity) => total + Number(activity.route_distance || 0), 0);
+function totalDistanceCriteria(km) {
+  return `(activities) => activities.reduce((total, activity) => total + Number(activity.route_distance || 0), 0) >= ${km}`;
 }
 
-function longestRun(activities) {
-  return activities.reduce((best, activity) => Math.max(best, Number(activity.route_distance || 0)), 0);
+function singleDistanceCriteria(km) {
+  return `(activities) => activities.some(activity => Number(activity.route_distance || 0) >= ${km})`;
 }
 
-function activityCount(activities, type) {
-  return activities.filter(activity => !type || activity.physical_activity == type).length;
+function activityCountCriteria(count, type) {
+  if(!type) return `(activities) => activities.length >= ${count}`;
+  return `(activities) => activities.filter(activity => activity.physical_activity == '${type}').length >= ${count}`;
 }
 
-function fastRuns(activities, minDistance, maxMinutesPerKm) {
-  return activities.filter(activity => {
-    const distance = Number(activity.route_distance || 0);
-    const parts = String(activity.time || '00:00:00').split(':').map(Number);
-    const seconds = (parts[0] || 0) * 3600 + (parts[1] || 0) * 60 + (parts[2] || 0);
-    return distance >= minDistance && seconds > 0 && (seconds / 60) / distance <= maxMinutesPerKm;
-  }).length;
+function paceCriteria(pace) {
+  return `(activities) => activities.filter(activity => { const d = Number(activity.route_distance || 0); const p = String(activity.time || '00:00:00').split(':').map(Number); const s = (p[0] || 0) * 3600 + (p[1] || 0) * 60 + (p[2] || 0); return d >= 3 && s > 0 && (s / 60) / d <= ${pace}; }).length >= 1`;
 }
 
-const badgeGroups = [
-  {
-    prefix: 'Distance',
-    thresholds: [1, 3, 5, 10, 15, 21, 30, 42, 50, 75, 100, 150, 200, 250, 300, 400, 500, 750, 1000, 1500],
-    description: km => `Run ${km}km in total`,
-    criteria: km => `(activities) => activities.reduce((total, activity) => total + Number(activity.route_distance || 0), 0) >= ${km}`,
-  },
-  {
-    prefix: 'Long Run',
-    thresholds: [1, 2, 3, 5, 8, 10, 12, 15, 18, 21, 25, 30, 35, 42, 50],
-    description: km => `Complete one activity with at least ${km}km`,
-    criteria: km => `(activities) => activities.some(activity => Number(activity.route_distance || 0) >= ${km})`,
-  },
-  {
-    prefix: 'Consistency',
-    thresholds: [1, 2, 3, 5, 7, 10, 14, 20, 25, 30, 40, 50, 75, 100, 150],
-    description: count => `Log ${count} activities`,
-    criteria: count => `(activities) => activities.length >= ${count}`,
-  },
-  {
-    prefix: 'Runner',
-    thresholds: [1, 2, 3, 5, 7, 10, 14, 20, 25, 30, 40, 50],
-    description: count => `Log ${count} running activities`,
-    criteria: count => `(activities) => activities.filter(activity => activity.physical_activity == 'running').length >= ${count}`,
-  },
-  {
-    prefix: 'Walker',
-    thresholds: [1, 2, 3, 5, 7, 10, 14, 20, 25, 30, 40, 50],
-    description: count => `Log ${count} walking activities`,
-    criteria: count => `(activities) => activities.filter(activity => activity.physical_activity == 'walking').length >= ${count}`,
-  },
-  {
-    prefix: 'Pace',
-    thresholds: [9, 8, 7, 6, 5, 4],
-    description: pace => `Finish a 3km+ activity under ${pace} min/km`,
-    criteria: pace => `(activities) => activities.filter(activity => { const d = Number(activity.route_distance || 0); const p = String(activity.time || '00:00:00').split(':').map(Number); const s = (p[0] || 0) * 3600 + (p[1] || 0) * 60 + (p[2] || 0); return d >= 3 && s > 0 && (s / 60) / d <= ${pace}; }).length >= 1`,
-  },
-  {
-    prefix: 'Explorer',
-    thresholds: [2, 3, 4, 5, 7, 10, 15, 20, 25, 30],
-    description: count => `Run in ${count} different places`,
-    criteria: count => `(activities) => new Set(activities.map(activity => activity.place).filter(Boolean)).size >= ${count}`,
-  },
-  {
-    prefix: 'Race Ready',
-    thresholds: [5, 10, 21, 42, 50, 100],
-    description: km => `Complete a classic ${km}km distance`,
-    criteria: km => `(activities) => activities.some(activity => Number(activity.route_distance || 0) >= ${km})`,
-  },
-  {
-    prefix: 'Comeback',
-    thresholds: [2, 4, 6, 8],
-    description: count => `Log ${count} activities after starting your journey`,
-    criteria: count => `(activities) => activities.length >= ${count}`,
-  },
-];
+function placesCriteria(count) {
+  return `(activities) => new Set(activities.map(activity => activity.place).filter(Boolean)).size >= ${count}`;
+}
 
-function buildBadgeSeeds(iconFiles) {
+function monthlyDistanceCriteria(km) {
+  return `(activities) => Object.values(activities.reduce((months, activity) => { const d = new Date(activity.date); if(isNaN(d)) return months; const key = d.getUTCFullYear() + '-' + d.getUTCMonth(); months[key] = (months[key] || 0) + Number(activity.route_distance || 0); return months; }, {})).some(total => total >= ${km})`;
+}
+
+function weeklyRunsCriteria(count) {
+  return `(activities) => Object.values(activities.filter(activity => activity.physical_activity == 'running').reduce((weeks, activity) => { const d = new Date(activity.date); if(isNaN(d)) return weeks; const day = (d.getUTCDay() + 6) % 7; const monday = new Date(Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate() - day)); const key = monday.toISOString().slice(0, 10); weeks[key] = (weeks[key] || 0) + 1; return weeks; }, {})).some(total => total >= ${count})`;
+}
+
+function consecutiveDaysCriteria(count) {
+  return `(activities) => { const days = Array.from(new Set(activities.map(activity => new Date(activity.date)).filter(d => !isNaN(d)).map(d => d.toISOString().slice(0, 10)))).sort(); let best = 0; let streak = 0; let previous = null; days.forEach(day => { const current = new Date(day + 'T00:00:00Z').getTime(); streak = previous !== null && current - previous == 86400000 ? streak + 1 : 1; previous = current; if(streak > best) best = streak; }); return best >= ${count}; }`;
+}
+
+function iconPath(icon) {
+  return `imgs/badges/run4fun/${icon}`;
+}
+
+function badge(title, group, icon, value, description, criteria, sortOrder) {
+  return {
+    title,
+    group,
+    icon: iconPath(icon),
+    value,
+    description,
+    criteria,
+    sort_order: sortOrder,
+  };
+}
+
+function buildBadgeSeeds() {
   let seeds = [];
+  let sortOrder = 1;
+  const add = (title, group, icon, value, description, criteria) => {
+    seeds.push(badge(title, group, icon, Math.max(1, Math.round(value || 1)), description, criteria, sortOrder++));
+  };
 
-  badgeGroups.forEach(group => {
-    group.thresholds.forEach(threshold => {
-      seeds.push({
-        title: `${group.prefix} ${threshold}`,
-        criteria: group.criteria(threshold),
-        icon: `imgs/badges/${iconFiles[seeds.length % iconFiles.length]}`,
-        value: Math.max(1, Math.round(Number(threshold) || 1)),
-        description: group.description(threshold),
-      });
-    });
-  });
+  [1, 3, 5, 10, 15, 21, 30, 42, 50, 75, 100, 150, 200, 250, 300, 400, 500, 750, 1000, 1500]
+    .forEach(km => add(`Distance ${km}km`, 'Distance', 'distance.svg', km, `Run ${km}km in total`, totalDistanceCriteria(km)));
 
-  return seeds.slice(0, 101);
+  [1, 2, 3, 5, 8, 10, 12, 15, 18, 21, 25, 30, 35, 42, 50]
+    .forEach(km => add(`Long Run ${km}km`, 'Long run', 'long-run.svg', km, `Complete one activity with at least ${km}km`, singleDistanceCriteria(km)));
+
+  [1, 2, 3, 5, 7, 10, 14, 20, 25, 30, 40, 50, 75, 100, 150]
+    .forEach(count => add(`Consistency ${count}`, 'Consistency', 'consistency.svg', count, `Log ${count} activities`, activityCountCriteria(count)));
+
+  [1, 2, 3, 5, 7, 10, 14, 20, 25, 30, 40, 50]
+    .forEach(count => add(`Runner ${count}`, 'Running', 'runner.svg', count, `Log ${count} running activities`, activityCountCriteria(count, 'running')));
+
+  [1, 2, 3, 5, 7, 10, 14, 20, 25, 30, 40, 50]
+    .forEach(count => add(`Walker ${count}`, 'Walking', 'walker.svg', count, `Log ${count} walking activities`, activityCountCriteria(count, 'walking')));
+
+  [9, 8, 7, 6, 5, 4]
+    .forEach(pace => add(`Pace ${pace}`, 'Pace', 'pace.svg', 10 - pace, `Finish a 3km+ activity under ${pace} min/km`, paceCriteria(pace)));
+
+  [2, 3, 4, 5, 7, 10, 15, 20, 25, 30]
+    .forEach(count => add(`Explorer ${count}`, 'Explorer', 'explorer.svg', count, `Run in ${count} different places`, placesCriteria(count)));
+
+  [
+    ['Best Effort 400m', 0.4],
+    ['Best Effort 800m', 0.8],
+    ['Best Effort 1K', 1],
+    ['Best Effort 1.5K', 1.5],
+    ['Best Effort 3K', 3],
+    ['Best Effort 5K', 5],
+    ['Best Effort 10K', 10],
+    ['Best Effort 15K', 15],
+    ['Best Effort 20K', 20],
+    ['Best Effort 21K', 21.1],
+    ['Best Effort 30K', 30],
+    ['Best Effort 42K', 42.2],
+    ['Best Effort 50K', 50],
+  ].forEach(([title, km]) => add(title, 'Best efforts', 'best-effort.svg', km, `Complete the benchmark distance: ${title.replace('Best Effort ', '')}`, singleDistanceCriteria(km)));
+
+  [3, 5, 7].forEach(count => add(`${count}x Weekly Streak`, 'Streaks', 'streak.svg', count, `Run ${count} times in the same week`, weeklyRunsCriteria(count)));
+  [2, 3, 5, 7, 10, 14, 21].forEach(count => add(`${count} Day Streak`, 'Streaks', 'streak.svg', count, `Log activities on ${count} consecutive days`, consecutiveDaysCriteria(count)));
+
+  [15, 25, 50, 75, 100, 150, 200, 250, 300, 400]
+    .forEach(km => add(`Monthly ${km}km`, 'Monthly challenges', 'monthly.svg', km, `Run ${km}km in one calendar month`, monthlyDistanceCriteria(km)));
+
+  [5, 10, 21, 42, 50, 100]
+    .forEach(km => add(`Race Ready ${km}km`, 'Race ready', 'race-ready.svg', km, `Complete a classic ${km}km distance`, singleDistanceCriteria(km)));
+
+  return seeds;
 }
 
 function buildCollectibleSeeds() {
@@ -158,11 +167,12 @@ function buildCollectibleSeeds() {
 }
 
 async function upsertBadges() {
-  const badgeDir = path.join(__dirname, '..', 'public', 'imgs', 'badges');
-  const badgeFiles = fs.readdirSync(badgeDir).filter(file => file.endsWith('.svg')).sort();
-  const badgeSeeds = buildBadgeSeeds(badgeFiles);
+  const badgeDir = path.join(__dirname, '..', 'public', 'imgs', 'badges', 'run4fun');
+  if(!fs.existsSync(badgeDir)) throw new Error('Run pnpm assets:badges before pnpm seed:dev');
 
-  await Badge.deleteMany({ criteria: /^Unlock / });
+  const badgeSeeds = buildBadgeSeeds();
+
+  await Badge.deleteMany({});
 
   for (const badge of badgeSeeds) {
     await Badge.updateOne(
@@ -191,7 +201,6 @@ async function upsertDemoUser() {
     await Transaction.deleteMany({ user_id: existingUser._id });
   }
 
-  const badges = await Badge.find().sort({ title: 1 }).limit(8).select('_id');
   const collectibles = await Collectible.find({ title: { $in: ['House Stark', 'House Lannister', 'Arc Reactor', 'Laser Blade'] } }).select('_id');
 
   await User.updateOne(
@@ -204,7 +213,7 @@ async function upsertDemoUser() {
         password: 'demo',
         role: 'user',
         balance: 500,
-        badges: badges.map(badge => badge._id),
+        badges: [],
         collectibles: collectibles.map(collectible => collectible._id),
         activities: [],
       },
