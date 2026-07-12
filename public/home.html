@@ -1,30 +1,57 @@
 <!DOCTYPE html>
 <html>
 <head>
+	<link href="https://fonts.googleapis.com/css?family=Montserrat&display=swap" rel="stylesheet">
+	<link rel="stylesheet" type="text/css" href="css/reset.css">
+	<link rel="stylesheet" type="text/css" href="css/style.css">
 	<title>Run4Fun</title>
+
+	<link rel="shortcut icon" href="/favicon-32x32.png" type="image/x-icon">
+	<link rel="icon" href="/favicon-32x32.png" type="image/x-icon">
 </head>
-<body>
-	<div class="signin">
-		<form>
-			<label for="login">Login:</label>
-			<input type="login" id="login" name="login">
+<body class="login-page">
+	<main class="login-shell">
+		<section class="login-panel">
+			<div class="login-brand">
+				<p class="brand-mark">R4F</p>
+				<div>
+					<h1>Run4Fun</h1>
+					<p>Track runs, earn badges and collect rewards.</p>
+				</div>
+			</div>
 
-			<label for="password">Password:</label>
-			<input type="password" id="password" name="password">
+			<div class="login-preview">
+				<div>
+					<img src="imgs/badges/run4fun/distance.svg" alt="Distance badge">
+					<span>Metric goals</span>
+				</div>
+				<div>
+					<img src="imgs/badges/run4fun/streak.svg" alt="Streak badge">
+					<span>Streaks</span>
+				</div>
+				<div>
+					<img src="imgs/badges/run4fun/best-effort.svg" alt="Best effort badge">
+					<span>Best efforts</span>
+				</div>
+			</div>
+		</section>
 
-			<button id="login-btn"> Login </button>
-		</form>
-	</div>
+		<section class="signin">
+			<form class="login-card">
+				<h2>Welcome back</h2>
 
-	<div class="signup">
-		<form>
-			<label for="email">Email:</label>
-			<input type="email" id="email" name="email">
+				<label for="login">Login</label>
+				<input type="text" id="login" name="login" autocomplete="username">
 
-			<label for="password">Password:</label>
-			<input type="password" id="password_signin" name="password_signin">
-		</form>
-	</div>
+				<label for="password">Password</label>
+				<input type="password" id="password" name="password" autocomplete="current-password">
+
+				<button id="login-btn" type="submit">Login</button>
+				<p class="login-hint">Demo account: demo / demo</p>
+			</form>
+		</section>
+	</main>
+
 	<script src="https://cdn.jsdelivr.net/npm/systemjs@0.19.31/dist/system.js"></script>
 	<script>
 		System.defaultJSExtensions = true;

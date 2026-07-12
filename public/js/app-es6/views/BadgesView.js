@@ -7,6 +7,7 @@ export class BadgesView extends View {
     }
 
     template(model){
+        const earnedBadges = model.badgeList.badges.filter(badge => badge.earned);
         const groups = model.badgeList.badges.reduce((badgesByGroup, badge) => {
             const group = badge.group || 'General';
             badgesByGroup[group] = badgesByGroup[group] || [];
@@ -19,6 +20,13 @@ export class BadgesView extends View {
                 <button class="badge-filter active" type="button" onclick="this.closest('#badges').dataset.filter='all'; this.parentNode.querySelectorAll('.badge-filter').forEach(button => button.classList.remove('active')); this.classList.add('active')">All</button>
                 <button class="badge-filter" type="button" onclick="this.closest('#badges').dataset.filter='earned'; this.parentNode.querySelectorAll('.badge-filter').forEach(button => button.classList.remove('active')); this.classList.add('active')">Earned</button>
             </div>
+
+            ${earnedBadges.length == 0 ? `
+                <div class="empty-state">
+                    <p>No badges earned yet.</p>
+                    <span>Register runs to unlock the colored versions of these badges.</span>
+                </div>
+            ` : ''}
 
             ${Object.keys(groups).map(group => `
                 <div class="badge-group">

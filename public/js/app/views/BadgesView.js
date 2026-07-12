@@ -70,6 +70,9 @@ System.register(['./View'], function (_export, _context) {
                 _createClass(BadgesView, [{
                     key: 'template',
                     value: function template(model) {
+                        var earnedBadges = model.badgeList.badges.filter(function (badge) {
+                            return badge.earned;
+                        });
                         var groups = model.badgeList.badges.reduce(function (badgesByGroup, badge) {
                             var group = badge.group || 'General';
                             badgesByGroup[group] = badgesByGroup[group] || [];
@@ -77,7 +80,7 @@ System.register(['./View'], function (_export, _context) {
                             return badgesByGroup;
                         }, {});
 
-                        return '\n            <div class="badge-toolbar">\n                <button class="badge-filter active" type="button" onclick="this.closest(\'#badges\').dataset.filter=\'all\'; this.parentNode.querySelectorAll(\'.badge-filter\').forEach(button => button.classList.remove(\'active\')); this.classList.add(\'active\')">All</button>\n                <button class="badge-filter" type="button" onclick="this.closest(\'#badges\').dataset.filter=\'earned\'; this.parentNode.querySelectorAll(\'.badge-filter\').forEach(button => button.classList.remove(\'active\')); this.classList.add(\'active\')">Earned</button>\n            </div>\n\n            ' + Object.keys(groups).map(function (group) {
+                        return '\n            <div class="badge-toolbar">\n                <button class="badge-filter active" type="button" onclick="this.closest(\'#badges\').dataset.filter=\'all\'; this.parentNode.querySelectorAll(\'.badge-filter\').forEach(button => button.classList.remove(\'active\')); this.classList.add(\'active\')">All</button>\n                <button class="badge-filter" type="button" onclick="this.closest(\'#badges\').dataset.filter=\'earned\'; this.parentNode.querySelectorAll(\'.badge-filter\').forEach(button => button.classList.remove(\'active\')); this.classList.add(\'active\')">Earned</button>\n            </div>\n\n            ' + (earnedBadges.length == 0 ? '\n                <div class="empty-state">\n                    <p>No badges earned yet.</p>\n                    <span>Register runs to unlock the colored versions of these badges.</span>\n                </div>\n            ' : '') + '\n\n            ' + Object.keys(groups).map(function (group) {
                             return '\n                <div class="badge-group">\n                    <h3>' + group + '</h3>\n                    <div class="badge-grid">\n                        ' + groups[group].sort(function (a, b) {
                                 return Number(b.earned) - Number(a.earned) || a.title.localeCompare(b.title);
                             }).map(function (badge) {

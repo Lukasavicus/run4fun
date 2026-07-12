@@ -197,26 +197,19 @@ System.register(['../helpers/Bind', '../helpers/DateHelper', '../helpers/MultiBi
                 }, {
                     key: 'toogle_section',
                     value: function toogle_section(event) {
-                        var _id = event.target.id;
-                        var toogle = $('#' + _id).dataset.toogle;
-                        var target = $('#' + _id).closest(".section-title").querySelector("section");
+                        var button = event.target;
+                        var toogle = button.dataset.toogle;
+                        var target = button.closest(".section-title").querySelector("section");
 
                         if (toogle == "true") {
-                            $('#' + _id).innerText = "Show";
-                            $('#' + _id).dataset.toogle = "false";
+                            button.innerText = "Show";
+                            button.dataset.toogle = "false";
                             target.classList.add("collapsed");
                         } else {
-                            $('#' + _id).innerText = "Hide";
-                            $('#' + _id).dataset.toogle = "true";
+                            button.innerText = "Hide";
+                            button.dataset.toogle = "true";
                             target.classList.remove("collapsed");
                         }
-
-                        Array.from(target.children).forEach(function (el) {
-                            console.log(el);
-                        });
-                        Array.from(target.children).forEach(function (el) {
-                            return el.classList.toggle("invisible");
-                        });
                     }
                 }, {
                     key: 'buyCollectible',

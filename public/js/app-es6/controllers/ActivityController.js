@@ -144,23 +144,20 @@ class ActivityController {
     }
 
     toogle_section(event){
-        let _id = event.target.id;
-        let toogle = $(`#${_id}`).dataset.toogle;
-        let target = $(`#${_id}`).closest(".section-title").querySelector("section");
+        let button = event.target;
+        let toogle = button.dataset.toogle;
+        let target = button.closest(".section-title").querySelector("section");
         
         if(toogle == "true"){
-            $(`#${_id}`).innerText = "Show";
-            $(`#${_id}`).dataset.toogle = "false";
+            button.innerText = "Show";
+            button.dataset.toogle = "false";
             target.classList.add("collapsed");
         }
         else{
-            $(`#${_id}`).innerText = "Hide";
-            $(`#${_id}`).dataset.toogle = "true";
+            button.innerText = "Hide";
+            button.dataset.toogle = "true";
             target.classList.remove("collapsed");
         }
-
-        Array.from(target.children).forEach(el => {console.log(el)});
-        Array.from(target.children).forEach(el => el.classList.toggle("invisible"));
 
     }
 

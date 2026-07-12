@@ -201,8 +201,6 @@ async function upsertDemoUser() {
     await Transaction.deleteMany({ user_id: existingUser._id });
   }
 
-  const collectibles = await Collectible.find({ title: { $in: ['House Stark', 'House Lannister', 'Arc Reactor', 'Laser Blade'] } }).select('_id');
-
   await User.updateOne(
     { login: 'demo' },
     {
@@ -214,7 +212,7 @@ async function upsertDemoUser() {
         role: 'user',
         balance: 500,
         badges: [],
-        collectibles: collectibles.map(collectible => collectible._id),
+        collectibles: [],
         activities: [],
       },
     },

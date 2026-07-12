@@ -9,6 +9,15 @@ export class ActivitiesView extends View {
     }
 
     template(model){
+        if(model.activities.length == 0) {
+            return `
+                <div class="empty-state">
+                    <p>No runs registered yet.</p>
+                    <span>Add your first activity to start earning points, badges and collectibles.</span>
+                </div>
+            `;
+        }
+
         return `
             <table id="records-table">
                 <thead>
@@ -54,7 +63,7 @@ export class ActivitiesView extends View {
                 <tfoot>
                     <tr>
                         <td colspan="3" >Total</td>
-                        <td>${model.total_distance} kms</td>
+                        <td>${model.total_distance} km</td>
                         <td>${model.total_time}</td>
                         <td>${model.avg_velocity_ms}</td>
                         <td>${model.avg_velocity_kmh}</td>
