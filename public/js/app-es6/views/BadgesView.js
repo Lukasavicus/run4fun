@@ -34,14 +34,33 @@ export class BadgesView extends View {
                     <div class="badge-grid">
                         ${groups[group]
                             .sort((a, b) => Number(b.earned) - Number(a.earned) || a.title.localeCompare(b.title))
-                            .map(badge => `
-                                <div class="badge ${badge.earned ? 'earned' : 'blocked'}">
+                            .map(badge => {
+                                const earnedAt = badge.earnedAt ? new Date(badge.earnedAt).toLocaleDateString() : '';
+                                const points = badge.earnedValue || badge.value;
+
+                                return `
+                                <button class="badge ${badge.earned ? 'earned' : 'blocked'}" type="button" onclick="document.getElementById('badge-modal-${badge.id}').showModal()">
                                     <span class="badge-status">${badge.earned ? 'Earned' : 'Blocked'}</span>
                                     <img src="${badge.icon}" class="badge-img" alt="${badge.title}">
-                                    <p class="badge-title">${badge.title}</p>
-                                    <p class="badge-description">${badge.description}</p>
-                                </div>
-                            `).join('')}
+                                    <span class="badge-title">${badge.title}</span>
+                                    <span class="badge-description">${badge.description}</span>
+                                </button>
+                                <dialog class="badge-modal" id="badge-modal-${badge.id}">
+                                    <div class="badge-modal-header">
+                                        <img src="${badge.icon}" alt="${badge.title}">
+                                        <div>
+                                            <h4>${badge.title}</h4>
+                                            <p>${badge.group}</p>
+                                        </div>
+                                    </div>
+                                    <p class="badge-modal-text">${badge.description}</p>
+                                    <p class="badge-modal-text">${badge.earned ? `Earned on ${earnedAt}. This badge yielded ${points}⚡.` : `Reward: ${badge.value}⚡. Keep training to unlock it.`}</p>
+                                    <form method="dialog">
+                                        <button type="submit">Close</button>
+                                    </form>
+                                </dialog>
+                            `;
+                            }).join('')}
                     </div>
                 </div>
             `).join('')}

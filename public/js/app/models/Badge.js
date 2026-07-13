@@ -36,6 +36,9 @@ System.register([], function (_export, _context) {
                 function Badge(id, title, icon, description) {
                     var group = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : 'General';
                     var earned = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : false;
+                    var value = arguments.length > 6 && arguments[6] !== undefined ? arguments[6] : 0;
+                    var earnedAt = arguments.length > 7 && arguments[7] !== undefined ? arguments[7] : null;
+                    var earnedValue = arguments.length > 8 && arguments[8] !== undefined ? arguments[8] : null;
 
                     _classCallCheck(this, Badge);
 
@@ -45,6 +48,9 @@ System.register([], function (_export, _context) {
                     this._description = description;
                     this._group = group;
                     this._earned = earned;
+                    this._value = value;
+                    this._earnedAt = earnedAt;
+                    this._earnedValue = earnedValue;
 
                     Object.freeze(this);
                 }
@@ -78,6 +84,21 @@ System.register([], function (_export, _context) {
                     key: 'earned',
                     get: function get() {
                         return this._earned;
+                    }
+                }, {
+                    key: 'value',
+                    get: function get() {
+                        return this._value;
+                    }
+                }, {
+                    key: 'earnedAt',
+                    get: function get() {
+                        return this._earnedAt;
+                    }
+                }, {
+                    key: 'earnedValue',
+                    get: function get() {
+                        return this._earnedValue;
                     }
                 }]);
 

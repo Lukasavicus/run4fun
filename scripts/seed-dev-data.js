@@ -79,11 +79,20 @@ function badge(title, group, icon, value, description, criteria, sortOrder) {
     title,
     group,
     icon: iconPath(icon),
-    value,
+    value: badgeValue(value),
     description,
     criteria,
     sort_order: sortOrder,
   };
+}
+
+function badgeValue(value) {
+  const level = Number(value || 1);
+  if(level >= 100) return 200;
+  if(level >= 30) return 100;
+  if(level >= 10) return 30;
+  if(level >= 3) return 20;
+  return 10;
 }
 
 function buildBadgeSeeds() {
@@ -210,7 +219,7 @@ async function upsertDemoUser() {
         login: 'demo',
         password: 'demo',
         role: 'user',
-        balance: 500,
+        balance: 5000,
         badges: [],
         collectibles: [],
         activities: [],

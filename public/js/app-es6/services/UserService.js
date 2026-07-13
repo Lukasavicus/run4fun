@@ -60,7 +60,10 @@ export class UserService {
                         badge_obj.icon,
                         badge_obj.description,
                         badge_obj.group,
-                        badge_obj.earned
+                        badge_obj.earned,
+                        badge_obj.value,
+                        badge_obj.earned_at,
+                        badge_obj.earned_value
                     )
                 ))
             )

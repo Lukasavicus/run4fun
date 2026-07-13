@@ -5,6 +5,7 @@ module.exports = function(app){
 	let model = mongoose.model('User');
 	let collectibleModel = mongoose.model('Collectible');
 	let badgeModel = mongoose.model('Badge');
+	let transactionModel = mongoose.model('Transaction');
 
 	
 	api.list = function(req, res){
@@ -91,11 +92,25 @@ module.exports = function(app){
 	//Badges
 	api.listBadges = function(req, res){
 		let earnedBadges = [];
+		let badgeTransactions = {};
 
 		model.findOne({ login: req.usuario })
 		.then(function(user){
+			if(!user) return [];
+
 			earnedBadges = ((user && user.badges) || []).map(function(badgeId){
 				return badgeId.toString();
+			});
+
+			return transactionModel.find({
+				user_id: user._id,
+				source_type: 'badge',
+				status: 'active',
+			});
+		})
+		.then(function(transactions){
+			transactions.forEach(function(transaction){
+				if(transaction.source_id) badgeTransactions[transaction.source_id.toString()] = transaction;
 			});
 
 			return badgeModel.find().sort({ group: 1, sort_order: 1, title: 1 });
@@ -105,6 +120,10 @@ module.exports = function(app){
 				.map(function(badge){
 					let badgeObj = badge.toObject();
 					badgeObj.earned = earnedBadges.indexOf(badge._id.toString()) >= 0;
+					if(badgeObj.earned && badgeTransactions[badge._id.toString()]) {
+						badgeObj.earned_at = badgeTransactions[badge._id.toString()].date;
+						badgeObj.earned_value = badgeTransactions[badge._id.toString()].value;
+					}
 					return badgeObj;
 				})
 				.sort(function(a, b){

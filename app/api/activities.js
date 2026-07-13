@@ -8,6 +8,10 @@ module.exports = function(app){
 	let userModel = mongoose.model('User');
 	let badgeModel = mongoose.model('Badge');
 
+	function _activity_points(distance){
+		return Number(distance || 0) * 10;
+	}
+
 	//Badges
 	function _set_up_badges(login){
 		return userModel.aggregate([
@@ -27,14 +31,19 @@ module.exports = function(app){
 			{
 				$project: {
 					_id: 0,
+					badges: 1,
 					activities_by_user: 1,
 				}
 			}
 		])
 		.then(function(result){
-			const activities = (result[0] && result[0]["activities_by_user"]) || [];
+			const user = result[0] || {};
+			const activities = user["activities_by_user"] || [];
+			const earnedBadgeIds = (user.badges || []).map(function(badgeId){ return badgeId.toString(); });
 			return badgeModel.find({}).then(function(badges){
-				return Promise.all(badges.map(function(badge){
+				let badgesByGroup = {};
+
+				badges.forEach(function(badge){
 					let earned = false;
 
 					try {
@@ -45,8 +54,15 @@ module.exports = function(app){
 						console.log("API / Activities -> invalid badge criteria", badge.title, err.message);
 					}
 
-					if(!earned) return null;
+					if(!earned || earnedBadgeIds.indexOf(badge._id.toString()) >= 0) return;
 
+					let group = badge.group || badge.title;
+					if(!badgesByGroup[group] || (badge.sort_order || 0) > (badgesByGroup[group].sort_order || 0))
+						badgesByGroup[group] = badge;
+				});
+
+				return Promise.all(Object.keys(badgesByGroup).map(function(group){
+					let badge = badgesByGroup[group];
 					return userModel.findOneAndUpdate(
 						{"$and" : [{"login" : login}, {"badges" : { "$nin" : [new mongoose.Types.ObjectId(badge._id)] } } ] },
 						{ "$push" : {"badges" : new mongoose.Types.ObjectId(badge._id) } }
@@ -150,9 +166,9 @@ module.exports = function(app){
 			if(!activity) return null;
 
 			return transactionRules._set_up_transaction(
-				-Number(activity.route_distance || 0),
+				-_activity_points(activity.route_distance),
 				"outcome",
-				`Outcome: Deleted ${activity.physical_activity} -${activity.route_distance}⚡`,
+				`Outcome: Deleted ${activity.physical_activity} -${_activity_points(activity.route_distance)}⚡`,
 				user._id,
 				'activity_delete',
 				activity._id
@@ -184,8 +200,9 @@ module.exports = function(app){
 			)
 			.then(function(user){
 				//console.log("User updated ", user);
+				const points = _activity_points(activity.route_distance);
 				return transactionRules
-					._set_up_transaction(activity.route_distance, "income", `Income: ${activity.physical_activity} +${activity.route_distance}⚡`, user._id, 'activity', activity._id)
+					._set_up_transaction(points, "income", `Income: ${activity.physical_activity} +${points}⚡`, user._id, 'activity', activity._id)
 					.then(function(){
 						return _set_up_badges(req.usuario); // badges assignment
 					})
@@ -238,13 +255,14 @@ module.exports = function(app){
 			const oldValue = Number(oldActivity.route_distance || 0);
 			const newValue = Number(activity.route_distance || 0);
 			const diff = newValue - oldValue;
+			const pointsDiff = _activity_points(diff);
 
 			if(diff == 0) return activity;
 
 			return transactionRules._set_up_transaction(
-				diff,
+				pointsDiff,
 				diff > 0 ? "income" : "outcome",
-				`Adjustment: Edited ${activity.physical_activity} ${diff > 0 ? '+' : ''}${diff}⚡`,
+				`Adjustment: Edited ${activity.physical_activity} ${pointsDiff > 0 ? '+' : ''}${pointsDiff}⚡`,
 				user._id,
 				'activity_edit',
 				activity._id
