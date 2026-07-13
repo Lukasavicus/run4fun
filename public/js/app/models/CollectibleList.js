@@ -45,6 +45,11 @@ System.register([], function (_export, _context) {
                         this._collectibles.push(collectible);
                     }
                 }, {
+                    key: "replace",
+                    value: function replace(collectibles) {
+                        this._collectibles = collectibles;
+                    }
+                }, {
                     key: "collectibles",
                     get: function get() {
                         return [].concat(this._collectibles);

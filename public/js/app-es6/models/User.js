@@ -30,6 +30,10 @@ export class User {
         this._collectibleList.add(collectible);
     }
 
+    setCollectibles(collectibles){
+        this._collectibleList.replace(collectibles);
+    }
+
     get collectibleList(){
         return this._collectibleList;
     }

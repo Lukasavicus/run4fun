@@ -22,20 +22,10 @@ System.register(['./controllers/ActivityController', './controllers/LoginControl
                 return el.onclick = activityController.toogle_section.bind(activityController);
             });
 
-            // Array
-            //     .from(document.querySelectorAll("div.collectible.not-purchased"))
-            //     .forEach(el => el.onclick = activityController.buyCollectible.bind(activityController));
-
-            // console.log(Array.from(document.querySelectorAll("div.collectible.not-purchased")));
-
-            setTimeout(function () {
-                console.log('collectibles loaded');
-                Array.from(document.querySelectorAll("div.collectible.not-purchased")).forEach(function (el) {
-                    el.onclick = function () {
-                        Reflect.apply(activityController.buyCollectible, activityController, [el]);
-                    };
-                });
-            }, 1500);
+            document.querySelector("#collectibles").onclick = function (event) {
+                var collectible = event.target.closest("div.collectible.not-purchased");
+                if (collectible) Reflect.apply(activityController.buyCollectible, activityController, [collectible]);
+            };
 
             setTimeout(function () {
                 console.log('activities loaded');

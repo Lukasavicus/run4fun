@@ -106,7 +106,7 @@ System.register(['../helpers/Bind', '../helpers/DateHelper', '../helpers/MultiBi
                 _createClass(ActivityController, [{
                     key: '_newUserModel',
                     value: function _newUserModel(name, balance) {
-                        return new MultiBind(new User(name, balance), [new ActivitiesView($("#activities-data")), new ActivitiesDashboardView($("#management-dashboard")), new BadgesView($("#badges")), new CollectiblesView($("#collectibles")), new TransactionsView($("#extract")), new NavigationBarView($(".user-pill"))], 'addActivity', 'addBadge', 'setBadges', 'addCollectible', 'addTransaction', 'setBalance', 'setTransactions');
+                        return new MultiBind(new User(name, balance), [new ActivitiesView($("#activities-data")), new ActivitiesDashboardView($("#management-dashboard")), new BadgesView($("#badges")), new CollectiblesView($("#collectibles")), new TransactionsView($("#extract")), new NavigationBarView($(".user-pill"))], 'addActivity', 'addBadge', 'setBadges', 'addCollectible', 'setCollectibles', 'addTransaction', 'setBalance', 'setTransactions');
                     }
                 }, {
                     key: '_init',
@@ -155,9 +155,7 @@ System.register(['../helpers/Bind', '../helpers/DateHelper', '../helpers/MultiBi
                         });
 
                         this._service.getUserCollectibles().then(function (collectibles) {
-                            collectibles.forEach(function (collectible) {
-                                return _this3._user.addCollectible(collectible);
-                            });
+                            return _this3._user.setCollectibles(collectibles);
                         }).catch(function (error) {
                             return _this3._message.text = error;
                         });
@@ -196,6 +194,15 @@ System.register(['../helpers/Bind', '../helpers/DateHelper', '../helpers/MultiBi
                         });
                     }
                 }, {
+                    key: '_refreshCollectibles',
+                    value: function _refreshCollectibles() {
+                        var _this7 = this;
+
+                        return this._service.getUserCollectibles().then(function (collectibles) {
+                            return _this7._user.setCollectibles(collectibles);
+                        });
+                    }
+                }, {
                     key: '_createActivity',
                     value: function _createActivity() {
                         return new Activity(DateHelper.textToDate(this._date.value), this._activity.value, this._place.value, parseFloat(this._route_distance.value), this._time.value);
@@ -230,16 +237,15 @@ System.register(['../helpers/Bind', '../helpers/DateHelper', '../helpers/MultiBi
                 }, {
                     key: 'buyCollectible',
                     value: function buyCollectible(elem) {
-                        var _this7 = this;
+                        var _this8 = this;
 
                         // open modal, option to confirm checkout, purchase order
                         console.log(elem);
 
-                        var items = Array.from(elem.children);
-                        var icon = items[0].src;
-                        var hist = items[1].innerText;
+                        var icon = elem.dataset.icon;
+                        var hist = elem.dataset.hist;
 
-                        new this._purchaseCollectible(elem.id, "Title", icon, elem.dataset.price, elem.dataset.serie, hist, false, "desc");
+                        new this._purchaseCollectible(elem.id, elem.dataset.title, icon, elem.dataset.price, elem.dataset.serie, hist, false, elem.dataset.description);
                         $("#parent-purchase-modal").style.display = "block";
 
                         $('.modal-close').addEventListener('click', function () {
@@ -253,11 +259,12 @@ System.register(['../helpers/Bind', '../helpers/DateHelper', '../helpers/MultiBi
                             event.preventDefault();
 
                             $(".oper-gif img").classList.remove('disp-n');
-                            _this7._service.purchaseCollectible(elem.id).then(function (resp) {
+                            _this8._service.purchaseCollectible(elem.id).then(function (resp) {
                                 $(".oper-gif img").src = './imgs/misc/ok.gif';
                                 $(".modal-content").classList.remove('error');
                                 $(".modal-content").classList.add('success');
                                 console.log("RESP on AcCntrl", resp);
+                                return Promise.all([_this8._refreshCollectibles(), _this8._refreshBalance(), _this8._refreshTransactions()]);
                             }).catch(function (resp) {
                                 $(".oper-gif img").src = './imgs/misc/nok.gif';
                                 $(".modal-content").classList.remove('success');

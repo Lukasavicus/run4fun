@@ -11,22 +11,10 @@ Array
     .from(document.querySelectorAll(".toogle-content"))
     .forEach(el => el.onclick = activityController.toogle_section.bind(activityController));
 
-// Array
-//     .from(document.querySelectorAll("div.collectible.not-purchased"))
-//     .forEach(el => el.onclick = activityController.buyCollectible.bind(activityController));
-
-// console.log(Array.from(document.querySelectorAll("div.collectible.not-purchased")));
-
-setTimeout(() => {
-        console.log('collectibles loaded');
-        Array
-            .from(document.querySelectorAll("div.collectible.not-purchased"))
-            .forEach(el => {
-                el.onclick = function(){
-                    Reflect.apply(activityController.buyCollectible, activityController, [el]);
-                };
-            });
-}, 1500);
+document.querySelector("#collectibles").onclick = event => {
+    const collectible = event.target.closest("div.collectible.not-purchased");
+    if(collectible) Reflect.apply(activityController.buyCollectible, activityController, [collectible]);
+};
 
 setTimeout(() => {
         console.log('activities loaded');

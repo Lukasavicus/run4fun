@@ -60,7 +60,7 @@ class ActivityController {
             new CollectiblesView($("#collectibles")),
             new TransactionsView($("#extract")),
             new NavigationBarView($(".user-pill"))
-        ], 'addActivity', 'addBadge', 'setBadges', 'addCollectible', 'addTransaction', 'setBalance', 'setTransactions');
+        ], 'addActivity', 'addBadge', 'setBadges', 'addCollectible', 'setCollectibles', 'addTransaction', 'setBalance', 'setTransactions');
     }
 
     _init(){
@@ -107,9 +107,7 @@ class ActivityController {
 
         this._service
             .getUserCollectibles()
-            .then(collectibles => {
-                collectibles.forEach(collectible => this._user.addCollectible(collectible));
-            })
+            .then(collectibles => this._user.setCollectibles(collectibles))
             .catch(error => this._message.text = error);
 
             this._service
@@ -136,6 +134,12 @@ class ActivityController {
         return this._service
             .getUserTransactions()
             .then(transactions => this._user.setTransactions(transactions));
+    }
+
+    _refreshCollectibles(){
+        return this._service
+            .getUserCollectibles()
+            .then(collectibles => this._user.setCollectibles(collectibles));
     }
 
     _createActivity(){
@@ -179,11 +183,10 @@ class ActivityController {
         // open modal, option to confirm checkout, purchase order
         console.log(elem);
 
-        let items = Array.from(elem.children);
-        let icon = items[0].src;
-        let hist = items[1].innerText;
+        let icon = elem.dataset.icon;
+        let hist = elem.dataset.hist;
 
-        new this._purchaseCollectible(elem.id, "Title", icon, elem.dataset.price, elem.dataset.serie, hist, false, "desc");
+        new this._purchaseCollectible(elem.id, elem.dataset.title, icon, elem.dataset.price, elem.dataset.serie, hist, false, elem.dataset.description);
         $("#parent-purchase-modal").style.display = "block";
 
         $('.modal-close').addEventListener('click', () => $("#parent-purchase-modal").style.display = "none" );
@@ -200,6 +203,11 @@ class ActivityController {
                     $(".modal-content").classList.remove('error');
                     $(".modal-content").classList.add('success');
                     console.log("RESP on AcCntrl", resp);
+                    return Promise.all([
+                        this._refreshCollectibles(),
+                        this._refreshBalance(),
+                        this._refreshTransactions()
+                    ]);
                 })
                 .catch((resp) => {
                     $(".oper-gif img").src = './imgs/misc/nok.gif';

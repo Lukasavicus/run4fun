@@ -18,7 +18,7 @@ export class CollectiblesView extends View {
             ` : ''}
 
             ${model.collectibleList.collectibles.map(collectible => `
-                <div id="${collectible.id}" data-price=${collectible.price} data-serie=${collectible.serie} class="collectible ${collectible.owned ? '' : 'not-purchased'}" title="${collectible.owned ? collectible.description : 'This Collectible costs: '+collectible.price + '⚡'}" >
+                <div id="${collectible.id}" data-title="${collectible.title}" data-icon="${collectible.icon}" data-price="${collectible.price}" data-serie="${collectible.serie}" data-hist="${collectible.hist}" data-description="${collectible.description}" class="collectible ${collectible.owned ? '' : 'not-purchased'}" title="${collectible.owned ? collectible.description : 'This Collectible costs: '+collectible.price + '⚡'}" >
                     <img src="${collectible.icon}" class="collectible-img">
                     <p class="collectible-description">${collectible.owned ? collectible.hist : ''}</p>
                 </div>
