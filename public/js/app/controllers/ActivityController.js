@@ -106,7 +106,7 @@ System.register(['../helpers/Bind', '../helpers/DateHelper', '../helpers/MultiBi
                 _createClass(ActivityController, [{
                     key: '_newUserModel',
                     value: function _newUserModel(name, balance) {
-                        return new MultiBind(new User(name, balance), [new ActivitiesView($("#activities-data")), new ActivitiesDashboardView($("#management-dashboard")), new BadgesView($("#badges")), new CollectiblesView($("#collectibles")), new TransactionsView($("#extract")), new NavigationBarView($(".user-pill"))], 'addActivity', 'addBadge', 'setBadges', 'addCollectible', 'addTransaction');
+                        return new MultiBind(new User(name, balance), [new ActivitiesView($("#activities-data")), new ActivitiesDashboardView($("#management-dashboard")), new BadgesView($("#badges")), new CollectiblesView($("#collectibles")), new TransactionsView($("#extract")), new NavigationBarView($(".user-pill"))], 'addActivity', 'addBadge', 'setBadges', 'addCollectible', 'addTransaction', 'setBalance', 'setTransactions');
                     }
                 }, {
                     key: '_init',
@@ -126,7 +126,7 @@ System.register(['../helpers/Bind', '../helpers/DateHelper', '../helpers/MultiBi
                         this._service.addActivity(activity).then(function (res) {
                             console.log(res);
                             _this2._message.text = "Activity created";
-                            return _this2._refreshBadges();
+                            return Promise.all([_this2._refreshBadges(), _this2._refreshBalance(), _this2._refreshTransactions()]);
                         }).catch(function (error) {
                             return _this2._message.text = error;
                         });
@@ -163,9 +163,7 @@ System.register(['../helpers/Bind', '../helpers/DateHelper', '../helpers/MultiBi
                         });
 
                         this._service.getUserTransactions().then(function (transactions) {
-                            transactions.forEach(function (transaction) {
-                                return _this3._user.addTransaction(transaction);
-                            });
+                            return _this3._user.setTransactions(transactions);
                         }).catch(function (error) {
                             return _this3._message.text = error;
                         });
@@ -177,6 +175,24 @@ System.register(['../helpers/Bind', '../helpers/DateHelper', '../helpers/MultiBi
 
                         return this._service.getUserBadges().then(function (badges) {
                             return _this4._user.setBadges(badges);
+                        });
+                    }
+                }, {
+                    key: '_refreshBalance',
+                    value: function _refreshBalance() {
+                        var _this5 = this;
+
+                        return this._service.getUserInfo().then(function (user) {
+                            return _this5._user.setBalance(user.balance);
+                        });
+                    }
+                }, {
+                    key: '_refreshTransactions',
+                    value: function _refreshTransactions() {
+                        var _this6 = this;
+
+                        return this._service.getUserTransactions().then(function (transactions) {
+                            return _this6._user.setTransactions(transactions);
                         });
                     }
                 }, {
@@ -214,7 +230,7 @@ System.register(['../helpers/Bind', '../helpers/DateHelper', '../helpers/MultiBi
                 }, {
                     key: 'buyCollectible',
                     value: function buyCollectible(elem) {
-                        var _this5 = this;
+                        var _this7 = this;
 
                         // open modal, option to confirm checkout, purchase order
                         console.log(elem);
@@ -237,7 +253,7 @@ System.register(['../helpers/Bind', '../helpers/DateHelper', '../helpers/MultiBi
                             event.preventDefault();
 
                             $(".oper-gif img").classList.remove('disp-n');
-                            _this5._service.purchaseCollectible(elem.id).then(function (resp) {
+                            _this7._service.purchaseCollectible(elem.id).then(function (resp) {
                                 $(".oper-gif img").src = './imgs/misc/ok.gif';
                                 $(".modal-content").classList.remove('error');
                                 $(".modal-content").classList.add('success');

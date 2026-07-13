@@ -45,6 +45,11 @@ System.register([], function (_export, _context) {
                         this._transactions.push(transaction);
                     }
                 }, {
+                    key: "replace",
+                    value: function replace(transactions) {
+                        this._transactions = transactions;
+                    }
+                }, {
                     key: "transactions",
                     get: function get() {
                         return [].concat(this._transactions);

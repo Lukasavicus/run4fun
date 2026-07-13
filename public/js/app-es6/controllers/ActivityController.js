@@ -60,7 +60,7 @@ class ActivityController {
             new CollectiblesView($("#collectibles")),
             new TransactionsView($("#extract")),
             new NavigationBarView($(".user-pill"))
-        ], 'addActivity', 'addBadge', 'setBadges', 'addCollectible', 'addTransaction');
+        ], 'addActivity', 'addBadge', 'setBadges', 'addCollectible', 'addTransaction', 'setBalance', 'setTransactions');
     }
 
     _init(){
@@ -78,7 +78,11 @@ class ActivityController {
             .then(res => {
                 console.log(res);
                 this._message.text = "Activity created";
-                return this._refreshBadges();
+                return Promise.all([
+                    this._refreshBadges(),
+                    this._refreshBalance(),
+                    this._refreshTransactions()
+                ]);
             })
             .catch(error => this._message.text = error);
 
@@ -110,9 +114,7 @@ class ActivityController {
 
             this._service
                 .getUserTransactions()
-                .then(transactions => {
-                    transactions.forEach(transaction => this._user.addTransaction(transaction));
-                })
+                .then(transactions => this._user.setTransactions(transactions))
                 .catch(error => this._message.text = error);
 
 
@@ -122,6 +124,18 @@ class ActivityController {
         return this._service
             .getUserBadges()
             .then(badges => this._user.setBadges(badges));
+    }
+
+    _refreshBalance(){
+        return this._service
+            .getUserInfo()
+            .then(user => this._user.setBalance(user.balance));
+    }
+
+    _refreshTransactions(){
+        return this._service
+            .getUserTransactions()
+            .then(transactions => this._user.setTransactions(transactions));
     }
 
     _createActivity(){

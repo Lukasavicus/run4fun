@@ -55,6 +55,11 @@ System.register(['../helpers/TimeHelper', './BadgeList', './CollectibleList', '.
                 }
 
                 _createClass(User, [{
+                    key: 'setBalance',
+                    value: function setBalance(balance) {
+                        this._balance = balance;
+                    }
+                }, {
                     key: 'addCollectible',
                     value: function addCollectible(collectible) {
                         this._collectibleList.add(collectible);
@@ -78,6 +83,11 @@ System.register(['../helpers/TimeHelper', './BadgeList', './CollectibleList', '.
                     key: 'addTransaction',
                     value: function addTransaction(transaction) {
                         this._transactionList.add(transaction);
+                    }
+                }, {
+                    key: 'setTransactions',
+                    value: function setTransactions(transactions) {
+                        this._transactionList.replace(transactions);
                     }
                 }, {
                     key: 'name',

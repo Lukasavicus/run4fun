@@ -21,6 +21,10 @@ export class User {
         return this._balance;
     }
 
+    setBalance(balance){
+        this._balance = balance;
+    }
+
     //Collectibles
     addCollectible(collectible){
         this._collectibleList.add(collectible);
@@ -56,6 +60,10 @@ export class User {
 
     addTransaction(transaction){
         this._transactionList.add(transaction);
+    }
+
+    setTransactions(transactions){
+        this._transactionList.replace(transactions);
     }
 
     get transactionList(){
