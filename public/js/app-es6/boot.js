@@ -16,6 +16,24 @@ document.querySelector("#collectibles").onclick = event => {
     if(collectible) Reflect.apply(activityController.buyCollectible, activityController, [collectible]);
 };
 
+document.querySelector("#analytics").onchange = event => {
+    if(event.target.closest(".analytics-controls"))
+        Reflect.apply(activityController.updateAnalytics, activityController, []);
+};
+
+document.querySelector("#settings").onsubmit = event => {
+    if(event.target.id == "public-settings-form")
+        Reflect.apply(activityController.savePublicSettings, activityController, [event]);
+};
+
+document.querySelector("#admin").onclick = event => {
+    if(event.target.id == "refresh-admin")
+        Reflect.apply(activityController.refreshAdmin, activityController, []);
+
+    if(event.target.classList.contains("admin-delete-user") && confirm("Delete this user profile?"))
+        Reflect.apply(activityController.deleteAdminUser, activityController, [event.target.dataset.userId]);
+};
+
 setTimeout(() => {
         console.log('activities loaded');
         Array

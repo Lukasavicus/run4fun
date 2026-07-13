@@ -17,6 +17,9 @@ import { CollectiblesView } from '../views/CollectiblesView';
 import { TransactionsView } from '../views/TransactionsView';
 import { PurchaseModalView } from '../views/PurchaseModalView';
 import { Collectible } from '../models/Collectible';
+import { AnalyticsView } from '../views/AnalyticsView';
+import { SettingsView } from '../views/SettingsView';
+import { AdminView } from '../views/AdminView';
 
 let $ = document.querySelector.bind(document);
 
@@ -25,8 +28,7 @@ class ActivityController {
     constructor(){
         this._service = new UserService();
 
-        let name = null;
-        let balance = null;
+        let userInfo = null;
 
         this._date = $("#date");
         this._activity = $("#activity");
@@ -40,27 +42,29 @@ class ActivityController {
         this._service
             .getUserInfo()
             .then(user_obj => {
-                name = user_obj.name;
-                balance = user_obj.balance;
+                userInfo = user_obj;
             })
             .then(() => {
 
-                this._user = this._newUserModel(name, balance);
+                this._user = this._newUserModel(userInfo);
                 this._message = new Bind(new Message(), new MessageView($("#messaging")), 'text');
                 this._init();
 
             });
     }
 
-    _newUserModel(name, balance){
-        return new MultiBind(new User(name, balance), [
+    _newUserModel(userInfo){
+        return new MultiBind(new User(userInfo.name, userInfo.balance, userInfo.login, userInfo.role), [
             new ActivitiesView($("#activities-data")), 
             new ActivitiesDashboardView($("#management-dashboard")),
+            new AnalyticsView($("#analytics")),
             new BadgesView($("#badges")),
             new CollectiblesView($("#collectibles")),
             new TransactionsView($("#extract")),
+            new SettingsView($("#settings")),
+            new AdminView($("#admin")),
             new NavigationBarView($(".user-pill"))
-        ], 'addActivity', 'addBadge', 'setBadges', 'addCollectible', 'setCollectibles', 'addTransaction', 'setBalance', 'setTransactions');
+        ], 'addActivity', 'setAnalyticsFilters', 'addBadge', 'setBadges', 'addCollectible', 'setCollectibles', 'addTransaction', 'setBalance', 'setTransactions', 'setPublicSettings', 'setAdminSummary');
     }
 
     _init(){
@@ -111,10 +115,16 @@ class ActivityController {
             .catch(error => this._message.text = error);
 
             this._service
-                .getUserTransactions()
-                .then(transactions => this._user.setTransactions(transactions))
-                .catch(error => this._message.text = error);
+            .getUserTransactions()
+            .then(transactions => this._user.setTransactions(transactions))
+            .catch(error => this._message.text = error);
 
+        this._service
+            .getPublicSettings()
+            .then(settings => this._user.setPublicSettings(settings))
+            .catch(error => this._message.text = error);
+
+        if(this._user.role == 'admin') this.refreshAdmin();
 
     }
 
@@ -177,6 +187,47 @@ class ActivityController {
             target.classList.remove("collapsed");
         }
 
+    }
+
+    updateAnalytics(){
+        this._user.setAnalyticsFilters(
+            $("#analytics-period").value,
+            $("#analytics-from").value,
+            $("#analytics-to").value
+        );
+    }
+
+    savePublicSettings(event){
+        event.preventDefault();
+
+        const settings = {
+            kpis: $("#public-kpis").checked,
+            runs: $("#public-runs").checked,
+            badges: $("#public-badges").checked,
+            collectibles: $("#public-collectibles").checked,
+        };
+
+        this._service
+            .updatePublicSettings(settings)
+            .then(savedSettings => {
+                this._user.setPublicSettings(savedSettings);
+                this._message.text = "Public settings saved";
+            })
+            .catch(error => this._message.text = error);
+    }
+
+    refreshAdmin(){
+        return this._service
+            .getAdminSummary()
+            .then(summary => this._user.setAdminSummary(summary))
+            .catch(error => this._message.text = error);
+    }
+
+    deleteAdminUser(userId){
+        this._service
+            .deleteAdminUser(userId)
+            .then(() => this.refreshAdmin())
+            .catch(error => this._message.text = error);
     }
 
     buyCollectible(elem){

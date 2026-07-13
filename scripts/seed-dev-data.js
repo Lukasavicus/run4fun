@@ -220,6 +220,40 @@ async function upsertDemoUser() {
         password: 'demo',
         role: 'user',
         balance: 5000,
+        public_settings: {
+          badges: true,
+          collectibles: true,
+          kpis: true,
+          runs: false,
+        },
+        badges: [],
+        collectibles: [],
+        activities: [],
+      },
+    },
+    { upsert: true }
+  );
+}
+
+async function upsertAdminUser() {
+  await User.updateOne(
+    { login: 'admin' },
+    {
+      $set: {
+        name: 'Run4Fun Admin',
+        email: 'admin@run4fun.local',
+        login: 'admin',
+        password: 'admin',
+        role: 'admin',
+        balance: 0,
+        public_settings: {
+          badges: false,
+          collectibles: false,
+          kpis: false,
+          runs: false,
+        },
+      },
+      $setOnInsert: {
         badges: [],
         collectibles: [],
         activities: [],
@@ -235,6 +269,7 @@ async function main() {
   await upsertBadges();
   await upsertCollectibles();
   await upsertDemoUser();
+  await upsertAdminUser();
 
   const [badges, collectibles, users] = await Promise.all([
     Badge.countDocuments(),

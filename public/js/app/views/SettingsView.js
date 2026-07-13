@@ -3,7 +3,7 @@
 System.register(['./View'], function (_export, _context) {
     "use strict";
 
-    var View, _createClass, ActivitiesDashboardView;
+    var View, _createClass, SettingsView;
 
     function _classCallCheck(instance, Constructor) {
         if (!(instance instanceof Constructor)) {
@@ -58,27 +58,29 @@ System.register(['./View'], function (_export, _context) {
                 };
             }();
 
-            _export('ActivitiesDashboardView', ActivitiesDashboardView = function (_View) {
-                _inherits(ActivitiesDashboardView, _View);
+            _export('SettingsView', SettingsView = function (_View) {
+                _inherits(SettingsView, _View);
 
-                function ActivitiesDashboardView(HTMLElement) {
-                    _classCallCheck(this, ActivitiesDashboardView);
+                function SettingsView(HTMLElement) {
+                    _classCallCheck(this, SettingsView);
 
-                    return _possibleConstructorReturn(this, (ActivitiesDashboardView.__proto__ || Object.getPrototypeOf(ActivitiesDashboardView)).call(this, HTMLElement));
+                    return _possibleConstructorReturn(this, (SettingsView.__proto__ || Object.getPrototypeOf(SettingsView)).call(this, HTMLElement));
                 }
 
-                _createClass(ActivitiesDashboardView, [{
+                _createClass(SettingsView, [{
                     key: 'template',
                     value: function template(model) {
-                        return '\n        <div>\n            <div>\n                <img src="imgs/badges/008-road.svg">\n                <p>Total Travelled Distance</p>\n            </div>\n            <p class="record" id="total_travelled_dist">' + model.total_distance + ' km</p>\n        </div>\n        <div>\n            <div>\n                <img src="imgs/badges/034-gas.svg">\n                <p>Total Travelled Time</p>\n            </div>\n            <p class="record" id="total_travelled_time">' + model.total_time + '</p>\n        </div>\n        <div>\n            <div>\n                <img src="imgs/badges/025-time.svg">\n                <p>Max Velocity Reached</p>\n            </div>\n            <p class="record" id="max_velocity_reached">' + model.max_velocity + ' km/h</p>\n        </div>\n        <div>\n            <div>\n                <img src="imgs/badges/029-energy-drink.svg">\n                <p>Max One-Shoot Distance</p>\n            </div>\n            <p class="record" id="max_one_shoot_dist">' + model.max_distance + ' km</p>\n        </div>\n        <div>\n            <div>\n                <img src="imgs/badges/040-medal-1.svg">\n                <p>Best Pace</p>\n            </div>\n            <p class="record" id="best_record">' + model.best_pace + '</p>\n        </div>\n        ';
+                        var settings = model.publicSettings;
+                        var publicUrl = window.location.origin + '/public.html?login=' + encodeURIComponent(model.login);
+
+                        return '\n            <form id="public-settings-form" class="settings-form">\n                <div>\n                    <h3>Public profile</h3>\n                    <p>Your public page: <a href="' + publicUrl + '" target="_blank">' + publicUrl + '</a></p>\n                </div>\n\n                <label><input type="checkbox" id="public-kpis" ' + (settings.kpis ? 'checked' : '') + '> Show KPIs</label>\n                <label><input type="checkbox" id="public-runs" ' + (settings.runs ? 'checked' : '') + '> Show runs</label>\n                <label><input type="checkbox" id="public-badges" ' + (settings.badges ? 'checked' : '') + '> Show badges</label>\n                <label><input type="checkbox" id="public-collectibles" ' + (settings.collectibles ? 'checked' : '') + '> Show collectibles</label>\n\n                <button type="submit">Save settings</button>\n            </form>\n        ';
                     }
                 }]);
 
-                return ActivitiesDashboardView;
+                return SettingsView;
             }(View));
 
-            _export('ActivitiesDashboardView', ActivitiesDashboardView);
+            _export('SettingsView', SettingsView);
         }
     };
 });
-//# sourceMappingURL=ActivitiesDashboardView.js.map

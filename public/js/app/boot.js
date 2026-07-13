@@ -27,6 +27,20 @@ System.register(['./controllers/ActivityController', './controllers/LoginControl
                 if (collectible) Reflect.apply(activityController.buyCollectible, activityController, [collectible]);
             };
 
+            document.querySelector("#analytics").onchange = function (event) {
+                if (event.target.closest(".analytics-controls")) Reflect.apply(activityController.updateAnalytics, activityController, []);
+            };
+
+            document.querySelector("#settings").onsubmit = function (event) {
+                if (event.target.id == "public-settings-form") Reflect.apply(activityController.savePublicSettings, activityController, [event]);
+            };
+
+            document.querySelector("#admin").onclick = function (event) {
+                if (event.target.id == "refresh-admin") Reflect.apply(activityController.refreshAdmin, activityController, []);
+
+                if (event.target.classList.contains("admin-delete-user") && confirm("Delete this user profile?")) Reflect.apply(activityController.deleteAdminUser, activityController, [event.target.dataset.userId]);
+            };
+
             setTimeout(function () {
                 console.log('activities loaded');
                 Array.from(document.querySelectorAll("td button")).filter(function (el) {

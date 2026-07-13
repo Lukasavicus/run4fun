@@ -39,9 +39,9 @@ export class ActivitiesDashboardView extends View {
         <div>
             <div>
                 <img src="imgs/badges/040-medal-1.svg">
-                <p>Best Record</p>
+                <p>Best Pace</p>
             </div>
-            <p class="record" id="best_record"></p>
+            <p class="record" id="best_record">${model.best_pace}</p>
         </div>
         `;
     }

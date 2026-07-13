@@ -13,6 +13,12 @@ module.exports = function(app) {
 
 	//app.get('/v1/users/:login', api.findByLogin);
 	app.get('/v1/user', api.findByLogin);
+	app.route('/v1/user/public-settings')
+		.get(api.getPublicSettings)
+		.put(api.updatePublicSettings);
+
+	app.get('/v1/admin/summary', api.adminSummary);
+	app.delete('/v1/admin/users/:id', api.adminDeleteUser);
 
 	//
 	app.route('/v1/users/badges')

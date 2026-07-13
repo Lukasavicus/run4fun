@@ -65,6 +65,12 @@ export class HttpService {
         .then(res => res.json());
     }
 
+    put(url, options) {
+        return this._fetch(url, options)
+        .then(res => this._handleErrors(res))
+        .then(res => res.json());
+    }
+
     delete(url) {
         return this._fetch(url, {
             method: 'DELETE',

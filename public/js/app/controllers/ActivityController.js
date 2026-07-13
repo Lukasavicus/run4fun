@@ -1,9 +1,9 @@
 'use strict';
 
-System.register(['../helpers/Bind', '../helpers/DateHelper', '../helpers/MultiBind', '../models/Activity', '../models/Message', '../models/User', '../services/UserService', '../views/ActivitiesView', '../views/ActivitiesDashboardView', '../views/MessageView', '../views/NavigationBarView', '../views/BadgesView', '../views/CollectiblesView', '../views/TransactionsView', '../views/PurchaseModalView', '../models/Collectible'], function (_export, _context) {
+System.register(['../helpers/Bind', '../helpers/DateHelper', '../helpers/MultiBind', '../models/Activity', '../models/Message', '../models/User', '../services/UserService', '../views/ActivitiesView', '../views/ActivitiesDashboardView', '../views/MessageView', '../views/NavigationBarView', '../views/BadgesView', '../views/CollectiblesView', '../views/TransactionsView', '../views/PurchaseModalView', '../models/Collectible', '../views/AnalyticsView', '../views/SettingsView', '../views/AdminView'], function (_export, _context) {
     "use strict";
 
-    var Bind, DateHelper, MultiBind, Activity, Message, User, UserService, ActivitiesView, ActivitiesDashboardView, MessageView, NavigationBarView, BadgesView, CollectiblesView, TransactionsView, PurchaseModalView, Collectible, _createClass, $, ActivityController, activityController;
+    var Bind, DateHelper, MultiBind, Activity, Message, User, UserService, ActivitiesView, ActivitiesDashboardView, MessageView, NavigationBarView, BadgesView, CollectiblesView, TransactionsView, PurchaseModalView, Collectible, AnalyticsView, SettingsView, AdminView, _createClass, $, ActivityController, activityController;
 
     function _classCallCheck(instance, Constructor) {
         if (!(instance instanceof Constructor)) {
@@ -50,6 +50,12 @@ System.register(['../helpers/Bind', '../helpers/DateHelper', '../helpers/MultiBi
             PurchaseModalView = _viewsPurchaseModalView.PurchaseModalView;
         }, function (_modelsCollectible) {
             Collectible = _modelsCollectible.Collectible;
+        }, function (_viewsAnalyticsView) {
+            AnalyticsView = _viewsAnalyticsView.AnalyticsView;
+        }, function (_viewsSettingsView) {
+            SettingsView = _viewsSettingsView.SettingsView;
+        }, function (_viewsAdminView) {
+            AdminView = _viewsAdminView.AdminView;
         }],
         execute: function () {
             _createClass = function () {
@@ -80,8 +86,7 @@ System.register(['../helpers/Bind', '../helpers/DateHelper', '../helpers/MultiBi
 
                     this._service = new UserService();
 
-                    var name = null;
-                    var balance = null;
+                    var userInfo = null;
 
                     this._date = $("#date");
                     this._activity = $("#activity");
@@ -93,11 +98,10 @@ System.register(['../helpers/Bind', '../helpers/DateHelper', '../helpers/MultiBi
                     this._purchaseCollectible = new Bind(Collectible, new PurchaseModalView($("#purchase-modal")));
 
                     this._service.getUserInfo().then(function (user_obj) {
-                        name = user_obj.name;
-                        balance = user_obj.balance;
+                        userInfo = user_obj;
                     }).then(function () {
 
-                        _this._user = _this._newUserModel(name, balance);
+                        _this._user = _this._newUserModel(userInfo);
                         _this._message = new Bind(new Message(), new MessageView($("#messaging")), 'text');
                         _this._init();
                     });
@@ -105,8 +109,8 @@ System.register(['../helpers/Bind', '../helpers/DateHelper', '../helpers/MultiBi
 
                 _createClass(ActivityController, [{
                     key: '_newUserModel',
-                    value: function _newUserModel(name, balance) {
-                        return new MultiBind(new User(name, balance), [new ActivitiesView($("#activities-data")), new ActivitiesDashboardView($("#management-dashboard")), new BadgesView($("#badges")), new CollectiblesView($("#collectibles")), new TransactionsView($("#extract")), new NavigationBarView($(".user-pill"))], 'addActivity', 'addBadge', 'setBadges', 'addCollectible', 'setCollectibles', 'addTransaction', 'setBalance', 'setTransactions');
+                    value: function _newUserModel(userInfo) {
+                        return new MultiBind(new User(userInfo.name, userInfo.balance, userInfo.login, userInfo.role), [new ActivitiesView($("#activities-data")), new ActivitiesDashboardView($("#management-dashboard")), new AnalyticsView($("#analytics")), new BadgesView($("#badges")), new CollectiblesView($("#collectibles")), new TransactionsView($("#extract")), new SettingsView($("#settings")), new AdminView($("#admin")), new NavigationBarView($(".user-pill"))], 'addActivity', 'setAnalyticsFilters', 'addBadge', 'setBadges', 'addCollectible', 'setCollectibles', 'addTransaction', 'setBalance', 'setTransactions', 'setPublicSettings', 'setAdminSummary');
                     }
                 }, {
                     key: '_init',
@@ -165,6 +169,14 @@ System.register(['../helpers/Bind', '../helpers/DateHelper', '../helpers/MultiBi
                         }).catch(function (error) {
                             return _this3._message.text = error;
                         });
+
+                        this._service.getPublicSettings().then(function (settings) {
+                            return _this3._user.setPublicSettings(settings);
+                        }).catch(function (error) {
+                            return _this3._message.text = error;
+                        });
+
+                        if (this._user.role == 'admin') this.refreshAdmin();
                     }
                 }, {
                     key: '_refreshBadges',
@@ -235,9 +247,57 @@ System.register(['../helpers/Bind', '../helpers/DateHelper', '../helpers/MultiBi
                         }
                     }
                 }, {
+                    key: 'updateAnalytics',
+                    value: function updateAnalytics() {
+                        this._user.setAnalyticsFilters($("#analytics-period").value, $("#analytics-from").value, $("#analytics-to").value);
+                    }
+                }, {
+                    key: 'savePublicSettings',
+                    value: function savePublicSettings(event) {
+                        var _this8 = this;
+
+                        event.preventDefault();
+
+                        var settings = {
+                            kpis: $("#public-kpis").checked,
+                            runs: $("#public-runs").checked,
+                            badges: $("#public-badges").checked,
+                            collectibles: $("#public-collectibles").checked
+                        };
+
+                        this._service.updatePublicSettings(settings).then(function (savedSettings) {
+                            _this8._user.setPublicSettings(savedSettings);
+                            _this8._message.text = "Public settings saved";
+                        }).catch(function (error) {
+                            return _this8._message.text = error;
+                        });
+                    }
+                }, {
+                    key: 'refreshAdmin',
+                    value: function refreshAdmin() {
+                        var _this9 = this;
+
+                        return this._service.getAdminSummary().then(function (summary) {
+                            return _this9._user.setAdminSummary(summary);
+                        }).catch(function (error) {
+                            return _this9._message.text = error;
+                        });
+                    }
+                }, {
+                    key: 'deleteAdminUser',
+                    value: function deleteAdminUser(userId) {
+                        var _this10 = this;
+
+                        this._service.deleteAdminUser(userId).then(function () {
+                            return _this10.refreshAdmin();
+                        }).catch(function (error) {
+                            return _this10._message.text = error;
+                        });
+                    }
+                }, {
                     key: 'buyCollectible',
                     value: function buyCollectible(elem) {
-                        var _this8 = this;
+                        var _this11 = this;
 
                         // open modal, option to confirm checkout, purchase order
                         console.log(elem);
@@ -259,12 +319,12 @@ System.register(['../helpers/Bind', '../helpers/DateHelper', '../helpers/MultiBi
                             event.preventDefault();
 
                             $(".oper-gif img").classList.remove('disp-n');
-                            _this8._service.purchaseCollectible(elem.id).then(function (resp) {
+                            _this11._service.purchaseCollectible(elem.id).then(function (resp) {
                                 $(".oper-gif img").src = './imgs/misc/ok.gif';
                                 $(".modal-content").classList.remove('error');
                                 $(".modal-content").classList.add('success');
                                 console.log("RESP on AcCntrl", resp);
-                                return Promise.all([_this8._refreshCollectibles(), _this8._refreshBalance(), _this8._refreshTransactions()]);
+                                return Promise.all([_this11._refreshCollectibles(), _this11._refreshBalance(), _this11._refreshTransactions()]);
                             }).catch(function (resp) {
                                 $(".oper-gif img").src = './imgs/misc/nok.gif';
                                 $(".modal-content").classList.remove('success');

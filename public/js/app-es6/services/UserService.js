@@ -23,6 +23,28 @@ export class UserService {
         });
     }
 
+    getPublicSettings(){
+        return this._httpService.get('/v1/user/public-settings');
+    }
+
+    updatePublicSettings(settings){
+        return this._httpService.put('/v1/user/public-settings', {
+            method : 'PUT',
+            body: JSON.stringify(settings),
+            headers: {
+                'Content-Type': 'application/json'
+            },
+        });
+    }
+
+    getAdminSummary(){
+        return this._httpService.get('/v1/admin/summary');
+    }
+
+    deleteAdminUser(userId){
+        return this._httpService.delete(`/v1/admin/users/${userId}`);
+    }
+
     //Collectibles
     getUserCollectibles(){
         return new Promise((resolve, reject) => {
