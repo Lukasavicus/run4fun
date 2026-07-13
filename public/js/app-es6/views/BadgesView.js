@@ -22,14 +22,14 @@ export class BadgesView extends View {
             </div>
 
             ${earnedBadges.length == 0 ? `
-                <div class="empty-state">
+                <div class="empty-state badge-empty-earned">
                     <p>No badges earned yet.</p>
                     <span>Register runs to unlock the colored versions of these badges.</span>
                 </div>
             ` : ''}
 
             ${Object.keys(groups).map(group => `
-                <div class="badge-group">
+                <div class="badge-group ${groups[group].some(badge => badge.earned) ? '' : 'no-earned'}">
                     <h3>${group}</h3>
                     <div class="badge-grid">
                         ${groups[group]

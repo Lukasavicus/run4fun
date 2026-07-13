@@ -292,6 +292,18 @@ main {
 	font-size: 16px;
 }
 
+.badge-empty-earned {
+	display: none;
+}
+
+#badges[data-filter="earned"] .badge-empty-earned {
+	display: block;
+}
+
+#badges[data-filter="earned"] .badge-group.no-earned {
+	display: none;
+}
+
 #badges[data-filter="earned"] .badge.blocked {
 	display: none;
 }
