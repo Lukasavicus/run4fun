@@ -34,15 +34,10 @@ header {
 }
 
 .brand-mark {
-	display: grid;
-	place-items: center;
+	flex: 0 0 auto;
 	width: 44px;
 	height: 44px;
 	margin: 0;
-	color: #17252f;
-	font-weight: bold;
-	background: #f6c85f;
-	border-radius: 8px;
 }
 
 .brand h1,
@@ -260,15 +255,16 @@ main {
 
 .heatmap-grid {
 	display: grid;
-	grid-template-columns: repeat(7, 34px);
+	grid-template-columns: repeat(7, minmax(34px, 1fr));
 	gap: 6px;
+	width: 100%;
 }
 
 .heatmap-day {
 	display: grid;
 	place-items: center;
-	width: 34px;
-	height: 34px;
+	width: 100%;
+	height: 44px;
 	color: #60737c;
 	font-size: 11px;
 	font-weight: bold;
@@ -602,7 +598,8 @@ main {
 	opacity: .72;
 }
 
-.not-purchased:hover {
+.not-purchased:hover,
+.badge.blocked:hover {
 	filter: grayscale(35%);
 	opacity: 1;
 	cursor: pointer;
@@ -661,10 +658,6 @@ main {
 .badge.blocked {
 	filter: grayscale(100%);
 	opacity: .62;
-}
-
-.badge.blocked:hover {
-	opacity: .9;
 }
 
 .badge-modal {
@@ -736,21 +729,17 @@ main {
 /* === LOGIN ================================= */
 
 .login-page {
-	display: grid;
-	place-items: center;
 	min-height: 100vh;
-	background: linear-gradient(135deg, #17252f, #277da1);
+	background: #eef3f6;
 }
 
 .login-shell {
 	display: grid;
-	grid-template-columns: minmax(280px, 1fr) minmax(300px, 420px);
-	gap: 22px;
-	width: min(960px, calc(100% - 32px));
-	margin: 0 auto;
+	grid-template-columns: minmax(0, 1.45fr) minmax(360px, 520px);
+	width: 100%;
+	min-height: 100vh;
 }
 
-.login-panel,
 .login-card {
 	background: rgba(255, 255, 255, .94);
 	border: 1px solid rgba(255, 255, 255, .7);
@@ -761,16 +750,18 @@ main {
 .login-panel {
 	display: flex;
 	flex-direction: column;
-	justify-content: space-between;
-	min-height: 430px;
-	padding: 28px;
+	min-height: 100vh;
+	padding: 32px 40px;
+	background-image: linear-gradient(180deg, rgba(16, 18, 22, .86), rgba(16, 18, 22, 0) 32%), url('../imgs/run4fun-hero.png');
+	background-position: center;
+	background-size: cover;
 }
 
 .login-brand {
 	display: flex;
 	align-items: center;
 	gap: 14px;
-	color: #17252f;
+	color: #ffffff;
 }
 
 .login-brand .brand-mark {
@@ -788,40 +779,19 @@ main {
 .login-brand p {
 	max-width: 420px;
 	margin: 8px 0 0;
-	color: #455a64;
+	color: #d7e1e6;
 	font-size: 15px;
 	line-height: 1.45;
 }
 
-.login-preview {
+.signin {
 	display: grid;
-	grid-template-columns: repeat(3, 1fr);
-	gap: 12px;
-}
-
-.login-preview div {
-	min-height: 124px;
-	padding: 14px 10px;
-	text-align: center;
-	background: #f8fafb;
-	border: 1px solid #dce6eb;
-	border-radius: 8px;
-}
-
-.login-preview img {
-	width: 58px;
-	height: 58px;
-	margin-bottom: 12px;
-}
-
-.login-preview span {
-	display: block;
-	color: #17252f;
-	font-size: 12px;
-	font-weight: bold;
+	place-items: center;
+	padding: 32px;
 }
 
 .login-card {
+	width: min(100%, 420px);
 	padding: 30px;
 }
 
@@ -1194,7 +1164,6 @@ footer p {
 
 	.login-page {
 		display: block;
-		padding: 18px 0;
 	}
 
 	.login-shell {
@@ -1202,11 +1171,11 @@ footer p {
 	}
 
 	.login-panel {
-		min-height: auto;
+		min-height: 380px;
+		padding: 22px;
 	}
 
-	.login-preview {
-		margin-top: 24px;
-		grid-template-columns: 1fr;
+	.signin {
+		padding: 24px 16px;
 	}
 }

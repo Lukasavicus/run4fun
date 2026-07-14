@@ -4,7 +4,7 @@
 	<link href="https://fonts.googleapis.com/css?family=Montserrat&display=swap" rel="stylesheet">
 	<link rel="stylesheet" type="text/css" href="css/reset.css">
 	<link rel="stylesheet" type="text/css" href="css/style.css">
-	<title>Run4Fun Public Profile</title>
+	<title>Run4Fun Admin Dashboard</title>
 
 	<link rel="icon" href="/imgs/run4fun-mark.svg" type="image/svg+xml">
 	<link rel="icon" href="/favicon-32x32.png" sizes="32x32" type="image/png">
@@ -15,36 +15,36 @@
 			<img class="brand-mark" src="imgs/run4fun-mark.svg" alt="">
 			<div>
 				<h1>Run4Fun</h1>
-				<p>public runner profile</p>
+				<p>administration</p>
 			</div>
 		</div>
 		<nav class="nav-menu">
 			<ul>
-				<li>
-					<a href="/home.html">Login</a>
-				</li>
+				<li><a href="public.html">Public profiles</a></li>
 			</ul>
 		</nav>
+		<div class="user-pill" id="admin-user">Admin</div>
+		<a id="logout" href="#">Logout</a>
 	</header>
 
 	<main>
-		<section class="section-title">
+		<section id="messaging"></section>
+		<div class="section-title">
 			<div class="section-header">
-				<p>Find a runner</p>
+				<p>Admin dashboard</p>
 			</div>
-			<form class="public-search" id="public-search-form">
-				<input type="text" id="public-login" placeholder="runner login">
-				<button type="submit">Search</button>
-			</form>
-		</section>
-
-		<section id="public-profile"></section>
+			<section id="admin"></section>
+		</div>
 	</main>
+
+	<footer>
+		<p>Run4Fun - 2020</p>
+	</footer>
 
 	<script src="https://cdn.jsdelivr.net/npm/systemjs@0.19.31/dist/system.js"></script>
 	<script>
 		System.defaultJSExtensions = true;
-		System.import('js/app/boot_public').catch(function(err){
+		System.import('js/app/boot_admin').catch(function(err){
 			console.error(err);
 		});
 	</script>

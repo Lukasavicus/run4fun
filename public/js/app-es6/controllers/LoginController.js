@@ -16,11 +16,16 @@ class LoginController{
 		return JSON.parse(jsonPayload);
 	};
 
-	login(login, passwd){
+	login(login, passwd, redirect='index.html', requiredRole='user'){
 		// Realiza a submisão de login
 		// Ao receber a resposta favoravel de login:
 		// 		Grava o resultado do x-access-token na sessão do usuário
 		// 		Redireciona para o index
+		if(!login || !passwd) return Promise.reject(new Error('Fill login and password'));
+
+		delete window.sessionStorage.token;
+		delete window.sessionStorage.login;
+
 		return this._service.post('/autenticar', {
 			method : 'POST',
 			body: JSON.stringify({
@@ -32,20 +37,28 @@ class LoginController{
 			  // 'Content-Type': 'application/x-www-form-urlencoded',
 			},
 		})
-		.then(res => res.headers.get('x-access-token'))
-		.then(token => {
-			console.log('token', token);
-			if(token){
-				window.sessionStorage.token = token;
-				window.sessionStorage.login = this._parseJwt(token).login;
-			}
-		})
 		.then(res => {
-			if(1 == 1){
-				window.location.href = "index.html";
-			}
+			const token = res.headers.get('x-access-token');
+			console.log('token', token);
+			if(!token) throw new Error('Invalid login or password');
+
+			window.sessionStorage.token = token;
+			window.sessionStorage.login = this._parseJwt(token).login;
+			return this._service.get('/v1/user');
 		})
-		.catch(err => console.log(err));
+		.then(user => {
+			if(user.role != requiredRole) {
+				throw new Error(requiredRole == 'admin' ? 'Admin access only' : 'Use the admin login page');
+			}
+
+			window.location.href = redirect;
+		})
+		.catch(error => {
+			delete window.sessionStorage.token;
+			delete window.sessionStorage.login;
+			if(error.message == 'Unauthorized') throw new Error('Invalid login or password');
+			throw error;
+		});
 		// redir home (login / sign in)
 	}
 
@@ -68,10 +81,10 @@ class LoginController{
 		.then(() => this.login(login, password));
 	}
 
-	logout(){
+	logout(redirect='home.html'){
 		delete window.sessionStorage.token;
 		delete window.sessionStorage.login;
-		window.location.href = "home.html";
+		window.location.href = typeof redirect == 'string' ? redirect : 'home.html';
 	}
 
 }

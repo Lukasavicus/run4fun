@@ -185,9 +185,12 @@ module.exports = function(app){
 		.then(function(admin){
 			if(!admin) return null;
 			return model.find({}, {'password': 0});
-		})
-		.then(function(users){
-			if(!users) return res.sendStatus(403);
+			})
+			.then(function(users){
+				if(!users) {
+					res.sendStatus(403);
+					return null;
+				}
 
 			let activityIds = users.reduce(function(ids, user){
 				return ids.concat(user.activities || []);
@@ -266,10 +269,10 @@ module.exports = function(app){
 				badge_unlocks: Object.keys(badgeUnlocks).sort().map(title => ({title, count: badgeUnlocks[title]})),
 			});
 		})
-		.catch(function(err){
-			console.log("API / Users -> adminSummary ", err);
-			res.sendStatus(500);
-		});
+			.catch(function(err){
+				console.log("API / Users -> adminSummary ", err);
+				if(!res.headersSent) res.sendStatus(500);
+			});
 	};
 
 	api.adminDeleteUser = function(req, res){

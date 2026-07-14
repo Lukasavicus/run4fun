@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<link href="https://fonts.googleapis.com/css?family=Montserrat&display=swap" rel="stylesheet">
+	<link rel="stylesheet" type="text/css" href="css/reset.css">
+	<link rel="stylesheet" type="text/css" href="css/style.css">
+	<title>Run4Fun Admin</title>
+
+	<link rel="icon" href="/imgs/run4fun-mark.svg" type="image/svg+xml">
+	<link rel="icon" href="/favicon-32x32.png" sizes="32x32" type="image/png">
+</head>
+<body class="login-page">
+	<main class="login-shell">
+		<section class="login-panel">
+			<div class="login-brand">
+				<img class="brand-mark" src="imgs/run4fun-mark.svg" alt="">
+				<div>
+					<h1>Run4Fun Admin</h1>
+					<p>Manage users, badges, collectibles and app metrics.</p>
+				</div>
+			</div>
+		</section>
+
+		<section class="signin">
+			<form class="login-card" id="admin-home-form">
+				<h2>Admin access</h2>
+				<p class="home-message" id="home-message"></p>
+
+				<label for="login">Login</label>
+				<input type="text" id="login" name="login" autocomplete="username">
+
+				<label for="password">Password</label>
+				<input type="password" id="password" name="password" autocomplete="current-password">
+
+				<button type="submit">Login</button>
+				<p class="login-hint">Admin account: admin / admin</p>
+				<p class="login-switch"><a href="home.html">Runner login</a></p>
+			</form>
+		</section>
+	</main>
+
+	<script src="https://cdn.jsdelivr.net/npm/systemjs@0.19.31/dist/system.js"></script>
+	<script>
+		System.defaultJSExtensions = true;
+		System.import('js/app/boot_admin_home').catch(function(err){
+			console.error(err);
+		});
+	</script>
+</body>
+</html>

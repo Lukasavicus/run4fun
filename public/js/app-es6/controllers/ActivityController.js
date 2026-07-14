@@ -19,7 +19,6 @@ import { PurchaseModalView } from '../views/PurchaseModalView';
 import { Collectible } from '../models/Collectible';
 import { AnalyticsView } from '../views/AnalyticsView';
 import { SettingsView } from '../views/SettingsView';
-import { AdminView } from '../views/AdminView';
 
 let $ = document.querySelector.bind(document);
 
@@ -62,9 +61,8 @@ class ActivityController {
             new CollectiblesView($("#collectibles")),
             new TransactionsView($("#extract")),
             new SettingsView($("#settings")),
-            new AdminView($("#admin")),
             new NavigationBarView($(".user-pill"))
-        ], 'addActivity', 'setAnalyticsFilters', 'addBadge', 'setBadges', 'addCollectible', 'setCollectibles', 'addTransaction', 'setBalance', 'setTransactions', 'setPublicSettings', 'setAdminSummary');
+        ], 'addActivity', 'setAnalyticsFilters', 'addBadge', 'setBadges', 'addCollectible', 'setCollectibles', 'addTransaction', 'setBalance', 'setTransactions', 'setPublicSettings');
     }
 
     _init(){
@@ -123,8 +121,6 @@ class ActivityController {
             .getPublicSettings()
             .then(settings => this._user.setPublicSettings(settings))
             .catch(error => this._message.text = error);
-
-        if(this._user.role == 'admin') this.refreshAdmin();
 
     }
 
@@ -213,20 +209,6 @@ class ActivityController {
                 this._user.setPublicSettings(savedSettings);
                 this._message.text = "Public settings saved";
             })
-            .catch(error => this._message.text = error);
-    }
-
-    refreshAdmin(){
-        return this._service
-            .getAdminSummary()
-            .then(summary => this._user.setAdminSummary(summary))
-            .catch(error => this._message.text = error);
-    }
-
-    deleteAdminUser(userId){
-        this._service
-            .deleteAdminUser(userId)
-            .then(() => this.refreshAdmin())
             .catch(error => this._message.text = error);
     }
 

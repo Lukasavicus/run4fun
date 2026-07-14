@@ -52,7 +52,9 @@ System.register(["./controllers/LoginController"], function (_export, _context) 
                 var login_ = document.querySelector("#login").value;
                 var pass_ = document.querySelector("#password").value;
                 //console.log(login_, pass_);
-                loginController.login(login_, pass_);
+                loginController.login(login_, pass_).catch(function (error) {
+                    return homeMessage.innerText = error.message || "Could not login";
+                });
                 return false;
             });
         }

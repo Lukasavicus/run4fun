@@ -47,6 +47,8 @@ homeForm.addEventListener('submit',
         const login_ =  document.querySelector("#login").value;
         const pass_ = document.querySelector("#password").value;
         //console.log(login_, pass_);
-        loginController.login(login_, pass_);
+        loginController
+            .login(login_, pass_)
+            .catch(error => homeMessage.innerText = error.message || "Could not login");
         return false;
 });

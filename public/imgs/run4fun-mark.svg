@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Run4Fun">
+	<circle cx="32" cy="32" r="29" fill="#101216" stroke="#4d7895" stroke-width="2"/>
+	<circle cx="32" cy="32" r="27" fill="none" stroke="#d86f68" stroke-width="2"/>
+	<circle cx="32" cy="32" r="25" fill="#101216" stroke="#e7eef2" stroke-width="1"/>
+	<path fill="#ffffff" d="M36.5 12 21.5 34h9L27 52l16-24h-9.5z"/>
+</svg>
