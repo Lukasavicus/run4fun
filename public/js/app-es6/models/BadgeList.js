@@ -7,6 +7,10 @@ export class BadgeList {
         this._badges.push(badge);
     }
 
+    replace(badges){
+        this._badges = badges;
+    }
+
     get badges(){
         return [].concat(this._badges);
     }

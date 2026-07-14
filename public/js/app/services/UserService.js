@@ -67,6 +67,32 @@ System.register(['./HttpService', '../models/Activity', '../models/Badge', '../m
                         });
                     }
                 }, {
+                    key: 'getPublicSettings',
+                    value: function getPublicSettings() {
+                        return this._httpService.get('/v1/user/public-settings');
+                    }
+                }, {
+                    key: 'updatePublicSettings',
+                    value: function updatePublicSettings(settings) {
+                        return this._httpService.put('/v1/user/public-settings', {
+                            method: 'PUT',
+                            body: JSON.stringify(settings),
+                            headers: {
+                                'Content-Type': 'application/json'
+                            }
+                        });
+                    }
+                }, {
+                    key: 'getAdminSummary',
+                    value: function getAdminSummary() {
+                        return this._httpService.get('/v1/admin/summary');
+                    }
+                }, {
+                    key: 'deleteAdminUser',
+                    value: function deleteAdminUser(userId) {
+                        return this._httpService.delete('/v1/admin/users/' + userId);
+                    }
+                }, {
                     key: 'getUserCollectibles',
                     value: function getUserCollectibles() {
                         var _this2 = this;
@@ -90,7 +116,7 @@ System.register(['./HttpService', '../models/Activity', '../models/Badge', '../m
                         return new Promise(function (resolve, reject) {
                             _this3._httpService.get('/v1/users/badges').then(function (badges_obj) {
                                 return resolve(badges_obj.map(function (badge_obj) {
-                                    return new Badge(badge_obj.title, badge_obj.icon, badge_obj.description);
+                                    return new Badge(badge_obj._id, badge_obj.title, badge_obj.icon, badge_obj.description, badge_obj.group, badge_obj.earned, badge_obj.value, badge_obj.earned_at, badge_obj.earned_value);
                                 }));
                             }).catch(function (error) {
                                 console.log(error);

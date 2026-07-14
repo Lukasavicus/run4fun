@@ -19,12 +19,39 @@ let userRules = {
     purchaseCollectible : function(collectible_id, user_id){
         return model.findOneAndUpdate(
                 { '_id' : user_id},
-                { "$push" : {"collectibles" : new mongoose.Types.ObjectId(collectible_id) } }
+                { "$addToSet" : {"collectibles" : new mongoose.Types.ObjectId(collectible_id) } }
             )
             .then(function(user){
                 return user
             }, function(err){
                 console.log("API / userRules -> purchaseCollectible ", err);
+                throw new Error(err);
+            });
+    },
+
+    undoCollectiblePurchase : function(collectible_id, user_id, refund_value){
+        return model.findOneAndUpdate(
+                { '_id' : new mongoose.Types.ObjectId(user_id)},
+                {
+                    "$pull" : {"collectibles" : new mongoose.Types.ObjectId(collectible_id) },
+                    "$inc" : { "balance" : refund_value }
+                },
+                { new: true }
+            )
+            .then(function(user){
+                return user
+            }, function(err){
+                console.log("API / userRules -> undoCollectiblePurchase ", err);
+                throw new Error(err);
+            });
+    },
+
+    findById : function(user_id){
+        return model.findById(new mongoose.Types.ObjectId(user_id))
+            .then(function(user){
+                return user
+            }, function(err){
+                console.log("API / userRules -> findById ", err);
                 throw new Error(err);
             });
     },

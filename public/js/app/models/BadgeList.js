@@ -45,6 +45,11 @@ System.register([], function (_export, _context) {
                         this._badges.push(badge);
                     }
                 }, {
+                    key: "replace",
+                    value: function replace(badges) {
+                        this._badges = badges;
+                    }
+                }, {
                     key: "badges",
                     get: function get() {
                         return [].concat(this._badges);

@@ -3,9 +3,14 @@ let mongoose = require('mongoose');
 module.exports = function(app){
 	let api = {};
 	let model = mongoose.model('Transaction');
+	let userModel = mongoose.model('User');
 
 	api.list = function(req, res){
-		model.find()
+		userModel.findOne({login : req.usuario})
+		.then(function(user){
+			if(!user) throw new Error('None user founded');
+			return model.find({user_id : user._id}).sort({date : -1});
+		})
 		.then(
 			function(transactions){
 				res.json(transactions);
@@ -19,7 +24,11 @@ module.exports = function(app){
 
 	api.findById = function(req, res){
 		const _id = req.params.id;
-		model.findById(_id)
+		userModel.findOne({login : req.usuario})
+		.then(function(user){
+			if(!user) throw new Error('None user founded');
+			return model.findOne({_id : _id, user_id : user._id});
+		})
 		.then(
 			function(transaction){
 				// check object empty

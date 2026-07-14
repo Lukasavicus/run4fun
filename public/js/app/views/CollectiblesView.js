@@ -70,8 +70,24 @@ System.register(['./View'], function (_export, _context) {
                 _createClass(CollectiblesView, [{
                     key: 'template',
                     value: function template(model) {
-                        return '\n            ' + model.collectibleList.collectibles.map(function (collectible) {
-                            return '\n                <div id="' + collectible.id + '" data-price=' + collectible.price + ' data-serie=' + collectible.serie + ' class="collectible ' + (collectible.owned ? '' : 'not-purchased') + '" title="' + (collectible.owned ? collectible.description : 'This Collectible costs: ' + collectible.price + '⚡') + '" >\n                    <img src="' + collectible.icon + '" class="collectible-img">\n                    <p class="collectible-description">' + (collectible.owned ? collectible.hist : '') + '</p>\n                </div>\n            ';
+                        var ownedCollectibles = model.collectibleList.collectibles.filter(function (collectible) {
+                            return collectible.owned;
+                        });
+                        var groups = model.collectibleList.collectibles.reduce(function (collectiblesBySerie, collectible) {
+                            var serie = collectible.serie || 'General';
+                            collectiblesBySerie[serie] = collectiblesBySerie[serie] || [];
+                            collectiblesBySerie[serie].push(collectible);
+                            return collectiblesBySerie;
+                        }, {});
+
+                        return '\n            <div class="item-toolbar">\n                <button class="item-filter active" type="button" onclick="this.closest(\'#collectibles\').dataset.filter=\'all\'; this.parentNode.querySelectorAll(\'.item-filter\').forEach(button => button.classList.remove(\'active\')); this.classList.add(\'active\')">All</button>\n                <button class="item-filter" type="button" onclick="this.closest(\'#collectibles\').dataset.filter=\'bought\'; this.parentNode.querySelectorAll(\'.item-filter\').forEach(button => button.classList.remove(\'active\')); this.classList.add(\'active\')">Bought</button>\n            </div>\n\n            ' + (ownedCollectibles.length == 0 ? '\n                <div class="empty-state collectible-empty-bought">\n                    <p>No collectibles owned yet.</p>\n                    <span>Use your points to buy your first collectible from the shop.</span>\n                </div>\n            ' : '') + '\n\n            ' + Object.keys(groups).map(function (serie) {
+                            return '\n                <div class="collectible-group ' + (groups[serie].some(function (collectible) {
+                                return collectible.owned;
+                            }) ? '' : 'no-owned') + '">\n                    <h3>' + serie + '</h3>\n                    <div class="collectible-grid">\n                        ' + groups[serie].sort(function (a, b) {
+                                return Number(b.owned) - Number(a.owned) || a.title.localeCompare(b.title);
+                            }).map(function (collectible) {
+                                return '\n                                <div id="' + collectible.id + '" data-title="' + collectible.title + '" data-icon="' + collectible.icon + '" data-price="' + collectible.price + '" data-serie="' + collectible.serie + '" data-hist="' + collectible.hist + '" data-description="' + collectible.description + '" class="collectible ' + (collectible.owned ? 'owned' : 'not-purchased') + '" title="' + (collectible.owned ? collectible.description : 'This Collectible costs: ' + collectible.price + '⚡') + '" >\n                                    <span class="collectible-status">' + (collectible.owned ? 'Bought' : collectible.price + '\u26A1') + '</span>\n                                    <img src="' + collectible.icon + '" class="collectible-img" alt="' + collectible.title + '">\n                                    <p class="collectible-title">' + collectible.title + '</p>\n                                    <p class="collectible-description">' + (collectible.owned ? collectible.hist : collectible.description) + '</p>\n                                </div>\n                            ';
+                            }).join('') + '\n                    </div>\n                </div>\n            ';
                         }).join('') + '\n        ';
                     }
                 }]);

@@ -5,7 +5,10 @@ let schema = mongoose.Schema({
 	value: 		{type : Number, require : true},
 	type: 		{type : String, require : true},
 	description:{type : String, require : true},
-	user_id: 	{type : mongoose.Schema.Types.ObjectId, require : true}
+	user_id: 	{type : mongoose.Schema.Types.ObjectId, require : true},
+	source_type:{type : String, default : 'manual'},
+	source_id: 	{type : mongoose.Schema.Types.ObjectId},
+	status: 	{type : String, default : 'active'}
 },
 {
 	timestamps: {

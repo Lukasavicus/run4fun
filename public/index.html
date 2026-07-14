@@ -6,20 +6,29 @@
 	<link rel="stylesheet" type="text/css" href="css/style.css">
 	<title>Run 4 Fun</title>
 
-	<link rel="shortcut icon" href="/favicon-32x32.png" type="image/x-icon">
-	<link rel="icon" href="/favicon-32x32.png" type="image/x-icon">
+	<link rel="icon" href="/imgs/run4fun-mark.svg" type="image/svg+xml">
+	<link rel="icon" href="/favicon-32x32.png" sizes="32x32" type="image/png">
 </head>
 <body>
 
 	<header>
+		<div class="brand">
+			<img class="brand-mark" src="imgs/run4fun-mark.svg" alt="">
+			<div>
+				<h1>Run4Fun</h1>
+				<p>running, rewards and collectibles</p>
+			</div>
+		</div>
 		<nav class=nav-menu>
 			<ul>
 				<li>
 					<a href="#management-dashboard">Home</a>
+					<a href="#analytics">Analytics</a>
 					<a href="#extract">Extract</a>
 					<a href="#badges">Badges</a>
 					<a href="#collectibles">Shop</a>
 					<a href="#activities-data">Data</a>
+					<a href="#settings">Settings</a>
 				</li>
 			</ul>
 		</nav>
@@ -34,11 +43,13 @@
 
 		<section class="dashboard" id="management-dashboard"></section>
 
-		<section id="dialog">dialog</section>
+		<section id="dialog"></section>
 
 	<div class="section-title">
-		<p>Collectibles</p>
-		<p class="toogle-content" id="toogle-collectibles" data-toogle="true">[Hide Section]</p>
+		<div class="section-header">
+			<p>Collectibles</p>
+			<button class="toogle-content" id="toogle-collectibles" data-toogle="true" type="button">Hide</button>
+		</div>
 		<section id="collectibles">
 		</section>
 	</div>
@@ -51,8 +62,10 @@
 	</div>
 
 	<div class="section-title">
-		<p>Badges</p>
-		<p class="toogle-content" id="toogle-badges" data-toogle="true">[Hide Section]</p>
+		<div class="section-header">
+			<p>Badges</p>
+			<button class="toogle-content" id="toogle-badges" data-toogle="true" type="button">Hide</button>
+		</div>
 		<section id="badges">
 		</section>
 	</div>
@@ -85,7 +98,7 @@
 					<div class="form-input">
 						<label for="route_distance">Route Distance:</label>
 						<input class="route_dist_metric" type="number" id="route_distance" name="route_distance" placeholder="0.00" step="0.01">
-						<p class="route_dist_metric"> Kms </p>
+						<p class="route_dist_metric"> km </p>
 					</div>
 
 					<div class="form-input">
@@ -104,11 +117,30 @@
 		</section>
 
 		<div class="section-title">
-			<p>Extract</p>
-			<p class="toogle-content" id="toogle-extract" data-toogle="true">[Hide Section]</p>
+			<div class="section-header">
+				<p>Analytics</p>
+				<button class="toogle-content" id="toogle-analytics" data-toogle="true" type="button">Hide</button>
+			</div>
+			<section id="analytics"></section>
+		</div>
+
+		<div class="section-title">
+			<div class="section-header">
+				<p>Extract</p>
+				<button class="toogle-content" id="toogle-extract" data-toogle="true" type="button">Hide</button>
+			</div>
 			<section id="extract">
 			</section>
 		</div>
+
+		<div class="section-title">
+			<div class="section-header">
+				<p>Settings</p>
+				<button class="toogle-content" id="toogle-settings" data-toogle="true" type="button">Hide</button>
+			</div>
+			<section id="settings"></section>
+		</div>
+
 	</main>
 
 	<footer>

@@ -6,6 +6,39 @@ module.exports = function(app) {
      var api = {};
      var model = mongoose.model('User');
 
+     api.signup = function(req, res) {
+         var login = String(req.body.login || '').trim();
+         var email = String(req.body.email || '').trim();
+         var password = String(req.body.password || '').trim();
+
+         if(!login || !email || !password) return res.status(400).json({message: 'Login, email and password are required'});
+
+         model.create({
+             name: login,
+             email: email,
+             login: login,
+             password: password,
+             role: 'user',
+             balance: 0,
+             badges: [],
+             collectibles: [],
+             activities: [],
+         })
+         .then(function(user) {
+             res.status(201).json({
+                 _id: user._id,
+                 login: user.login,
+                 email: user.email,
+                 name: user.name,
+             });
+         })
+         .catch(function(err) {
+             console.log("API / Auth -> signup", err);
+             if(err.code == 11000) return res.status(409).json({message: 'Login or email already exists'});
+             res.sendStatus(500);
+         });
+     };
+
      api.autentica = function(req, res) {
          console.log('autentica invoked', req.body);
          model.findOne({

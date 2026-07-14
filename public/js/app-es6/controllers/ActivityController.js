@@ -17,6 +17,8 @@ import { CollectiblesView } from '../views/CollectiblesView';
 import { TransactionsView } from '../views/TransactionsView';
 import { PurchaseModalView } from '../views/PurchaseModalView';
 import { Collectible } from '../models/Collectible';
+import { AnalyticsView } from '../views/AnalyticsView';
+import { SettingsView } from '../views/SettingsView';
 
 let $ = document.querySelector.bind(document);
 
@@ -25,8 +27,7 @@ class ActivityController {
     constructor(){
         this._service = new UserService();
 
-        let name = null;
-        let balance = null;
+        let userInfo = null;
 
         this._date = $("#date");
         this._activity = $("#activity");
@@ -40,27 +41,28 @@ class ActivityController {
         this._service
             .getUserInfo()
             .then(user_obj => {
-                name = user_obj.name;
-                balance = user_obj.balance;
+                userInfo = user_obj;
             })
             .then(() => {
 
-                this._user = this._newUserModel(name, balance);
+                this._user = this._newUserModel(userInfo);
                 this._message = new Bind(new Message(), new MessageView($("#messaging")), 'text');
                 this._init();
 
             });
     }
 
-    _newUserModel(name, balance){
-        return new MultiBind(new User(name, balance), [
+    _newUserModel(userInfo){
+        return new MultiBind(new User(userInfo.name, userInfo.balance, userInfo.login, userInfo.role), [
             new ActivitiesView($("#activities-data")), 
             new ActivitiesDashboardView($("#management-dashboard")),
+            new AnalyticsView($("#analytics")),
             new BadgesView($("#badges")),
             new CollectiblesView($("#collectibles")),
             new TransactionsView($("#extract")),
+            new SettingsView($("#settings")),
             new NavigationBarView($(".user-pill"))
-        ], 'addActivity', 'addBadge', 'addCollectible', 'addTransaction');
+        ], 'addActivity', 'setAnalyticsFilters', 'addBadge', 'setBadges', 'addCollectible', 'setCollectibles', 'addTransaction', 'setBalance', 'setTransactions', 'setPublicSettings');
     }
 
     _init(){
@@ -78,6 +80,11 @@ class ActivityController {
             .then(res => {
                 console.log(res);
                 this._message.text = "Activity created";
+                return Promise.all([
+                    this._refreshBadges(),
+                    this._refreshBalance(),
+                    this._refreshTransactions()
+                ]);
             })
             .catch(error => this._message.text = error);
 
@@ -96,30 +103,49 @@ class ActivityController {
 
         this._service
             .getUserBadges()
-            .then(badges => {
-                return badges;
-            })
-            .then(badges => {
-                badges.forEach(badge => this._user.addBadge(badge));
-            })
+            .then(badges => this._user.setBadges(badges))
             .catch(error => this._message.text = error);
 
 
         this._service
             .getUserCollectibles()
-            .then(collectibles => {
-                collectibles.forEach(collectible => this._user.addCollectible(collectible));
-            })
+            .then(collectibles => this._user.setCollectibles(collectibles))
             .catch(error => this._message.text = error);
 
             this._service
-                .getUserTransactions()
-                .then(transactions => {
-                    transactions.forEach(transaction => this._user.addTransaction(transaction));
-                })
-                .catch(error => this._message.text = error);
+            .getUserTransactions()
+            .then(transactions => this._user.setTransactions(transactions))
+            .catch(error => this._message.text = error);
 
+        this._service
+            .getPublicSettings()
+            .then(settings => this._user.setPublicSettings(settings))
+            .catch(error => this._message.text = error);
 
+    }
+
+    _refreshBadges(){
+        return this._service
+            .getUserBadges()
+            .then(badges => this._user.setBadges(badges));
+    }
+
+    _refreshBalance(){
+        return this._service
+            .getUserInfo()
+            .then(user => this._user.setBalance(user.balance));
+    }
+
+    _refreshTransactions(){
+        return this._service
+            .getUserTransactions()
+            .then(transactions => this._user.setTransactions(transactions));
+    }
+
+    _refreshCollectibles(){
+        return this._service
+            .getUserCollectibles()
+            .then(collectibles => this._user.setCollectibles(collectibles));
     }
 
     _createActivity(){
@@ -142,33 +168,58 @@ class ActivityController {
     }
 
     toogle_section(event){
-        let _id = event.target.id;
-        let toogle = $(`#${_id}`).dataset.toogle;
-        let target = $(`#${_id}`).parentElement.querySelector("section");
+        let button = event.target;
+        let toogle = button.dataset.toogle;
+        let target = button.closest(".section-title").querySelector("section");
         
         if(toogle == "true"){
-            $(`#${_id}`).innerText = "[Show Section]";
-            $(`#${_id}`).dataset.toogle = "false";
+            button.innerText = "Show";
+            button.dataset.toogle = "false";
+            target.classList.add("collapsed");
         }
         else{
-            $(`#${_id}`).innerText = "[Hide Section]";
-            $(`#${_id}`).dataset.toogle = "true";
+            button.innerText = "Hide";
+            button.dataset.toogle = "true";
+            target.classList.remove("collapsed");
         }
 
-        Array.from(target.children).forEach(el => {console.log(el)});
-        Array.from(target.children).forEach(el => el.classList.toggle("invisible"));
+    }
 
+    updateAnalytics(){
+        this._user.setAnalyticsFilters(
+            $("#analytics-period").value,
+            $("#analytics-from").value,
+            $("#analytics-to").value
+        );
+    }
+
+    savePublicSettings(event){
+        event.preventDefault();
+
+        const settings = {
+            kpis: $("#public-kpis").checked,
+            runs: $("#public-runs").checked,
+            badges: $("#public-badges").checked,
+            collectibles: $("#public-collectibles").checked,
+        };
+
+        this._service
+            .updatePublicSettings(settings)
+            .then(savedSettings => {
+                this._user.setPublicSettings(savedSettings);
+                this._message.text = "Public settings saved";
+            })
+            .catch(error => this._message.text = error);
     }
 
     buyCollectible(elem){
         // open modal, option to confirm checkout, purchase order
         console.log(elem);
 
-        let items = Array.from(elem.children);
-        let icon = items[0].src;
-        let hist = items[1].innerText;
+        let icon = elem.dataset.icon;
+        let hist = elem.dataset.hist;
 
-        new this._purchaseCollectible(elem.id, "Title", icon, elem.dataset.price, elem.dataset.serie, hist, false, "desc");
+        new this._purchaseCollectible(elem.id, elem.dataset.title, icon, elem.dataset.price, elem.dataset.serie, hist, false, elem.dataset.description);
         $("#parent-purchase-modal").style.display = "block";
 
         $('.modal-close').addEventListener('click', () => $("#parent-purchase-modal").style.display = "none" );
@@ -185,6 +236,11 @@ class ActivityController {
                     $(".modal-content").classList.remove('error');
                     $(".modal-content").classList.add('success');
                     console.log("RESP on AcCntrl", resp);
+                    return Promise.all([
+                        this._refreshCollectibles(),
+                        this._refreshBalance(),
+                        this._refreshTransactions()
+                    ]);
                 })
                 .catch((resp) => {
                     $(".oper-gif img").src = './imgs/misc/nok.gif';
