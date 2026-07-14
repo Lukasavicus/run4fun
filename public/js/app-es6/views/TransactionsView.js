@@ -24,9 +24,9 @@ export class TransactionsView extends View {
                         model.transactionList.transactions.map(transaction => `
                             <tr>
                                 <td>${DateHelper.dateToText(transaction.date)}</td>
-                                <td>${transaction.value}</td>
+                                <td class="${transaction.value >= 0 ? 'income' : 'outcome'}">${transaction.value} ⚡</td>
                                 <td>${transaction.type}</td>
-                                <td>${transaction.description} km</td>
+                                <td>${transaction.description}</td>
                             </tr>
                             `
                     )
@@ -35,7 +35,7 @@ export class TransactionsView extends View {
                 <tfoot>
                     <tr>
                         <td colspan="2" >Current Balance:</td>
-                        <td>${model.balance} Neons</td>
+                        <td>${model.balance} ⚡</td>
                     </tr>
                 </tfoot>
             </table>

@@ -1,9 +1,9 @@
 'use strict';
 
-System.register(['../helpers/Bind', '../helpers/DateHelper', '../helpers/MultiBind', '../models/Activity', '../models/Message', '../models/User', '../services/UserService', '../views/ActivitiesView', '../views/ActivitiesDashboardView', '../views/MessageView', '../views/NavigationBarView', '../views/BadgesView', '../views/CollectiblesView', '../views/TransactionsView', '../views/PurchaseModalView', '../models/Collectible'], function (_export, _context) {
+System.register(['../helpers/Bind', '../helpers/DateHelper', '../helpers/MultiBind', '../models/Activity', '../models/Message', '../models/User', '../services/UserService', '../views/ActivitiesView', '../views/ActivitiesDashboardView', '../views/MessageView', '../views/NavigationBarView', '../views/BadgesView', '../views/CollectiblesView', '../views/TransactionsView', '../views/PurchaseModalView', '../models/Collectible', '../views/AnalyticsView', '../views/SettingsView'], function (_export, _context) {
     "use strict";
 
-    var Bind, DateHelper, MultiBind, Activity, Message, User, UserService, ActivitiesView, ActivitiesDashboardView, MessageView, NavigationBarView, BadgesView, CollectiblesView, TransactionsView, PurchaseModalView, Collectible, _createClass, $, ActivityController, activityController;
+    var Bind, DateHelper, MultiBind, Activity, Message, User, UserService, ActivitiesView, ActivitiesDashboardView, MessageView, NavigationBarView, BadgesView, CollectiblesView, TransactionsView, PurchaseModalView, Collectible, AnalyticsView, SettingsView, _createClass, $, ActivityController, activityController;
 
     function _classCallCheck(instance, Constructor) {
         if (!(instance instanceof Constructor)) {
@@ -50,6 +50,10 @@ System.register(['../helpers/Bind', '../helpers/DateHelper', '../helpers/MultiBi
             PurchaseModalView = _viewsPurchaseModalView.PurchaseModalView;
         }, function (_modelsCollectible) {
             Collectible = _modelsCollectible.Collectible;
+        }, function (_viewsAnalyticsView) {
+            AnalyticsView = _viewsAnalyticsView.AnalyticsView;
+        }, function (_viewsSettingsView) {
+            SettingsView = _viewsSettingsView.SettingsView;
         }],
         execute: function () {
             _createClass = function () {
@@ -80,8 +84,7 @@ System.register(['../helpers/Bind', '../helpers/DateHelper', '../helpers/MultiBi
 
                     this._service = new UserService();
 
-                    var name = null;
-                    var balance = null;
+                    var userInfo = null;
 
                     this._date = $("#date");
                     this._activity = $("#activity");
@@ -93,11 +96,10 @@ System.register(['../helpers/Bind', '../helpers/DateHelper', '../helpers/MultiBi
                     this._purchaseCollectible = new Bind(Collectible, new PurchaseModalView($("#purchase-modal")));
 
                     this._service.getUserInfo().then(function (user_obj) {
-                        name = user_obj.name;
-                        balance = user_obj.balance;
+                        userInfo = user_obj;
                     }).then(function () {
 
-                        _this._user = _this._newUserModel(name, balance);
+                        _this._user = _this._newUserModel(userInfo);
                         _this._message = new Bind(new Message(), new MessageView($("#messaging")), 'text');
                         _this._init();
                     });
@@ -105,8 +107,8 @@ System.register(['../helpers/Bind', '../helpers/DateHelper', '../helpers/MultiBi
 
                 _createClass(ActivityController, [{
                     key: '_newUserModel',
-                    value: function _newUserModel(name, balance) {
-                        return new MultiBind(new User(name, balance), [new ActivitiesView($("#activities-data")), new ActivitiesDashboardView($("#management-dashboard")), new BadgesView($("#badges")), new CollectiblesView($("#collectibles")), new TransactionsView($("#extract")), new NavigationBarView($(".user-pill"))], 'addActivity', 'addBadge', 'addCollectible', 'addTransaction');
+                    value: function _newUserModel(userInfo) {
+                        return new MultiBind(new User(userInfo.name, userInfo.balance, userInfo.login, userInfo.role), [new ActivitiesView($("#activities-data")), new ActivitiesDashboardView($("#management-dashboard")), new AnalyticsView($("#analytics")), new BadgesView($("#badges")), new CollectiblesView($("#collectibles")), new TransactionsView($("#extract")), new SettingsView($("#settings")), new NavigationBarView($(".user-pill"))], 'addActivity', 'setAnalyticsFilters', 'addBadge', 'setBadges', 'addCollectible', 'setCollectibles', 'addTransaction', 'setBalance', 'setTransactions', 'setPublicSettings');
                     }
                 }, {
                     key: '_init',
@@ -126,6 +128,7 @@ System.register(['../helpers/Bind', '../helpers/DateHelper', '../helpers/MultiBi
                         this._service.addActivity(activity).then(function (res) {
                             console.log(res);
                             _this2._message.text = "Activity created";
+                            return Promise.all([_this2._refreshBadges(), _this2._refreshBalance(), _this2._refreshTransactions()]);
                         }).catch(function (error) {
                             return _this2._message.text = error;
                         });
@@ -148,29 +151,63 @@ System.register(['../helpers/Bind', '../helpers/DateHelper', '../helpers/MultiBi
                         });
 
                         this._service.getUserBadges().then(function (badges) {
-                            return badges;
-                        }).then(function (badges) {
-                            badges.forEach(function (badge) {
-                                return _this3._user.addBadge(badge);
-                            });
+                            return _this3._user.setBadges(badges);
                         }).catch(function (error) {
                             return _this3._message.text = error;
                         });
 
                         this._service.getUserCollectibles().then(function (collectibles) {
-                            collectibles.forEach(function (collectible) {
-                                return _this3._user.addCollectible(collectible);
-                            });
+                            return _this3._user.setCollectibles(collectibles);
                         }).catch(function (error) {
                             return _this3._message.text = error;
                         });
 
                         this._service.getUserTransactions().then(function (transactions) {
-                            transactions.forEach(function (transaction) {
-                                return _this3._user.addTransaction(transaction);
-                            });
+                            return _this3._user.setTransactions(transactions);
                         }).catch(function (error) {
                             return _this3._message.text = error;
+                        });
+
+                        this._service.getPublicSettings().then(function (settings) {
+                            return _this3._user.setPublicSettings(settings);
+                        }).catch(function (error) {
+                            return _this3._message.text = error;
+                        });
+                    }
+                }, {
+                    key: '_refreshBadges',
+                    value: function _refreshBadges() {
+                        var _this4 = this;
+
+                        return this._service.getUserBadges().then(function (badges) {
+                            return _this4._user.setBadges(badges);
+                        });
+                    }
+                }, {
+                    key: '_refreshBalance',
+                    value: function _refreshBalance() {
+                        var _this5 = this;
+
+                        return this._service.getUserInfo().then(function (user) {
+                            return _this5._user.setBalance(user.balance);
+                        });
+                    }
+                }, {
+                    key: '_refreshTransactions',
+                    value: function _refreshTransactions() {
+                        var _this6 = this;
+
+                        return this._service.getUserTransactions().then(function (transactions) {
+                            return _this6._user.setTransactions(transactions);
+                        });
+                    }
+                }, {
+                    key: '_refreshCollectibles',
+                    value: function _refreshCollectibles() {
+                        var _this7 = this;
+
+                        return this._service.getUserCollectibles().then(function (collectibles) {
+                            return _this7._user.setCollectibles(collectibles);
                         });
                     }
                 }, {
@@ -191,38 +228,58 @@ System.register(['../helpers/Bind', '../helpers/DateHelper', '../helpers/MultiBi
                 }, {
                     key: 'toogle_section',
                     value: function toogle_section(event) {
-                        var _id = event.target.id;
-                        var toogle = $('#' + _id).dataset.toogle;
-                        var target = $('#' + _id).parentElement.querySelector("section");
+                        var button = event.target;
+                        var toogle = button.dataset.toogle;
+                        var target = button.closest(".section-title").querySelector("section");
 
                         if (toogle == "true") {
-                            $('#' + _id).innerText = "[Show Section]";
-                            $('#' + _id).dataset.toogle = "false";
+                            button.innerText = "Show";
+                            button.dataset.toogle = "false";
+                            target.classList.add("collapsed");
                         } else {
-                            $('#' + _id).innerText = "[Hide Section]";
-                            $('#' + _id).dataset.toogle = "true";
+                            button.innerText = "Hide";
+                            button.dataset.toogle = "true";
+                            target.classList.remove("collapsed");
                         }
+                    }
+                }, {
+                    key: 'updateAnalytics',
+                    value: function updateAnalytics() {
+                        this._user.setAnalyticsFilters($("#analytics-period").value, $("#analytics-from").value, $("#analytics-to").value);
+                    }
+                }, {
+                    key: 'savePublicSettings',
+                    value: function savePublicSettings(event) {
+                        var _this8 = this;
 
-                        Array.from(target.children).forEach(function (el) {
-                            console.log(el);
-                        });
-                        Array.from(target.children).forEach(function (el) {
-                            return el.classList.toggle("invisible");
+                        event.preventDefault();
+
+                        var settings = {
+                            kpis: $("#public-kpis").checked,
+                            runs: $("#public-runs").checked,
+                            badges: $("#public-badges").checked,
+                            collectibles: $("#public-collectibles").checked
+                        };
+
+                        this._service.updatePublicSettings(settings).then(function (savedSettings) {
+                            _this8._user.setPublicSettings(savedSettings);
+                            _this8._message.text = "Public settings saved";
+                        }).catch(function (error) {
+                            return _this8._message.text = error;
                         });
                     }
                 }, {
                     key: 'buyCollectible',
                     value: function buyCollectible(elem) {
-                        var _this4 = this;
+                        var _this9 = this;
 
                         // open modal, option to confirm checkout, purchase order
                         console.log(elem);
 
-                        var items = Array.from(elem.children);
-                        var icon = items[0].src;
-                        var hist = items[1].innerText;
+                        var icon = elem.dataset.icon;
+                        var hist = elem.dataset.hist;
 
-                        new this._purchaseCollectible(elem.id, "Title", icon, elem.dataset.price, elem.dataset.serie, hist, false, "desc");
+                        new this._purchaseCollectible(elem.id, elem.dataset.title, icon, elem.dataset.price, elem.dataset.serie, hist, false, elem.dataset.description);
                         $("#parent-purchase-modal").style.display = "block";
 
                         $('.modal-close').addEventListener('click', function () {
@@ -236,11 +293,12 @@ System.register(['../helpers/Bind', '../helpers/DateHelper', '../helpers/MultiBi
                             event.preventDefault();
 
                             $(".oper-gif img").classList.remove('disp-n');
-                            _this4._service.purchaseCollectible(elem.id).then(function (resp) {
+                            _this9._service.purchaseCollectible(elem.id).then(function (resp) {
                                 $(".oper-gif img").src = './imgs/misc/ok.gif';
                                 $(".modal-content").classList.remove('error');
                                 $(".modal-content").classList.add('success');
                                 console.log("RESP on AcCntrl", resp);
+                                return Promise.all([_this9._refreshCollectibles(), _this9._refreshBalance(), _this9._refreshTransactions()]);
                             }).catch(function (resp) {
                                 $(".oper-gif img").src = './imgs/misc/nok.gif';
                                 $(".modal-content").classList.remove('success');

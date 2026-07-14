@@ -70,8 +70,27 @@ System.register(['./View'], function (_export, _context) {
                 _createClass(BadgesView, [{
                     key: 'template',
                     value: function template(model) {
-                        return '\n            ' + model.badgeList.badges.map(function (badge) {
-                            return '\n                <div class="badge true">\n                    <img src="' + badge.icon + '" "="" class="badge-img">\n                    <p class="badge-title">' + badge.title + '</p>\n                </div>\n            ';
+                        var earnedBadges = model.badgeList.badges.filter(function (badge) {
+                            return badge.earned;
+                        });
+                        var groups = model.badgeList.badges.reduce(function (badgesByGroup, badge) {
+                            var group = badge.group || 'General';
+                            badgesByGroup[group] = badgesByGroup[group] || [];
+                            badgesByGroup[group].push(badge);
+                            return badgesByGroup;
+                        }, {});
+
+                        return '\n            <div class="badge-toolbar">\n                <button class="badge-filter active" type="button" onclick="this.closest(\'#badges\').dataset.filter=\'all\'; this.parentNode.querySelectorAll(\'.badge-filter\').forEach(button => button.classList.remove(\'active\')); this.classList.add(\'active\')">All</button>\n                <button class="badge-filter" type="button" onclick="this.closest(\'#badges\').dataset.filter=\'earned\'; this.parentNode.querySelectorAll(\'.badge-filter\').forEach(button => button.classList.remove(\'active\')); this.classList.add(\'active\')">Earned</button>\n            </div>\n\n            ' + (earnedBadges.length == 0 ? '\n                <div class="empty-state badge-empty-earned">\n                    <p>No badges earned yet.</p>\n                    <span>Register runs to unlock the colored versions of these badges.</span>\n                </div>\n            ' : '') + '\n\n            ' + Object.keys(groups).map(function (group) {
+                            return '\n                <div class="badge-group ' + (groups[group].some(function (badge) {
+                                return badge.earned;
+                            }) ? '' : 'no-earned') + '">\n                    <h3>' + group + '</h3>\n                    <div class="badge-grid">\n                        ' + groups[group].sort(function (a, b) {
+                                return Number(b.earned) - Number(a.earned) || a.title.localeCompare(b.title);
+                            }).map(function (badge) {
+                                var earnedAt = badge.earnedAt ? new Date(badge.earnedAt).toLocaleDateString() : '';
+                                var points = badge.earnedValue || badge.value;
+
+                                return '\n                                <button class="badge ' + (badge.earned ? 'earned' : 'blocked') + '" type="button" onclick="document.getElementById(\'badge-modal-' + badge.id + '\').showModal()">\n                                    <span class="badge-status">' + (badge.earned ? 'Earned' : 'Blocked') + '</span>\n                                    <img src="' + badge.icon + '" class="badge-img" alt="' + badge.title + '">\n                                    <span class="badge-title">' + badge.title + '</span>\n                                    <span class="badge-description">' + badge.description + '</span>\n                                </button>\n                                <dialog class="badge-modal" id="badge-modal-' + badge.id + '">\n                                    <div class="badge-modal-header">\n                                        <img src="' + badge.icon + '" alt="' + badge.title + '">\n                                        <div>\n                                            <h4>' + badge.title + '</h4>\n                                            <p>' + badge.group + '</p>\n                                        </div>\n                                    </div>\n                                    <p class="badge-modal-text">' + badge.description + '</p>\n                                    <p class="badge-modal-text">' + (badge.earned ? 'Earned on ' + earnedAt + '. This badge yielded ' + points + '\u26A1.' : 'Reward: ' + badge.value + '\u26A1. Keep training to unlock it.') + '</p>\n                                    <form method="dialog">\n                                        <button type="submit">Close</button>\n                                    </form>\n                                </dialog>\n                            ';
+                            }).join('') + '\n                    </div>\n                </div>\n            ';
                         }).join('') + '\n        ';
                     }
                 }]);

@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<link href="https://fonts.googleapis.com/css?family=Montserrat&display=swap" rel="stylesheet">
+	<link rel="stylesheet" type="text/css" href="css/reset.css">
+	<link rel="stylesheet" type="text/css" href="css/style.css">
+	<title>Run4Fun Admin Dashboard</title>
+
+	<link rel="icon" href="/imgs/run4fun-mark.svg" type="image/svg+xml">
+	<link rel="icon" href="/favicon-32x32.png" sizes="32x32" type="image/png">
+</head>
+<body>
+	<header>
+		<div class="brand">
+			<img class="brand-mark" src="imgs/run4fun-mark.svg" alt="">
+			<div>
+				<h1>Run4Fun</h1>
+				<p>administration</p>
+			</div>
+		</div>
+		<nav class="nav-menu">
+			<ul>
+				<li><a href="public.html">Public profiles</a></li>
+			</ul>
+		</nav>
+		<div class="user-pill" id="admin-user">Admin</div>
+		<a id="logout" href="#">Logout</a>
+	</header>
+
+	<main>
+		<section id="messaging"></section>
+		<div class="section-title">
+			<div class="section-header">
+				<p>Admin dashboard</p>
+			</div>
+			<section id="admin"></section>
+		</div>
+	</main>
+
+	<footer>
+		<p>Run4Fun - 2020</p>
+	</footer>
+
+	<script src="https://cdn.jsdelivr.net/npm/systemjs@0.19.31/dist/system.js"></script>
+	<script>
+		System.defaultJSExtensions = true;
+		System.import('js/app/boot_admin').catch(function(err){
+			console.error(err);
+		});
+	</script>
+</body>
+</html>

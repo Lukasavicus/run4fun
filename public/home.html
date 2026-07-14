@@ -1,30 +1,60 @@
 <!DOCTYPE html>
 <html>
 <head>
+	<link href="https://fonts.googleapis.com/css?family=Montserrat&display=swap" rel="stylesheet">
+	<link rel="stylesheet" type="text/css" href="css/reset.css">
+	<link rel="stylesheet" type="text/css" href="css/style.css">
 	<title>Run4Fun</title>
+
+	<link rel="icon" href="/imgs/run4fun-mark.svg" type="image/svg+xml">
+	<link rel="icon" href="/favicon-32x32.png" sizes="32x32" type="image/png">
 </head>
-<body>
-	<div class="signin">
-		<form>
-			<label for="login">Login:</label>
-			<input type="login" id="login" name="login">
+<body class="login-page">
+	<main class="login-shell">
+		<section class="login-panel">
+			<div class="login-brand">
+				<img class="brand-mark" src="imgs/run4fun-mark.svg" alt="">
+				<div>
+					<h1>Run4Fun</h1>
+					<p>Track runs, earn badges and collect rewards.</p>
+				</div>
+			</div>
+		</section>
 
-			<label for="password">Password:</label>
-			<input type="password" id="password" name="password">
+		<section class="signin">
+			<form class="login-card" id="home-form">
+				<h2 id="home-form-title">Welcome back</h2>
+				<p class="home-message" id="home-message"></p>
 
-			<button id="login-btn"> Login </button>
-		</form>
-	</div>
+				<div class="login-fields">
+					<label for="login">Login</label>
+					<input type="text" id="login" name="login" autocomplete="username">
 
-	<div class="signup">
-		<form>
-			<label for="email">Email:</label>
-			<input type="email" id="email" name="email">
+					<label for="password">Password</label>
+					<input type="password" id="password" name="password" autocomplete="current-password">
 
-			<label for="password">Password:</label>
-			<input type="password" id="password_signin" name="password_signin">
-		</form>
-	</div>
+					<button id="login-btn" type="submit">Login</button>
+					<p class="login-hint">Demo account: demo / demo</p>
+					<p class="login-switch">No account yet? <a href="#" id="show-signup">Create one</a></p>
+				</div>
+
+				<div class="signup-fields">
+					<label for="signup-login">Login</label>
+					<input type="text" id="signup-login" name="signup-login" autocomplete="username">
+
+					<label for="signup-email">Email</label>
+					<input type="email" id="signup-email" name="signup-email" autocomplete="email">
+
+					<label for="signup-password">Password</label>
+					<input type="password" id="signup-password" name="signup-password" autocomplete="new-password">
+
+					<button id="signup-btn" type="submit">Create account</button>
+					<p class="login-switch">Already have an account? <a href="#" id="show-login">Login</a></p>
+				</div>
+			</form>
+		</section>
+	</main>
+
 	<script src="https://cdn.jsdelivr.net/npm/systemjs@0.19.31/dist/system.js"></script>
 	<script>
 		System.defaultJSExtensions = true;

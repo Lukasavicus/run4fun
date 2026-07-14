@@ -8,12 +8,16 @@ module.exports = function(app){
 	let userModel = mongoose.model('User');
 	let badgeModel = mongoose.model('Badge');
 
+	function _activity_points(distance){
+		return Number(distance || 0) * 10;
+	}
+
 	//Badges
-	function _set_up_badges(req, res){
+	function _set_up_badges(login){
 		return userModel.aggregate([
 			{
 				$match: {
-					login: req.usuario
+					login: login
 				}
 			},
 			{ $lookup : 
@@ -27,51 +31,57 @@ module.exports = function(app){
 			{
 				$project: {
 					_id: 0,
+					badges: 1,
 					activities_by_user: 1,
 				}
 			}
 		])
-		.then(
-			function(result){
-				const activities = result[0]["activities_by_user"];
-				badgeModel.find({})
-				.then(function(badges){
-					badges.forEach(badge => {
+		.then(function(result){
+			const user = result[0] || {};
+			const activities = user["activities_by_user"] || [];
+			const earnedBadgeIds = (user.badges || []).map(function(badgeId){ return badgeId.toString(); });
+			return badgeModel.find({}).then(function(badges){
+				let badgesByGroup = {};
+
+				badges.forEach(function(badge){
+					let earned = false;
+
+					try {
 						let f = eval(badge.criteria);
-						console.log("Evaluating ", badge.title);
-						let result = f(activities);
-						console.log("result, ", result);
-						if(result){
-							console.log("Inserting badge with _id: ", new mongoose.Types.ObjectId(badge._id), badge._id);
-							userModel.findOneAndUpdate(
-								{"$and" : [{"login" : req.usuario}, {"badges" : { "$nin" : [new mongoose.Types.ObjectId(badge._id)] } } ] },
-								{ "$push" : {"badges" : new mongoose.Types.ObjectId(badge._id) } }
-							)
-							.then(function(updatedUser){
-								console.log("updatedUser", updatedUser);
-								return {badge, 'user' : updatedUser};
-							}, (err) => { throw new Error(err)})
-							.then(data => {
-								console.log(data);
-								let badge = data.badge;
-								let user = data.user;
-								if(user)
-									return transactionRules._set_up_transaction(badge.value, "income", `Income: Badge earned: "${badge.title}" +${badge.value}⚡`, user._id);
-								return null;
-							})
-							.catch((err) => { throw new Error(err)});
-						}
-					});
-				}, function(err){
-					console.log("API / Activities -> _set_up_badges ", err);
-					res.sendStatus(500);
+						earned = typeof f == 'function' && f(activities);
+					}
+					catch(err) {
+						console.log("API / Activities -> invalid badge criteria", badge.title, err.message);
+					}
+
+					if(!earned || earnedBadgeIds.indexOf(badge._id.toString()) >= 0) return;
+
+					let group = badge.group || badge.title;
+					if(!badgesByGroup[group] || (badge.sort_order || 0) > (badgesByGroup[group].sort_order || 0))
+						badgesByGroup[group] = badge;
 				});
-			},
-			function(err){
-				console.log("API / Activities -> _set_up_badges *", err);
-				res.sendStatus(500);
-			}
-		);
+
+				return Promise.all(Object.keys(badgesByGroup).map(function(group){
+					let badge = badgesByGroup[group];
+					return userModel.findOneAndUpdate(
+						{"$and" : [{"login" : login}, {"badges" : { "$nin" : [new mongoose.Types.ObjectId(badge._id)] } } ] },
+						{ "$push" : {"badges" : new mongoose.Types.ObjectId(badge._id) } }
+					)
+					.then(function(updatedUser){
+						if(updatedUser)
+							return transactionRules._set_up_transaction(badge.value, "income", `Income: Badge earned: "${badge.title}" +${badge.value}⚡`, updatedUser._id, 'badge', badge._id);
+						return null;
+					});
+				}));
+			});
+		});
+	}
+
+	function _find_user_activity(login, activity_id){
+		return userModel.findOne({
+			login : login,
+			activities : new mongoose.Types.ObjectId(activity_id)
+		});
 	}
 
 	api.list = function(req, res){
@@ -124,19 +134,57 @@ module.exports = function(app){
 	};
 
 	api.removeById = function(req, res){
-		const params = req.url.split('/');
-		const _id = params[params.length-1];
+		const _id = req.params.id;
+		let user = null;
+		let activity = null;
 
-		console.log("\n\n===== REMOVE THIS ======== \n\n", _id);
+		_find_user_activity(req.usuario, _id)
+		.then(function(userFound){
+			if(!userFound) {
+				res.sendStatus(404);
+				return null;
+			}
 
-		res.sendStatus(200);
-		// model.deleteOne({'_id' : req.params.id})
-		// .then(function() {
-		// 	res.sendStatus(200);
-		// }, function(err) {
-		// 	console.log(err);
-		// 	res.sendStatus(500);
-		// });
+			user = userFound;
+			return model.findById(_id);
+		})
+		.then(function(activityFound){
+			if(!activityFound) return null;
+
+			activity = activityFound;
+			return model.deleteOne({'_id' : _id});
+		})
+		.then(function(){
+			if(!activity) return null;
+
+			return userModel.findByIdAndUpdate(
+				user._id,
+				{ "$pull" : {"activities" : new mongoose.Types.ObjectId(activity._id) } }
+			);
+		})
+		.then(function(){
+			if(!activity) return null;
+
+			return transactionRules._set_up_transaction(
+				-_activity_points(activity.route_distance),
+				"outcome",
+				`Outcome: Deleted ${activity.physical_activity} -${_activity_points(activity.route_distance)}⚡`,
+				user._id,
+				'activity_delete',
+				activity._id
+			);
+		})
+		.then(function(){
+			if(!activity) return null;
+			return transactionRules.undoPurchasesUntilBalanceIsPositive(user._id, 'Activity deleted');
+		})
+		.then(function(){
+			if(activity) res.json(activity);
+		})
+		.catch(function(err){
+			console.log("API / Activities -> removeById ", err);
+			res.sendStatus(500);
+		});
 	};
 
 	api.create = function(req, res){
@@ -152,13 +200,15 @@ module.exports = function(app){
 			)
 			.then(function(user){
 				//console.log("User updated ", user);
-
-				_set_up_badges(req, res); // badges assignment
-				//.then(() => {
-				transactionRules._set_up_transaction(activity.route_distance, "income", `Income: ${activity.physical_activity} +${activity.route_distance}⚡`, user._id);
-				//}).then(() => {
-				res.json({activity, 'user_activities' : user['activities']});
-				//});
+				const points = _activity_points(activity.route_distance);
+				return transactionRules
+					._set_up_transaction(points, "income", `Income: ${activity.physical_activity} +${points}⚡`, user._id, 'activity', activity._id)
+					.then(function(){
+						return _set_up_badges(req.usuario); // badges assignment
+					})
+					.then(function(){
+						res.json({activity, 'user_activities' : user['activities']});
+					});
 			}, function(){
 				console.log("API / Activities -> create (update user)", err);
 				res.sendStatus(500);
@@ -180,10 +230,58 @@ module.exports = function(app){
 	};
 
 	api.update = function(req, res){
-		model.findByIdAndUpdate(req.params.id, req.body)
+		let user = null;
+		let oldActivity = null;
+
+		_find_user_activity(req.usuario, req.params.id)
+		.then(function(userFound){
+			if(!userFound) {
+				res.sendStatus(404);
+				return null;
+			}
+
+			user = userFound;
+			return model.findById(req.params.id);
+		})
+		.then(function(activityFound){
+			if(!activityFound) return null;
+
+			oldActivity = activityFound;
+			return model.findByIdAndUpdate(req.params.id, req.body, {new: true});
+		})
 		.then(function(activity) {
-			res.json(activity);
-		}, function(err) {
+			if(!activity) return null;
+
+			const oldValue = Number(oldActivity.route_distance || 0);
+			const newValue = Number(activity.route_distance || 0);
+			const diff = newValue - oldValue;
+			const pointsDiff = _activity_points(diff);
+
+			if(diff == 0) return activity;
+
+			return transactionRules._set_up_transaction(
+				pointsDiff,
+				diff > 0 ? "income" : "outcome",
+				`Adjustment: Edited ${activity.physical_activity} ${pointsDiff > 0 ? '+' : ''}${pointsDiff}⚡`,
+				user._id,
+				'activity_edit',
+				activity._id
+			)
+			.then(function(){
+				return transactionRules.undoPurchasesUntilBalanceIsPositive(user._id, 'Activity edited');
+			})
+			.then(function(){
+				return activity;
+			});
+		})
+		.then(function(activity){
+			if(!activity) return null;
+			return _set_up_badges(req.usuario).then(function(){ return activity; });
+		})
+		.then(function(activity){
+			if(activity) res.json(activity);
+		})
+		.catch(function(err) {
 			console.log("API / Activities -> update ", err);
 			res.sendStatus(500);
 		});

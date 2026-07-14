@@ -43,21 +43,40 @@ System.register(['../helpers/TimeHelper', './BadgeList', './CollectibleList', '.
             _export('User', User = function () {
                 function User(name) {
                     var balance = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
+                    var login = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : '';
+                    var role = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 'user';
 
                     _classCallCheck(this, User);
 
                     this._name = name;
                     this._balance = balance;
+                    this._login = login;
+                    this._role = role;
                     this._activities = [];
                     this._badgeList = new BadgeList();
                     this._collectibleList = new CollectibleList();
                     this._transactionList = new TransactionList();
+                    this._analyticsPeriod = 'month';
+                    this._analyticsFrom = '';
+                    this._analyticsTo = '';
+                    this._publicSettings = { badges: true, collectibles: true, kpis: true, runs: false };
+                    this._adminSummary = null;
                 }
 
                 _createClass(User, [{
+                    key: 'setBalance',
+                    value: function setBalance(balance) {
+                        this._balance = balance;
+                    }
+                }, {
                     key: 'addCollectible',
                     value: function addCollectible(collectible) {
                         this._collectibleList.add(collectible);
+                    }
+                }, {
+                    key: 'setCollectibles',
+                    value: function setCollectibles(collectibles) {
+                        this._collectibleList.replace(collectibles);
                     }
                 }, {
                     key: 'addBadge',
@@ -65,9 +84,21 @@ System.register(['../helpers/TimeHelper', './BadgeList', './CollectibleList', '.
                         this._badgeList.add(badge);
                     }
                 }, {
+                    key: 'setBadges',
+                    value: function setBadges(badges) {
+                        this._badgeList.replace(badges);
+                    }
+                }, {
                     key: 'addActivity',
                     value: function addActivity(activity) {
                         this._activities.push(activity);
+                    }
+                }, {
+                    key: 'setAnalyticsFilters',
+                    value: function setAnalyticsFilters(period, from, to) {
+                        this._analyticsPeriod = period || 'month';
+                        this._analyticsFrom = from || '';
+                        this._analyticsTo = to || '';
                     }
                 }, {
                     key: 'addTransaction',
@@ -75,9 +106,34 @@ System.register(['../helpers/TimeHelper', './BadgeList', './CollectibleList', '.
                         this._transactionList.add(transaction);
                     }
                 }, {
+                    key: 'setTransactions',
+                    value: function setTransactions(transactions) {
+                        this._transactionList.replace(transactions);
+                    }
+                }, {
+                    key: 'setPublicSettings',
+                    value: function setPublicSettings(settings) {
+                        this._publicSettings = settings || { badges: true, collectibles: true, kpis: true, runs: false };
+                    }
+                }, {
+                    key: 'setAdminSummary',
+                    value: function setAdminSummary(summary) {
+                        this._adminSummary = summary;
+                    }
+                }, {
                     key: 'name',
                     get: function get() {
                         return this._name;
+                    }
+                }, {
+                    key: 'login',
+                    get: function get() {
+                        return this._login;
+                    }
+                }, {
+                    key: 'role',
+                    get: function get() {
+                        return this._role;
                     }
                 }, {
                     key: 'balance',
@@ -100,9 +156,34 @@ System.register(['../helpers/TimeHelper', './BadgeList', './CollectibleList', '.
                         return [].concat(this._activities);
                     }
                 }, {
+                    key: 'analyticsPeriod',
+                    get: function get() {
+                        return this._analyticsPeriod;
+                    }
+                }, {
+                    key: 'analyticsFrom',
+                    get: function get() {
+                        return this._analyticsFrom;
+                    }
+                }, {
+                    key: 'analyticsTo',
+                    get: function get() {
+                        return this._analyticsTo;
+                    }
+                }, {
                     key: 'transactionList',
                     get: function get() {
                         return this._transactionList;
+                    }
+                }, {
+                    key: 'publicSettings',
+                    get: function get() {
+                        return this._publicSettings;
+                    }
+                }, {
+                    key: 'adminSummary',
+                    get: function get() {
+                        return this._adminSummary;
                     }
                 }, {
                     key: 'total_distance',
@@ -148,6 +229,24 @@ System.register(['../helpers/TimeHelper', './BadgeList', './CollectibleList', '.
                     get: function get() {
                         var hours = TimeHelper.getNumberHours(this.total_time);
                         return (this.total_distance / hours).toFixed(2);
+                    }
+                }, {
+                    key: 'best_pace',
+                    get: function get() {
+                        var bestSeconds = this._activities.reduce(function (best, activity) {
+                            var distance = Number(activity.route_distance || 0);
+                            var seconds = TimeHelper.getNumberSeconds(activity.time);
+                            if (distance <= 0 || seconds <= 0) return best;
+
+                            var pace = seconds / distance;
+                            return best == null || pace < best ? pace : best;
+                        }, null);
+
+                        if (bestSeconds == null) return '--:--/km';
+
+                        var minutes = parseInt(bestSeconds / 60);
+                        var seconds = parseInt(bestSeconds % 60);
+                        return String(minutes).padStart(2, '0') + ':' + String(seconds).padStart(2, '0') + '/km';
                     }
                 }]);
 

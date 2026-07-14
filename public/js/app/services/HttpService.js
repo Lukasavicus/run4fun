@@ -121,9 +121,20 @@ System.register([], function (_export, _context) {
                         });
                     }
                 }, {
+                    key: 'put',
+                    value: function put(url, options) {
+                        var _this4 = this;
+
+                        return this._fetch(url, options).then(function (res) {
+                            return _this4._handleErrors(res);
+                        }).then(function (res) {
+                            return res.json();
+                        });
+                    }
+                }, {
                     key: 'delete',
                     value: function _delete(url) {
-                        var _this4 = this;
+                        var _this5 = this;
 
                         return this._fetch(url, {
                             method: 'DELETE',
@@ -131,7 +142,7 @@ System.register([], function (_export, _context) {
                                 'Content-Type': 'application/json'
                             }
                         }).then(function (res) {
-                            return _this4._handleErrors(res);
+                            return _this5._handleErrors(res);
                         }).then(function (res) {
                             return res.json();
                         });

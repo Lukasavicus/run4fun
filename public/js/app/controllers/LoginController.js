@@ -63,11 +63,19 @@ System.register(['../services/HttpService'], function (_export, _context) {
 					value: function login(_login, passwd) {
 						var _this = this;
 
+						var redirect = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 'index.html';
+						var requiredRole = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 'user';
+
 						// Realiza a submisão de login
 						// Ao receber a resposta favoravel de login:
 						// 		Grava o resultado do x-access-token na sessão do usuário
 						// 		Redireciona para o index
-						this._service.post('/autenticar', {
+						if (!_login || !passwd) return Promise.reject(new Error('Fill login and password'));
+
+						delete window.sessionStorage.token;
+						delete window.sessionStorage.login;
+
+						return this._service.post('/autenticar', {
 							method: 'POST',
 							body: JSON.stringify({
 								'login': _login,
@@ -78,36 +86,58 @@ System.register(['../services/HttpService'], function (_export, _context) {
 								// 'Content-Type': 'application/x-www-form-urlencoded',
 							}
 						}).then(function (res) {
-							return res.headers.get('x-access-token');
-						}).then(function (token) {
+							var token = res.headers.get('x-access-token');
 							console.log('token', token);
-							if (token) {
-								window.sessionStorage.token = token;
-								window.sessionStorage.login = _this._parseJwt(token).login;
+							if (!token) throw new Error('Invalid login or password');
+
+							window.sessionStorage.token = token;
+							window.sessionStorage.login = _this._parseJwt(token).login;
+							return _this._service.get('/v1/user');
+						}).then(function (user) {
+							if (user.role != requiredRole) {
+								throw new Error(requiredRole == 'admin' ? 'Admin access only' : 'Use the admin login page');
 							}
-						}).then(function (res) {
-							if (1 == 1) {
-								window.location.href = "index.html";
-							}
-						}).catch(function (err) {
-							return console.log(err);
+
+							window.location.href = redirect;
+						}).catch(function (error) {
+							delete window.sessionStorage.token;
+							delete window.sessionStorage.login;
+							if (error.message == 'Unauthorized') throw new Error('Invalid login or password');
+							throw error;
 						});
 						// redir home (login / sign in)
 					}
 				}, {
-					key: 'logout',
-					value: function logout() {
-						delete window.sessionStorage.token;
-						delete window.sessionStorage.login;
-						window.location.href = "home.html";
+					key: 'signup',
+					value: function signup(login, email, password) {
+						var _this2 = this;
+
+						if (!login || !email || !password) {
+							throw new Error('Fill login, email and password');
+						}
+
+						return this._service.post('/signup', {
+							method: 'POST',
+							body: JSON.stringify({
+								'login': login,
+								'email': email,
+								'password': password
+							}),
+							headers: {
+								'Content-Type': 'application/json'
+							}
+						}, true).then(function () {
+							return _this2.login(login, password);
+						});
 					}
 				}, {
-					key: 'signin',
-					value: function signin() {
-						// Faz validações
-						// 		Se validações ok:
-						// 		Submete dados para cadastro do usuário
-						//		Se cadastro ok redireciona para tela de login
+					key: 'logout',
+					value: function logout() {
+						var redirect = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 'home.html';
+
+						delete window.sessionStorage.token;
+						delete window.sessionStorage.login;
+						window.location.href = typeof redirect == 'string' ? redirect : 'home.html';
 					}
 				}]);
 

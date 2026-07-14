@@ -81,11 +81,14 @@ module.exports = function(app){
 
 					console.log("PURCHASE Operation", user, collectible);
 
-					if(user.balance > collectible.value ){
+					if(user.collectibles.map(String).includes(String(collectible._id))){
+						res.status(409).send('Already purchased');
+					}
+					else if(user.balance >= collectible.value ){
 						// DO THE PURCHASE OPERATION HERE
 						console.log("Set up Transactions");
 						transactionRules
-						._set_up_transaction(-collectible.value, "outcome", `Outcome: Purchasing ${collectible.title} -${collectible.value}⚡`, user._id)
+						._set_up_transaction(-collectible.value, "outcome", `Outcome: Purchasing ${collectible.title} -${collectible.value}⚡`, user._id, 'collectible_purchase', collectible._id)
 						.then(() => {
 							// ADD COLLECTIBLE TO USER
 							userRules
